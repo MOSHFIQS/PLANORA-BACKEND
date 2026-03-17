@@ -60,9 +60,32 @@ const getMyEvents = catchAsync(async (req, res) => {
      });
 });
 
+const updateEvent = catchAsync(async (req, res) => {
+     const { id } = req.params;
+     const user = req.user;
+
+     if (!user) {
+          throw new AppError(status.UNAUTHORIZED, "Unauthorized");
+     }
+
+     const result = await EventService.updateEvent(
+          id as string,
+          user,
+          req.body,
+     );
+
+     sendResponse(res, {
+          httpStatusCode: status.OK,
+          success: true,
+          message: "Event updated successfully",
+          data: result,
+     });
+});
+
 export const EventController = {
      createEvent,
      getAllEvents,
      getSingleEvent,
      getMyEvents,
+     updateEvent,
 };

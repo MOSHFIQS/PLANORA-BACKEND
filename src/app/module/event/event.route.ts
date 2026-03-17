@@ -12,4 +12,7 @@ router.get("/:id", EventController.getSingleEvent);
 router.post("/", checkAuth(Role.USER, Role.ADMIN), EventController.createEvent);
 router.get("/me/events", checkAuth(Role.USER, Role.ADMIN), EventController.getMyEvents);
 
+// Update/Delete — Organizer or Admin
+router.patch("/:id", checkAuth(Role.USER, Role.ADMIN), EventController.updateEvent);
+
 export const EventRoutes = router;

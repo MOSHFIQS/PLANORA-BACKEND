@@ -1,7 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { ICreateEventPayload } from "./event.interface";
-import { EventVisibility } from "../../../generated/prisma/enums";
+import { ICreateEventPayload, IUpdateEventPayload } from "./event.interface";
+import { EventVisibility, Role } from "../../../generated/prisma/enums";
 import AppError from "../../errorHelpers/AppError";
 import status from "http-status";
 
@@ -60,9 +60,30 @@ const getMyEvents = async (user: IRequestUser) => {
   });
 };
 
+const updateEvent = async (
+  id: string,
+  user: IRequestUser,
+  payload: IUpdateEventPayload
+) => {
+  const event = await prisma.event.findUnique({ where: { id } });
+
+  if (!event) throw new AppError(status.NOT_FOUND, "Event not found");
+
+  // Only organizer or admin
+  if (event.organizerId !== user.userId && user.role !== Role.ADMIN) {
+    throw new AppError(status.FORBIDDEN, "Not authorized");
+  }
+
+  return prisma.event.update({
+    where: { id },
+    data: payload,
+  });
+};
+
 export const EventService = {
      createEvent,
      getAllEvents,
      getSingleEvent,
-     getMyEvents
+     getMyEvents,
+     updateEvent
 };
