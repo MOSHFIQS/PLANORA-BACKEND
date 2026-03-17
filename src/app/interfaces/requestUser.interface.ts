@@ -1,4 +1,4 @@
-import { Role, UserStatus } from "../../generated/prisma/enums";
+import { Role } from "../../generated/prisma/enums";
 
 export interface ILoginUserPayload {
      email: string;
@@ -8,9 +8,5 @@ export interface ILoginUserPayload {
 export interface IRequestUser {
      userId: string;
      role: Role;
-     name?: string;
      email?: string;
-     status?: UserStatus;
-     isDeleted?: boolean;
-     emailVerified?: boolean;
 }

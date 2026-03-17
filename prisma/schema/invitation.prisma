@@ -13,7 +13,7 @@ model Invitation {
 
   payment     Payment[]
 
-  @@unique([eventId, userId])   // prevent duplicate invites
+  @@unique([eventId, userId])   
   @@index([eventId])
   @@index([status])
   @@map("invitation")

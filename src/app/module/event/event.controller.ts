@@ -1,0 +1,26 @@
+import { Request, Response } from "express";
+import status from "http-status";
+import { catchAsync } from "../../shared/catchAsync";
+import { sendResponse } from "../../shared/sendResponse";
+import { EventService } from "./event.service";
+import AppError from "../../errorHelpers/AppError";
+
+const createEvent = catchAsync(async (req: Request, res: Response) => {
+     const user = req.user;
+     if (!user) {
+          throw new AppError(status.UNAUTHORIZED, "Unauthorized");
+     }
+
+     const result = await EventService.createEvent(user, req.body);
+
+     sendResponse(res, {
+          httpStatusCode: status.CREATED,
+          success: true,
+          message: "Event created successfully",
+          data: result,
+     });
+});
+
+export const EventController = {
+     createEvent,
+};
