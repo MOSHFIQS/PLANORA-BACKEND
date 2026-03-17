@@ -8,7 +8,8 @@ const router = Router();
 router.get("/", EventController.getAllEvents);
 router.get("/:id", EventController.getSingleEvent);
 
-
+// Organizer / User
 router.post("/", checkAuth(Role.USER, Role.ADMIN), EventController.createEvent);
+router.get("/me/events", checkAuth(Role.USER, Role.ADMIN), EventController.getMyEvents);
 
 export const EventRoutes = router;

@@ -21,31 +21,48 @@ const createEvent = catchAsync(async (req: Request, res: Response) => {
      });
 });
 const getAllEvents = catchAsync(async (req, res) => {
-  const result = await EventService.getAllEvents();
+     const result = await EventService.getAllEvents();
 
-  sendResponse(res, {
-    httpStatusCode: status.OK,
-    success: true,
-    message: "Events fetched successfully",
-    data: result,
-  });
+     sendResponse(res, {
+          httpStatusCode: status.OK,
+          success: true,
+          message: "Events fetched successfully",
+          data: result,
+     });
 });
 
 const getSingleEvent = catchAsync(async (req, res) => {
-  const { id } = req.params;
+     const { id } = req.params;
 
-  const result = await EventService.getSingleEvent(id as string);
+     const result = await EventService.getSingleEvent(id as string);
 
-  sendResponse(res, {
-    httpStatusCode: status.OK,
-    success: true,
-    message: "Event fetched successfully",
-    data: result,
-  });
+     sendResponse(res, {
+          httpStatusCode: status.OK,
+          success: true,
+          message: "Event fetched successfully",
+          data: result,
+     });
+});
+
+const getMyEvents = catchAsync(async (req, res) => {
+     const user = req.user;
+     if (!user) {
+          throw new AppError(status.UNAUTHORIZED, "Unauthorized");
+     }
+
+     const result = await EventService.getMyEvents(user);
+
+     sendResponse(res, {
+          httpStatusCode: status.OK,
+          success: true,
+          message: "My events fetched successfully",
+          data: result,
+     });
 });
 
 export const EventController = {
      createEvent,
      getAllEvents,
-     getSingleEvent
+     getSingleEvent,
+     getMyEvents,
 };

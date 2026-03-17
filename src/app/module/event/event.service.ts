@@ -49,8 +49,20 @@ const getSingleEvent = async (id: string) => {
   return event;
 };
 
+const getMyEvents = async (user: IRequestUser) => {
+  return prisma.event.findMany({
+    where: {
+      organizerId: user.userId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+};
+
 export const EventService = {
      createEvent,
      getAllEvents,
-     getSingleEvent
+     getSingleEvent,
+     getMyEvents
 };
