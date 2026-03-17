@@ -20,7 +20,18 @@ const createEvent = catchAsync(async (req: Request, res: Response) => {
           data: result,
      });
 });
+const getAllEvents = catchAsync(async (req, res) => {
+  const result = await EventService.getAllEvents();
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Events fetched successfully",
+    data: result,
+  });
+});
 
 export const EventController = {
      createEvent,
+     getAllEvents
 };

@@ -1,6 +1,7 @@
 import { prisma } from "../../lib/prisma";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
 import { ICreateEventPayload } from "./event.interface";
+import { EventVisibility } from "../../../generated/prisma/enums";
 
 const createEvent = async (
      user: IRequestUser,
@@ -14,6 +15,21 @@ const createEvent = async (
      });
 };
 
+const getAllEvents = async () => {
+     return prisma.event.findMany({
+          where: {
+               visibility: EventVisibility.PUBLIC,
+          },
+          include: {
+               organizer: true,
+          },
+          orderBy: {
+               dateTime: "asc",
+          },
+     });
+};
+
 export const EventService = {
      createEvent,
+     getAllEvents,
 };
