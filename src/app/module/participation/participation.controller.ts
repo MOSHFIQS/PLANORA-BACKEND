@@ -42,7 +42,7 @@ const cancelParticipation = catchAsync(async (req: Request, res: Response) => {
      });
 });
 
-const getMyEvents = catchAsync(async (req, res) => {
+const getMyEvents = catchAsync(async (req:Request, res:Response) => {
      const user = req.user!;
 
      const result = await ParticipationService.getMyEvents(user);
@@ -69,7 +69,7 @@ const getMyEvents = catchAsync(async (req, res) => {
 //   });
 // });
 
-const getEventParticipants = catchAsync(async (req, res) => {
+const getEventParticipants = catchAsync(async (req:Request, res:Response) => {
      const user = req.user;
      if (!user) throw new AppError(status.UNAUTHORIZED, "Unauthorized");
 

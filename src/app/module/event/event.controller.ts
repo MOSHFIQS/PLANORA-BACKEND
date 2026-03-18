@@ -20,7 +20,7 @@ const createEvent = catchAsync(async (req: Request, res: Response) => {
           data: result,
      });
 });
-const getAllEvents = catchAsync(async (req, res) => {
+const getAllEvents = catchAsync(async (req:Request, res:Response) => {
      const result = await EventService.getAllEvents();
 
      sendResponse(res, {
@@ -31,7 +31,7 @@ const getAllEvents = catchAsync(async (req, res) => {
      });
 });
 
-const getSingleEvent = catchAsync(async (req, res) => {
+const getSingleEvent = catchAsync(async (req:Request, res:Response) => {
      const { id } = req.params;
 
      const result = await EventService.getSingleEvent(id as string);
@@ -44,7 +44,7 @@ const getSingleEvent = catchAsync(async (req, res) => {
      });
 });
 
-const getMyEvents = catchAsync(async (req, res) => {
+const getMyEvents = catchAsync(async (req:Request, res:Response) => {
      const user = req.user;
      if (!user) {
           throw new AppError(status.UNAUTHORIZED, "Unauthorized");
@@ -60,7 +60,7 @@ const getMyEvents = catchAsync(async (req, res) => {
      });
 });
 
-const updateEvent = catchAsync(async (req, res) => {
+const updateEvent = catchAsync(async (req:Request, res:Response) => {
      const { id } = req.params;
      const user = req.user;
 
@@ -82,7 +82,7 @@ const updateEvent = catchAsync(async (req, res) => {
      });
 });
 
-const deleteEvent = catchAsync(async (req, res) => {
+const deleteEvent = catchAsync(async (req:Request, res:Response) => {
      const { id } = req.params;
      const user = req.user;
      if (!user) {
@@ -98,7 +98,7 @@ const deleteEvent = catchAsync(async (req, res) => {
      });
 });
 
-const getAllEventsAdmin = catchAsync(async (req, res) => {
+const getAllEventsAdmin = catchAsync(async (req:Request, res:Response) => {
      const result = await EventService.getAllEventsAdmin();
 
      sendResponse(res, {
