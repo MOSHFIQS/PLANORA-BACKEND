@@ -6,24 +6,7 @@ import AppError from "../../errorHelpers/AppError";
 import { ParticipationService } from "./participation.service";
 import { ParticipationStatus } from "../../../generated/prisma/enums";
 
-const joinEvent = catchAsync(async (req: Request, res: Response) => {
-     const user = req.user;
-     if (!user) throw new AppError(status.UNAUTHORIZED, "Unauthorized");
 
-     const { eventId } = req.params;
-
-     const result = await ParticipationService.joinEvent(
-          user,
-          eventId as string,
-     );
-
-     sendResponse(res, {
-          httpStatusCode: status.CREATED,
-          success: true,
-          message: "Joined event successfully",
-          data: result,
-     });
-});
 
 const cancelParticipation = catchAsync(async (req: Request, res: Response) => {
      const user = req.user!;
@@ -50,7 +33,10 @@ const getMyEvents = catchAsync(async (req:Request, res:Response) => {
      sendResponse(res, {
           httpStatusCode: status.OK,
           success: true,
-          message: "My events fetched",
+          message:
+            result.length === 0
+                ? "You have not joined any events yet."
+                : "My events fetched",
           data: result,
      });
 });
@@ -115,7 +101,6 @@ const updateStatus = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const ParticipationController = {
-     joinEvent,
      cancelParticipation,
      getMyEvents,
      getEventParticipants,

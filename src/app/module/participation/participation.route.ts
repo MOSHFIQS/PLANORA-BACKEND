@@ -6,11 +6,7 @@ import { Role } from "../../../generated/prisma/enums";
 const router = Router();
 
 // 👤 User routes
-router.post(
-     "/join/:eventId",
-     checkAuth(Role.USER, Role.ADMIN),
-     ParticipationController.joinEvent,
-);
+
 
 router.delete(
      "/cancel/:eventId",

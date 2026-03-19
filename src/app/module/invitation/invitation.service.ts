@@ -2,13 +2,9 @@ import status from "http-status";
 import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
-import {
-     InvitationStatus,
-     EventVisibility,
-     ParticipationStatus,
-} from "../../../generated/prisma/enums";
+import { EventVisibility } from "../../../generated/prisma/enums";
 
-// 👑 Send invitation
+
 const sendInvitation = async (
      user: IRequestUser,
      eventId: string,
@@ -41,7 +37,7 @@ const sendInvitation = async (
           );
      }
 
-     // Already participant?
+
      const existingParticipation = await prisma.participation.findUnique({
           where: {
                userId_eventId: {
@@ -63,59 +59,7 @@ const sendInvitation = async (
      });
 };
 
-// 👤 Respond to invitation
-const respondInvitation = async (
-     user: IRequestUser,
-     invitationId: string,
-     newStatus: InvitationStatus,
-) => {
-     // fetch the invitation along with its event
-     const invitation = await prisma.invitation.findUnique({
-          where: { id: invitationId },
-          include: { event: true },
-     });
 
-     if (!invitation) {
-          throw new AppError(status.NOT_FOUND, "Invitation not found");
-     }
-
-     // only the invited user can respond
-     if (invitation.userId !== user.userId) {
-          throw new AppError(status.FORBIDDEN, "Not your invitation");
-     }
-
-     // prevent responding twice
-     if (invitation.status !== InvitationStatus.PENDING) {
-          throw new AppError(status.BAD_REQUEST, "Already responded");
-     }
-
-     // update the invitation status
-     const updated = await prisma.invitation.update({
-          where: { id: invitationId },
-          data: { status: newStatus },
-     });
-
-     // if accepted → create participation
-     if (newStatus === InvitationStatus.ACCEPTED) {
-          // determine participation status based on event fee
-          const participationStatus =
-               invitation.event.fee > 0
-                    ? ParticipationStatus.PENDING // wait for payment if event is paid
-                    : ParticipationStatus.APPROVED; // auto-approved if free
-
-          await prisma.participation.create({
-               data: {
-                    userId: user.userId,
-                    eventId: invitation.eventId,
-                    status: participationStatus,
-               },
-          });
-     }
-
-     return updated;
-};
-
-//  Get invitations for event
 const getEventInvitations = async (user: IRequestUser, eventId: string) => {
      const event = await prisma.event.findUnique({
           where: { id: eventId },
@@ -135,7 +79,7 @@ const getEventInvitations = async (user: IRequestUser, eventId: string) => {
      });
 };
 
-//  Get my invitations
+
 const getMyInvitations = async (user: IRequestUser) => {
      return prisma.invitation.findMany({
           where: { userId: user.userId },
@@ -145,7 +89,7 @@ const getMyInvitations = async (user: IRequestUser) => {
      });
 };
 
-//  Cancel invitation
+
 const cancelInvitation = async (user: IRequestUser, invitationId: string) => {
      const invitation = await prisma.invitation.findUnique({
           where: { id: invitationId },
@@ -170,7 +114,6 @@ const cancelInvitation = async (user: IRequestUser, invitationId: string) => {
 
 export const InvitationService = {
      sendInvitation,
-     respondInvitation,
      getEventInvitations,
      getMyInvitations,
      cancelInvitation,

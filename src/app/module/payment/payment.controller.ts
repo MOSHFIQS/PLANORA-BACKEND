@@ -9,7 +9,7 @@ import { PaymentService } from "./payment.service";
 import { stripe } from "../../config/stripe.config";
 import { envVars } from "../../config/env";
 
-// Start payment
+
 const initiatePayment = catchAsync(async (req: Request, res: Response) => {
      const user = req.user!;
      const result = await PaymentService.initiatePayment(user, req.body);
@@ -22,7 +22,7 @@ const initiatePayment = catchAsync(async (req: Request, res: Response) => {
      });
 });
 
-//  Stripe Webhook
+
 const handleStripeWebhookEvent = catchAsync(
      async (req: Request, res: Response) => {
           const signature = req.headers["stripe-signature"] as string;

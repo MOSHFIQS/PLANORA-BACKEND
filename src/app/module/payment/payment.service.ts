@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import Stripe from "stripe";
 import status from "http-status";
 import { v4 as uuidv4 } from "uuid";
@@ -8,267 +7,270 @@ import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import { stripe } from "../../config/stripe.config";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { PaymentStatus } from "../../../generated/prisma/enums";
+import {
+    PaymentStatus,
+    ParticipationStatus,
+    InvitationStatus,
+} from "../../../generated/prisma/enums";
 
-// create stripe checkout session
+
 const initiatePayment = async (
-     user: IRequestUser,
-     payload: {
-          participationId?: string;
-          invitationId?: string;
-     },
+    user: IRequestUser,
+    payload: {
+        eventId?: string; 
+        invitationId?: string;
+    },
 ) => {
-     if (!payload.participationId && !payload.invitationId) {
-          throw new AppError(status.BAD_REQUEST, "Invalid payment target");
-     }
+    if (!payload.eventId && !payload.invitationId) {
+        throw new AppError(status.BAD_REQUEST, "Invalid payment target");
+    }
 
-     let amount = 0;
+    let amount = 0;
+    let participationId: string | undefined = undefined;
 
-     // handle participation payment
-     if (payload.participationId) {
-          const participation = await prisma.participation.findUniqueOrThrow({
-               where: { id: payload.participationId },
-               include: { event: true },
-          });
+    // ================= DIRECT EVENT =================
+    if (payload.eventId) {
+        const event = await prisma.event.findUniqueOrThrow({
+            where: { id: payload.eventId },
+        });
 
-          if (participation.userId !== user.userId) {
-               throw new AppError(status.FORBIDDEN, "Not your participation");
-          }
+        if (event.organizerId === user.userId) {
+            throw new AppError(
+                status.BAD_REQUEST,
+                "Organizer cannot join own event",
+            );
+        }
 
-          // stop if event already passed
-          if (participation.event.dateTime < new Date()) {
-               throw new AppError(
-                    status.BAD_REQUEST,
-                    "This event has already expired",
-               );
-          }
+        
+        const existing = await prisma.participation.findUnique({
+            where: { userId_eventId: { userId: user.userId, eventId: event.id } },
+        });
 
-          // prevent paying twice
-          const paid = await prisma.payment.findFirst({
-               where: {
-                    participationId: payload.participationId,
-                    status: PaymentStatus.SUCCESS,
-               },
-          });
+        if (existing) {
+            throw new AppError(status.BAD_REQUEST, "Already joined or requested");
+        }
 
-          if (paid) {
-               throw new AppError(
-                    status.BAD_REQUEST,
-                    "Already paid for this event",
-               );
-          }
+        
+        if (event.fee === 0) {
+            await prisma.participation.create({
+                data: {
+                    userId: user.userId,
+                    eventId: event.id,
+                    status: ParticipationStatus.APPROVED,
+                },
+            });
 
-          // prevent multiple pending payments
-          const pending = await prisma.payment.findFirst({
-               where: {
-                    participationId: payload.participationId,
-                    status: PaymentStatus.PENDING,
-               },
-          });
+            return { message: "Joined successfully (free event)" };
+        }
 
-          if (pending) {
-               throw new AppError(
-                    status.BAD_REQUEST,
-                    "Payment already in progress",
-               );
-          }
+        
+        const participation = await prisma.participation.create({
+            data: {
+                userId: user.userId,
+                eventId: event.id,
+                status: ParticipationStatus.PENDING,
+            },
+        });
 
-          amount = participation.event.fee;
-     }
+        participationId = participation.id;
+        amount = event.fee;
+    }
 
-     // handle invitation payment
-     if (payload.invitationId) {
-          const invitation = await prisma.invitation.findUniqueOrThrow({
-               where: { id: payload.invitationId },
-               include: { event: true },
-          });
 
-          if (invitation.userId !== user.userId) {
-               throw new AppError(status.FORBIDDEN, "Not your invitation");
-          }
+    if (payload.invitationId) {
+        const invitation = await prisma.invitation.findUniqueOrThrow({
+            where: { id: payload.invitationId },
+            include: { event: true },
+        });
 
-          // stop if event already passed
-          if (invitation.event.dateTime < new Date()) {
-               throw new AppError(
-                    status.BAD_REQUEST,
-                    "This event has already expired",
-               );
-          }
+        if (invitation.userId !== user.userId) {
+            throw new AppError(status.FORBIDDEN, "Not your invitation");
+        }
 
-          const paid = await prisma.payment.findFirst({
-               where: {
-                    invitationId: payload.invitationId,
-                    status: PaymentStatus.SUCCESS,
-               },
-          });
+        
+        if (invitation.event.fee === 0) {
+            await prisma.$transaction(async (tx) => {
+                await tx.invitation.update({
+                    where: { id: invitation.id },
+                    data: { status: InvitationStatus.ACCEPTED },
+                });
 
-          if (paid) {
-               throw new AppError(status.BAD_REQUEST, "Already paid");
-          }
-
-          const pending = await prisma.payment.findFirst({
-               where: {
-                    invitationId: payload.invitationId,
-                    status: PaymentStatus.PENDING,
-               },
-          });
-
-          if (pending) {
-               throw new AppError(
-                    status.BAD_REQUEST,
-                    "Payment already in progress",
-               );
-          }
-
-          amount = invitation.event.fee;
-     }
-
-     // create payment record before redirecting to stripe
-     const payment = await prisma.payment.create({
-          data: {
-               amount,
-               transactionId: uuidv4(),
-               userId: user.userId,
-               participationId: payload.participationId,
-               invitationId: payload.invitationId,
-               status: PaymentStatus.PENDING,
-          },
-     });
-
-     // create stripe checkout session
-     const session = await stripe.checkout.sessions.create({
-          payment_method_types: ["card"],
-          mode: "payment",
-
-          line_items: [
-               {
-                    price_data: {
-                         currency: "bdt",
-                         product_data: { name: "Event Ticket" },
-                         unit_amount: amount * 100,
+                
+                const exists = await tx.participation.findFirst({
+                    where: {
+                        userId: user.userId,
+                        eventId: invitation.eventId,
                     },
-                    quantity: 1,
-               },
-          ],
+                });
 
-          metadata: {
-               paymentId: payment.id,
-          },
+                if (!exists) {
+                    await tx.participation.create({
+                        data: {
+                            userId: user.userId,
+                            eventId: invitation.eventId,
+                            status: ParticipationStatus.APPROVED,
+                        },
+                    });
+                }
+            });
 
-          success_url: `${process.env.FRONTEND_URL}/payment-success`,
-          cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
-     });
+            return { message: "Joined successfully (free invitation)" };
+        }
 
-     return {
-          paymentId: payment.id,
-          paymentUrl: session.url,
-     };
+        
+        const participation = await prisma.participation.create({
+            data: {
+                userId: user.userId,
+                eventId: invitation.eventId,
+                status: ParticipationStatus.PENDING,
+            },
+        });
+
+        participationId = participation.id;
+        amount = invitation.event.fee;
+    }
+
+    
+    const payment = await prisma.payment.create({
+        data: {
+            amount,
+            transactionId: uuidv4(),
+            userId: user.userId,
+            participationId,
+            invitationId: payload.invitationId,
+            status: PaymentStatus.PENDING,
+        },
+    });
+
+    
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items: [
+            {
+                price_data: {
+                    currency: "bdt",
+                    product_data: { name: "Event Ticket" },
+                    unit_amount: amount * 100,
+                },
+                quantity: 1,
+            },
+        ],
+        metadata: { paymentId: payment.id },
+        success_url: `${process.env.FRONTEND_URL}/payment-success`,
+        cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
+    });
+
+    return { paymentId: payment.id, paymentUrl: session.url };
 };
 
-// handle stripe webhook events
 const handleStripeWebhookEvent = async (event: Stripe.Event) => {
-     const existing = await prisma.payment.findFirst({
-          where: { stripeEventId: event.id },
-     });
+    const existing = await prisma.payment.findFirst({
+        where: { stripeEventId: event.id },
+    });
 
-     if (existing) return { message: "Already processed" };
+    if (existing) return { message: "Already processed" };
 
-     switch (event.type) {
-          case "checkout.session.completed": {
-               const session = event.data.object as any;
-               const paymentId = session.metadata?.paymentId;
+    switch (event.type) {
+        case "checkout.session.completed": {
+            const session = event.data.object as any;
+            const paymentId = session.metadata?.paymentId;
+            if (!paymentId) return { message: "Missing paymentId" };
 
-               if (!paymentId) return { message: "Missing paymentId" };
+            const payment = await prisma.payment.findUnique({
+                where: { id: paymentId },
+                include: {
+                    participation: { include: { event: true } },
+                    invitation: { include: { event: true } },
+                },
+            });
 
-               const payment = await prisma.payment.findUnique({
+            if (!payment) return { message: "Payment not found" };
+
+            const eventData =
+                payment.participation?.event || payment.invitation?.event;
+
+            if (!eventData) return { message: "Event not found" };
+
+            
+            if (eventData.dateTime < new Date()) {
+                await prisma.payment.update({
                     where: { id: paymentId },
-                    include: {
-                         participation: {
-                              include: { event: true },
-                         },
-                         invitation: {
-                              include: { event: true },
-                         },
-                    },
-               });
+                    data: { status: PaymentStatus.CANCELED, stripeEventId: event.id },
+                });
+                return { message: "Event expired, payment canceled" };
+            }
 
-               if (!payment) return { message: "Payment not found" };
-
-               // get related event (either from participation or invitation)
-               const eventData =
-                    payment.participation?.event || payment.invitation?.event;
-
-               if (!eventData) return { message: "Event not found" };
-
-               // double check expiry here because stripe can still complete payment later
-               if (eventData.dateTime < new Date()) {
-                    await prisma.payment.update({
-                         where: { id: paymentId },
-                         data: {
-                              status: PaymentStatus.CANCELED,
-                              stripeEventId: event.id,
-                         },
-                    });
-
-                    return { message: "Event expired, payment canceled" };
-               }
-
-               await prisma.$transaction(async (tx) => {
-                    await tx.payment.update({
-                         where: { id: paymentId },
-                         data: {
-                              status: PaymentStatus.SUCCESS,
-                              stripeEventId: event.id,
-                              paymentGatewayData: session,
-                         },
-                    });
-
-                    // approve participation after successful payment
-                    if (payment.participationId) {
-                         await tx.participation.update({
-                              where: { id: payment.participationId },
-                              data: { status: "APPROVED" },
-                         });
-                    }
-
-                    // accept invitation after successful payment
-                    if (payment.invitationId) {
-                         await tx.invitation.update({
-                              where: { id: payment.invitationId },
-                              data: { status: "ACCEPTED" },
-                         });
-                    }
-               });
-
-               break;
-          }
-
-          case "payment_intent.payment_failed":
-          case "checkout.session.expired": {
-               const session = event.data.object as any;
-               const paymentId = session.metadata?.paymentId;
-
-               if (!paymentId) return;
-
-               await prisma.payment.update({
+            await prisma.$transaction(async (tx) => {
+                await tx.payment.update({
                     where: { id: paymentId },
                     data: {
-                         status: PaymentStatus.FAILED,
-                         stripeEventId: event.id,
+                        status: PaymentStatus.SUCCESS,
+                        stripeEventId: event.id,
+                        paymentGatewayData: session,
                     },
-               });
+                });
 
-               break;
-          }
+                
+                if (payment.participationId) {
+                    await tx.participation.update({
+                        where: { id: payment.participationId },
+                        data: { status: ParticipationStatus.APPROVED },
+                    });
+                }
 
-          default:
-               break;
-     }
+                
+                if (payment.invitationId && payment.invitation) {
+                    // avoid duplicate
+                    const exists = await tx.participation.findFirst({
+                        where: {
+                            userId: payment.userId,
+                            eventId: payment.invitation.eventId,
+                        },
+                    });
 
-     return { message: "Webhook processed" };
+                    if (!exists) {
+                        await tx.participation.create({
+                            data: {
+                                userId: payment.userId,
+                                eventId: payment.invitation.eventId,
+                                status: ParticipationStatus.APPROVED,
+                            },
+                        });
+                    }
+
+                    await tx.invitation.update({
+                        where: { id: payment.invitationId },
+                        data: { status: InvitationStatus.ACCEPTED },
+                    });
+                }
+            });
+
+            break;
+        }
+
+        case "payment_intent.payment_failed":
+        case "checkout.session.expired": {
+            const session = event.data.object as any;
+            const paymentId = session.metadata?.paymentId;
+            if (!paymentId) return;
+
+            await prisma.payment.update({
+                where: { id: paymentId },
+                data: { status: PaymentStatus.FAILED, stripeEventId: event.id },
+            });
+
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    return { message: "Webhook processed" };
 };
 
 export const PaymentService = {
-     initiatePayment,
-     handleStripeWebhookEvent,
+    initiatePayment,
+    handleStripeWebhookEvent,
 };

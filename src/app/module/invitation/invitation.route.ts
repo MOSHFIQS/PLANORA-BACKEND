@@ -33,11 +33,6 @@ router.get(
   InvitationController.getMyInvitations
 );
 
-router.patch(
-  "/:id/respond",
-  checkAuth(Role.USER, Role.ADMIN),
-  InvitationController.respondInvitation
-);
 
 
 export const InvitationRoutes = router;
