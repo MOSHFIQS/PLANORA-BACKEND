@@ -14,7 +14,6 @@ const joinEvent = async (user: IRequestUser, eventId: string) => {
 
      if (!event) throw new AppError(status.NOT_FOUND, "Event not found");
 
-     // Prevent organizer joining own event
      if (event.organizerId === user.userId) {
           throw new AppError(
                status.BAD_REQUEST,
@@ -35,6 +34,18 @@ const joinEvent = async (user: IRequestUser, eventId: string) => {
           throw new AppError(status.BAD_REQUEST, "Already joined or requested");
      }
 
+     // PAID EVENT
+     if (event.fee > 0) {
+          return prisma.participation.create({
+               data: {
+                    userId: user.userId,
+                    eventId,
+                    status: ParticipationStatus.PENDING, // wait for payment
+               },
+          });
+     }
+
+     // FREE EVENT
      const statusValue =
           event.visibility === EventVisibility.PUBLIC
                ? ParticipationStatus.APPROVED
