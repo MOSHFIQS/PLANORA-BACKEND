@@ -11,6 +11,7 @@ import { CookieUtils } from "../utils/cookie";
 export const checkAuth = (...authRoles: Role[]) => {
      return async (req: Request, res: Response, next: NextFunction) => {
           try {
+               // console.log("req.cookies",req.cookies);
                //Session Token Verification
                const sessionToken = CookieUtils.getCookie(
                     req,

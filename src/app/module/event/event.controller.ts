@@ -31,17 +31,24 @@ const getAllEvents = catchAsync(async (req:Request, res:Response) => {
      });
 });
 
-const getSingleEvent = catchAsync(async (req:Request, res:Response) => {
-     const { id } = req.params;
+export const getSingleEvent = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const userId = req.user?.userId; 
+    const userRole = req.user?.role;
 
-     const result = await EventService.getSingleEvent(id as string);
+    const event = await EventService.getSingleEvent(id as string);
 
-     sendResponse(res, {
-          httpStatusCode: status.OK,
-          success: true,
-          message: "Event fetched successfully",
-          data: result,
-     });
+    // Only organizer or admin can access
+    if (event.organizerId !== userId && userRole !== "ADMIN") {
+        throw new AppError(status.UNAUTHORIZED, "You are not authorized to view this event");
+    }
+
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Event fetched successfully",
+        data: event,
+    });
 });
 
 const getMyEvents = catchAsync(async (req:Request, res:Response) => {

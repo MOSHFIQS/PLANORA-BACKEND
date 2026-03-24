@@ -17,18 +17,31 @@ const createEvent = async (
      });
 };
 
+
 const getAllEvents = async () => {
-     return prisma.event.findMany({
-          where: {
-               visibility: EventVisibility.PUBLIC,
-          },
-          include: {
-               organizer: true,
-          },
-          orderBy: {
-               dateTime: "asc",
-          },
-     });
+    return prisma.event.findMany({
+        where: {
+            visibility: EventVisibility.PUBLIC,
+        },
+        select: {
+            id: true,
+            title: true,
+            venue: true,
+            dateTime: true,
+            type: true,
+            fee: true,
+            images: true,
+            organizer: {
+                select: {
+                    id: true,
+                    name: true, 
+                },
+            },
+        },
+        orderBy: {
+            dateTime: "asc",
+        },
+    });
 };
 
 const getSingleEvent = async (id: string) => {

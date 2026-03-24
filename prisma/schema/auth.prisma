@@ -15,11 +15,11 @@ model User {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    // 🔐 Better Auth relations
+    // Better Auth relations
     sessions Session[]
     accounts Account[]
 
-    // 🎉 Planora relations
+    // Planora relations
     events         Event[]         @relation("OrganizerEvents")
     participations Participation[]
     invitations    Invitation[]

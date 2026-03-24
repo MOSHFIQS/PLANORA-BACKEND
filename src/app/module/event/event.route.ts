@@ -6,11 +6,11 @@ import { EventController } from "./event.controller";
 const router = Router();
 // Public
 router.get("/", EventController.getAllEvents);
-router.get("/:id", EventController.getSingleEvent);
 
 // Organizer / User
 router.post("/", checkAuth(Role.USER, Role.ADMIN), EventController.createEvent);
 router.get("/me/events", checkAuth(Role.USER, Role.ADMIN), EventController.getMyEvents);
+router.get("/:id", checkAuth(Role.USER, Role.ADMIN), EventController.getSingleEvent);
 
 // Update/Delete — Organizer or Admin
 router.patch("/:id", checkAuth(Role.USER, Role.ADMIN), EventController.updateEvent);

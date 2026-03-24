@@ -2,7 +2,7 @@ import status from "http-status";
 import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
-import { ParticipationStatus } from "../../../generated/prisma/enums";
+import { ParticipationStatus, PaymentStatus } from "../../../generated/prisma/enums";
 
 const cancelParticipation = async (user: IRequestUser, eventId: string) => {
      const participation = await prisma.participation.findUnique({
@@ -23,19 +23,47 @@ const cancelParticipation = async (user: IRequestUser, eventId: string) => {
      });
 };
 
-const getMyEvents = async (user: IRequestUser) => {
-     return prisma.participation.findMany({
+
+export const getMyEvents = async (user: IRequestUser) => {
+     
+     if (!user?.userId) {
+          throw new AppError(status.UNAUTHORIZED, "Unauthorized");
+     }
+
+     const approvedEvents = await prisma.participation.findMany({
           where: {
                userId: user.userId,
-               status: {
-                    in: [
-                         ParticipationStatus.APPROVED,
-                         ParticipationStatus.PENDING,
-                    ],
-               },
+               OR: [
+                    { status: ParticipationStatus.APPROVED },
+                    {
+                         payment: {
+                              some: {
+                                   status: PaymentStatus.SUCCESS,
+                              },
+                         },
+                    },
+               ],
           },
           include: {
-               event: true,
+               event: {
+                    select: {
+                         id: true,
+                         title: true,
+                         description: true,
+                         venue: true,
+                         dateTime: true,
+                         type: true,
+                         fee: true,
+                         images: true,
+                         meetingLink: true,
+                         organizer: {
+                              select: {
+                                   id: true,
+                                   name: true,
+                              },
+                         },
+                    },
+               },
                ticket: true,
                payment: {
                     select: {
@@ -48,8 +76,37 @@ const getMyEvents = async (user: IRequestUser) => {
                     },
                },
           },
-          orderBy: { createdAt: "desc" },
      });
+
+     const pendingEvents = await prisma.participation.findMany({
+          where: {
+               userId: user.userId,
+               status: ParticipationStatus.PENDING,
+               payment: {
+                    none: {
+                         status: PaymentStatus.SUCCESS,
+                    },
+               },
+          },
+          include: {
+               event: {
+                    select: {
+                         id: true,
+                         title: true,
+                         dateTime: true,
+                         fee: true,
+                         images: true,
+                    },
+               },
+          },
+     });
+
+ 
+     const result = [...approvedEvents, ...pendingEvents].sort(
+          (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+     );
+
+     return result;
 };
 
 // const getEventParticipants = async (eventId: string) => {
