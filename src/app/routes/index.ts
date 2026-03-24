@@ -5,6 +5,7 @@ import { ParticipationRoutes } from "../module/participation/participation.route
 import { InvitationRoutes } from "../module/invitation/invitation.route";
 import { ReviewRoutes } from "../module/review/review.route";
 import { PaymentRoutes } from "../module/payment/payment.route";
+import { FileRoutes } from "../module/file/file.route";
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use("/participation", ParticipationRoutes);
 router.use("/invitations", InvitationRoutes);
 router.use("/reviews", ReviewRoutes);
 router.use("/payments", PaymentRoutes);
+router.use("/file", FileRoutes);
 
 export const IndexRoutes = router;
