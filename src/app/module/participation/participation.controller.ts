@@ -8,22 +8,7 @@ import { ParticipationStatus } from "../../../generated/prisma/enums";
 
 
 
-const cancelParticipation = catchAsync(async (req: Request, res: Response) => {
-     const user = req.user!;
-     const { eventId } = req.params;
 
-     const result = await ParticipationService.cancelParticipation(
-          user,
-          eventId as string,
-     );
-
-     sendResponse(res, {
-          httpStatusCode: status.OK,
-          success: true,
-          message: "Participation canceled",
-          data: result,
-     });
-});
 
 const getMyEvents = catchAsync(async (req:Request, res:Response) => {
      const user = req.user!;
@@ -41,19 +26,21 @@ const getMyEvents = catchAsync(async (req:Request, res:Response) => {
      });
 });
 
-// const getEventParticipants = catchAsync(async (req, res) => {
+const getMySingleEvent = catchAsync(async (req: Request, res: Response) => {
+    const user = req.user;
+    if (!user) throw new AppError(status.UNAUTHORIZED, "Unauthorized");
 
-//   const { eventId } = req.params;
+    const { id } = req.params;
 
-//   const result = await ParticipationService.getEventParticipants(eventId as string);
+    const result = await ParticipationService.getMySingleEvent(user, id as string);
 
-//   sendResponse(res, {
-//     httpStatusCode: status.OK,
-//     success: true,
-//     message: "Participants fetched",
-//     data: result,
-//   });
-// });
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Participation details fetched successfully",
+        data: result,
+    });
+});
 
 const getEventParticipants = catchAsync(async (req:Request, res:Response) => {
      const user = req.user;
@@ -101,8 +88,8 @@ const updateStatus = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const ParticipationController = {
-     cancelParticipation,
      getMyEvents,
+     getMySingleEvent,
      getEventParticipants,
      updateStatus,
 };

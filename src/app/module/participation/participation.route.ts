@@ -5,19 +5,17 @@ import { Role } from "../../../generated/prisma/enums";
 
 const router = Router();
 
-// 👤 User routes
-
-
-router.delete(
-     "/cancel/:eventId",
-     checkAuth(Role.USER, Role.ADMIN),
-     ParticipationController.cancelParticipation,
-);
-
+// User routes
 router.get(
      "/my-events",
      checkAuth(Role.USER, Role.ADMIN),
      ParticipationController.getMyEvents,
+);
+// routes/participation.routes.ts
+router.get(
+    "/me/:id",                     // participant's own participation
+    checkAuth(Role.USER, Role.ADMIN),
+    ParticipationController.getMySingleEvent
 );
 
 // Organizer/Admin routes
