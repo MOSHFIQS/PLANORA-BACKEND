@@ -16,11 +16,24 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
+  const result = await AdminService.getAllAdmins();
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Admins fetched",
+    data: result,
+  });
+});
+
 const updateUserStatus = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { status: statusValue } = req.body;
+  const user = req.user;
+  if (!user) throw new AppError(status.UNAUTHORIZED, "Unauthorized");
 
-  const result = await AdminService.updateUserStatus(id as string, statusValue);
+  const result = await AdminService.updateUserStatus(id as string, statusValue, user);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -45,6 +58,27 @@ const deleteUser = catchAsync(async (req, res) => {
   });
 });
 
+const updateUserRole = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { role } = req.body;
+  const user = req.user;
+
+  if (!user) throw new AppError(status.UNAUTHORIZED, "Unauthorized");
+
+  const result = await AdminService.updateUserRole(
+    id as string,
+    role,
+    user
+  );
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "User role updated",
+    data: result,
+  });
+});
+
 const getAdminStats = catchAsync(async (req: Request, res: Response) => {
   const result = await AdminService.getAdminStats();
 
@@ -59,7 +93,9 @@ const getAdminStats = catchAsync(async (req: Request, res: Response) => {
 
 export const AdminController = {
   getAllUsers,
+  getAllAdmins,
   updateUserStatus,
   deleteUser,
+  updateUserRole,
   getAdminStats,
 };

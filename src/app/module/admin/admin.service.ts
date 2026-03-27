@@ -1,13 +1,26 @@
 import status from "http-status";
 import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
-import { InvitationStatus, ParticipationStatus, PaymentStatus, UserStatus } from "../../../generated/prisma/enums";
+import { InvitationStatus, ParticipationStatus, PaymentStatus, Role, UserStatus } from "../../../generated/prisma/enums";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
 
 // get all users
 const getAllUsers = async () => {
   return prisma.user.findMany({
-    where: { isDeleted: false },
+    where: {
+      isDeleted: false,
+      role: "USER",
+    },
+    orderBy: { createdAt: "desc" },
+  });
+};
+
+const getAllAdmins = async () => {
+  return prisma.user.findMany({
+    where: {
+      isDeleted: false,
+      role: "ADMIN",
+    },
     orderBy: { createdAt: "desc" },
   });
 };
@@ -26,7 +39,13 @@ const getSingleUser = async (id: string) => {
 };
 
 // update user status (ACTIVE / SUSPENDED)
-const updateUserStatus = async (id: string, statusValue: UserStatus) => {
+const updateUserStatus = async (id: string, statusValue: UserStatus, user: IRequestUser) => {
+  if (user.role !== "ADMIN") {
+    throw new AppError(status.UNAUTHORIZED, "You are not authorized");
+  }
+  if (user.userId === id) {
+    throw new AppError(status.BAD_REQUEST, "You cannot suspended yourself");
+  }
   return prisma.user.update({
     where: { id },
     data: { status: statusValue },
@@ -35,12 +54,12 @@ const updateUserStatus = async (id: string, statusValue: UserStatus) => {
 
 // soft delete user
 const deleteUser = async (id: string, user: IRequestUser) => {
-  
+
   if (user.role !== "ADMIN") {
     throw new AppError(status.UNAUTHORIZED, "You are not authorized");
   }
 
-  
+
   if (user.userId === id) {
     throw new AppError(status.BAD_REQUEST, "You cannot delete yourself");
   }
@@ -54,11 +73,64 @@ const deleteUser = async (id: string, user: IRequestUser) => {
     },
   });
 };
+
+
+const updateUserRole = async (
+  id: string,
+  role: Role,
+  user: IRequestUser
+) => {
+  // only admin can change role
+  if (user.role !== "ADMIN") {
+    throw new AppError(status.UNAUTHORIZED, "You are not authorized");
+  }
+
+  // prevent self role change (very important)
+  if (user.userId === id) {
+    throw new AppError(status.BAD_REQUEST, "You cannot change your own role");
+  }
+
+  // check user exists
+  const targetUser = await prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!targetUser || targetUser.isDeleted) {
+    throw new AppError(status.NOT_FOUND, "User not found");
+  }
+
+  return prisma.user.update({
+    where: { id },
+    data: { role },
+  });
+};
+
+
+
 const getAdminStats = async () => {
   // ===== USERS =====
   const totalUsers = await prisma.user.count();
+
+  const totalAdmins = await prisma.user.count({
+    where: { role: "ADMIN" },
+  });
+
+  const totalNormalUsers = await prisma.user.count({
+    where: { role: "USER" },
+  });
+
   const activeUsers = await prisma.user.count({
-    where: { status: "ACTIVE" },
+    where: {
+      status: "ACTIVE",
+      role: "USER",
+    },
+  });
+
+  const suspendedUsers = await prisma.user.count({
+    where: {
+      status: "SUSPENDED",
+      role: "USER",
+    },
   });
 
   // ===== EVENTS =====
@@ -103,6 +175,9 @@ const getAdminStats = async () => {
     users: {
       totalUsers,
       activeUsers,
+      totalAdmins,
+      totalNormalUsers,
+      suspendedUsers
     },
 
     events: {
@@ -134,8 +209,10 @@ const getAdminStats = async () => {
 
 export const AdminService = {
   getAllUsers,
+  getAllAdmins,
   getSingleUser,
   updateUserStatus,
   deleteUser,
+  updateUserRole,
   getAdminStats,
 };

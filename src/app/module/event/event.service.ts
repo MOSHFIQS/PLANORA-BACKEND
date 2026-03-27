@@ -30,6 +30,7 @@ const getAllEvents = async () => {
       type: true,
       fee: true,
       images: true,
+      categoryId:true
     },
     orderBy: {
       dateTime: "asc",

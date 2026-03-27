@@ -29,8 +29,10 @@ const getActiveBanners = async () => {
   });
 };
 
+
+
 // GET SINGLE
-const getSingleBanner = async (id: string) => {
+const getBannerById = async (id: string) => {
   const banner = await prisma.banner.findUnique({
     where: { id },
   });
@@ -42,9 +44,11 @@ const getSingleBanner = async (id: string) => {
   return banner;
 };
 
+
+
 // UPDATE
 const updateBanner = async (id: string, payload: IUpdateBanner) => {
-  await getSingleBanner(id);
+  await getBannerById(id);
 
   return prisma.banner.update({
     where: { id },
@@ -54,7 +58,7 @@ const updateBanner = async (id: string, payload: IUpdateBanner) => {
 
 // DELETE
 const deleteBanner = async (id: string) => {
-  await getSingleBanner(id);
+  await getBannerById(id);
 
   return prisma.banner.update({
     where: { id },
@@ -65,11 +69,27 @@ const deleteBanner = async (id: string) => {
   });
 };
 
+const updateBannerStatus = async (id: string, isActive: boolean) => {
+  const banner = await prisma.banner.findUnique({
+    where: { id },
+  });
+
+  if (!banner || banner.isDeleted) {
+    throw new AppError(status.NOT_FOUND, "Banner not found");
+  }
+
+  return prisma.banner.update({
+    where: { id },
+    data: { isActive },
+  });
+};
+
 export const BannerService = {
   createBanner,
   getAllBanners,
   getActiveBanners,
-  getSingleBanner,
+  getBannerById,
   updateBanner,
   deleteBanner,
+  updateBannerStatus
 };

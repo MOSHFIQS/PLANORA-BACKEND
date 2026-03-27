@@ -3,6 +3,7 @@ import status from "http-status";
 import { BannerService } from "./banner.service";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
+import AppError from "../../errorHelpers/AppError";
 
 // CREATE
 const createBanner = catchAsync(async (req: Request, res: Response) => {
@@ -54,6 +55,21 @@ const updateBanner = catchAsync(async (req, res) => {
   });
 });
 
+const getBannerById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await BannerService.getBannerById(id as string);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Banner fetched",
+    data: result,
+  });
+});
+
+
+
 // DELETE
 const deleteBanner = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -68,10 +84,30 @@ const deleteBanner = catchAsync(async (req, res) => {
   });
 });
 
+const updateBannerStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { isActive } = req.body;
+
+  if (typeof isActive !== "boolean") {
+    throw new AppError(status.BAD_REQUEST, "isActive must be boolean");
+  }
+
+  const result = await BannerService.updateBannerStatus(id as string, isActive);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Banner status updated",
+    data: result,
+  });
+});
+
 export const BannerController = {
   createBanner,
   getAllBanners,
+  getBannerById,
   getActiveBanners,
   updateBanner,
   deleteBanner,
+  updateBannerStatus
 };

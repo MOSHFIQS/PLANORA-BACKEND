@@ -9,6 +9,8 @@ import { FileRoutes } from "../module/file/file.route";
 import { AdminRoutes } from "../module/admin/admin.route";
 import { UserRoutes } from "../module/user/user.route";
 import { ProfileRoutes } from "../module/profile/profile.route";
+import { CategoryRoutes } from "../module/category/category.route";
+import { BannerRoutes } from "../module/banner/banner.route";
 
 const router = Router();
 
@@ -22,5 +24,7 @@ router.use("/file", FileRoutes);
 router.use("/admin", AdminRoutes);
 router.use("/user", UserRoutes);
 router.use("/profile", ProfileRoutes);
+router.use("/category", CategoryRoutes);
+router.use("/banner", BannerRoutes);
 
 export const IndexRoutes = router;
