@@ -141,7 +141,11 @@ const getMyReviews = async (user: IRequestUser) => {
     where: { userId: user.userId },
     include: {
       event: true,
+      user: true
     },
+    orderBy: {
+      createdAt: "desc"
+    }
   });
 };
 
