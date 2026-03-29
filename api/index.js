@@ -162,7 +162,7 @@ var notFound = (req, res) => {
 };
 
 // src/app/routes/index.ts
-import { Router as Router13 } from "express";
+import { Router as Router15 } from "express";
 
 // src/app/module/auth/auth.route.ts
 import { Router } from "express";
@@ -295,14 +295,14 @@ var config = {
   "clientVersion": "7.3.0",
   "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "postgresql",
-  "inlineSchema": 'model User {\n  id            String  @id @default(cuid())\n  name          String\n  email         String  @unique\n  emailVerified Boolean @default(false)\n\n  role   Role       @default(USER)\n  status UserStatus @default(ACTIVE)\n\n  isDeleted Boolean   @default(false)\n  deletedAt DateTime?\n\n  image String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  // Better Auth relations\n  sessions Session[]\n  accounts Account[]\n\n  // Planora relations\n  events         Event[]         @relation("OrganizerEvents")\n  participations Participation[]\n  invitations    Invitation[]\n  reviews        Review[]\n  payments       Payment[]\n  tickets        Ticket[]\n\n  @@map("user")\n}\n\nmodel Session {\n  id        String   @id\n  expiresAt DateTime\n  token     String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([token])\n  @@index([userId])\n  @@map("session")\n}\n\nmodel Account {\n  id                    String    @id\n  accountId             String\n  providerId            String\n  userId                String\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n\n  @@index([userId])\n  @@map("account")\n}\n\nmodel Verification {\n  id         String   @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n\n  @@index([identifier])\n  @@map("verification")\n}\n\nmodel Banner {\n  id String @id @default(uuid())\n\n  title       String\n  description String?\n\n  image       String\n  redirectUrl String?\n\n  position      BannerPosition\n  positionOrder Int\n\n  buttonText String?\n  altText    String?\n\n  isActive Boolean @default(true)\n\n  isDeleted Boolean   @default(false)\n  deletedAt DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([position])\n  @@index([isActive])\n  @@map("banner")\n}\n\nmodel Category {\n  id          String  @id @default(uuid())\n  name        String\n  description String?\n  image       String?\n\n  isDeleted Boolean   @default(false)\n  deletedAt DateTime?\n  events    Event[]\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([name])\n  @@map("category")\n}\n\nenum Role {\n  USER\n  ADMIN\n}\n\nenum UserStatus {\n  ACTIVE\n  SUSPENDED\n}\n\nenum EventVisibility {\n  PUBLIC\n  PRIVATE\n}\n\nenum EventType {\n  ONLINE\n  OFFLINE\n}\n\nenum ParticipationStatus {\n  PENDING\n  APPROVED\n  REJECTED\n  BANNED\n}\n\nenum InvitationStatus {\n  PENDING\n  ACCEPTED\n  DECLINED\n}\n\nenum PaymentStatus {\n  PENDING\n  SUCCESS\n  FAILED\n  REFUNDED\n  CANCELED\n  UNPAID\n}\n\nenum TicketStatus {\n  VALID\n  USED\n  CANCELED\n}\n\nenum BannerPosition {\n  MAIN\n  SECONDARY\n  THIRD\n}\n\nmodel Event {\n  id          String   @id @default(cuid())\n  title       String\n  description String\n  venue       String?\n  dateTime    DateTime\n\n  visibility EventVisibility\n  type       EventType       @default(ONLINE)\n\n  meetingLink String?\n\n  fee Float @default(0)\n\n  images String[]\n\n  categoryId String?\n  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)\n\n  organizerId String\n  organizer   User   @relation("OrganizerEvents", fields: [organizerId], references: [id])\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  participations Participation[]\n  invitations    Invitation[]\n  reviews        Review[]\n  tickets        Ticket[]\n\n  @@index([organizerId])\n  @@index([visibility])\n  @@index([dateTime])\n  @@map("event")\n}\n\nmodel Invitation {\n  id String @id @default(cuid())\n\n  eventId String\n  userId  String\n\n  status InvitationStatus @default(PENDING)\n\n  createdAt DateTime @default(now())\n\n  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)\n  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  payment Payment[]\n\n  @@unique([eventId, userId])\n  @@index([eventId])\n  @@index([status])\n  @@map("invitation")\n}\n\nmodel Participation {\n  id String @id @default(cuid())\n\n  userId  String\n  eventId String\n\n  status ParticipationStatus @default(PENDING)\n\n  createdAt DateTime @default(now())\n\n  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)\n  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)\n\n  payment Payment[]\n  ticket  Ticket?\n\n  @@unique([userId, eventId])\n  @@index([eventId])\n  @@index([status])\n  @@map("participation")\n}\n\nmodel Payment {\n  id            String  @id @default(uuid())\n  amount        Float\n  transactionId String  @unique @db.Uuid()\n  stripeEventId String? @unique\n\n  status PaymentStatus @default(PENDING)\n\n  userId String\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  invoiceUrl         String?\n  paymentGatewayData Json?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  participationId String?\n  participation   Participation? @relation(fields: [participationId], references: [id], onDelete: Cascade)\n\n  invitationId String?\n  invitation   Invitation? @relation(fields: [invitationId], references: [id], onDelete: Cascade)\n\n  @@index([participationId])\n  @@index([invitationId])\n  @@index([transactionId])\n  @@map("payment")\n}\n\nmodel Review {\n  id String @id @default(cuid())\n\n  rating  Int\n  comment String?\n\n  userId  String\n  eventId String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)\n  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)\n\n  @@unique([userId, eventId])\n  @@index([eventId])\n  @@map("review")\n}\n\n// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = "prisma-client"\n  output   = "../../src/generated/prisma"\n}\n\ndatasource db {\n  provider = "postgresql"\n}\n\nmodel Ticket {\n  id String @id @default(cuid())\n\n  userId  String\n  eventId String\n\n  participationId String? @unique\n\n  qrCode String @unique\n\n  status TicketStatus @default(VALID)\n\n  checkedInAt DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)\n  event         Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)\n  participation Participation? @relation(fields: [participationId], references: [id], onDelete: Cascade)\n\n  @@index([eventId])\n  @@index([userId])\n  @@map("ticket")\n}\n',
+  "inlineSchema": 'model User {\n  id            String  @id @default(cuid())\n  name          String\n  email         String  @unique\n  emailVerified Boolean @default(false)\n\n  role   Role       @default(USER)\n  status UserStatus @default(ACTIVE)\n\n  isDeleted Boolean   @default(false)\n  deletedAt DateTime?\n\n  image String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  // Better Auth relations\n  sessions Session[]\n  accounts Account[]\n\n  // Planora relations\n  events         Event[]         @relation("OrganizerEvents")\n  participations Participation[]\n  invitations    Invitation[]\n  reviews        Review[]\n  payments       Payment[]\n  tickets        Ticket[]\n\n  @@map("user")\n}\n\nmodel Session {\n  id        String   @id\n  expiresAt DateTime\n  token     String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([token])\n  @@index([userId])\n  @@map("session")\n}\n\nmodel Account {\n  id                    String    @id\n  accountId             String\n  providerId            String\n  userId                String\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n\n  @@index([userId])\n  @@map("account")\n}\n\nmodel Verification {\n  id         String   @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n\n  @@index([identifier])\n  @@map("verification")\n}\n\nmodel Banner {\n  id String @id @default(uuid())\n\n  title       String\n  description String?\n\n  image       String\n  redirectUrl String?\n\n  dateTime DateTime?\n  type     EventType @default(ONLINE)\n\n  position      BannerPosition\n  positionOrder Int\n\n  buttonText String?\n  altText    String?\n\n  isActive Boolean @default(true)\n\n  isDeleted Boolean   @default(false)\n  deletedAt DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([position])\n  @@index([isActive])\n  @@map("banner")\n}\n\nmodel Category {\n  id          String  @id @default(uuid())\n  name        String\n  description String?\n  image       String?\n\n  isDeleted Boolean   @default(false)\n  deletedAt DateTime?\n  events    Event[]\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@index([name])\n  @@map("category")\n}\n\nenum Role {\n  USER\n  ADMIN\n}\n\nenum UserStatus {\n  ACTIVE\n  SUSPENDED\n}\n\nenum EventVisibility {\n  PUBLIC\n  PRIVATE\n}\n\nenum EventType {\n  ONLINE\n  OFFLINE\n}\n\nenum ParticipationStatus {\n  PENDING\n  APPROVED\n  REJECTED\n  BANNED\n}\n\nenum InvitationStatus {\n  PENDING\n  ACCEPTED\n  DECLINED\n}\n\nenum PaymentStatus {\n  PENDING\n  SUCCESS\n  FAILED\n  REFUNDED\n  CANCELED\n  UNPAID\n}\n\nenum TicketStatus {\n  VALID\n  USED\n  CANCELED\n}\n\nenum BannerPosition {\n  MAIN\n  SECONDARY\n  THIRD\n}\n\nmodel Event {\n  id          String   @id @default(cuid())\n  title       String\n  description String\n  venue       String?\n  dateTime    DateTime\n\n  visibility EventVisibility\n  type       EventType       @default(ONLINE)\n\n  meetingLink String?\n\n  fee Float @default(0)\n\n  images String[]\n\n  categoryId String?\n  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)\n\n  organizerId String\n  organizer   User   @relation("OrganizerEvents", fields: [organizerId], references: [id])\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  participations Participation[]\n  invitations    Invitation[]\n  reviews        Review[]\n  tickets        Ticket[]\n\n  @@index([organizerId])\n  @@index([visibility])\n  @@index([dateTime])\n  @@map("event")\n}\n\nmodel Invitation {\n  id String @id @default(cuid())\n\n  eventId String\n  userId  String\n\n  status InvitationStatus @default(PENDING)\n\n  createdAt DateTime @default(now())\n\n  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)\n  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  payment Payment[]\n\n  @@unique([eventId, userId])\n  @@index([eventId])\n  @@index([status])\n  @@map("invitation")\n}\n\nmodel Participation {\n  id String @id @default(cuid())\n\n  userId  String\n  eventId String\n\n  status ParticipationStatus @default(PENDING)\n\n  createdAt DateTime @default(now())\n\n  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)\n  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)\n\n  payment Payment[]\n  ticket  Ticket?\n\n  @@unique([userId, eventId])\n  @@index([eventId])\n  @@index([status])\n  @@map("participation")\n}\n\nmodel Payment {\n  id            String  @id @default(uuid())\n  amount        Float\n  transactionId String  @unique @db.Uuid()\n  stripeEventId String? @unique\n\n  status PaymentStatus @default(PENDING)\n\n  userId String\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  invoiceUrl         String?\n  paymentGatewayData Json?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  participationId String?\n  participation   Participation? @relation(fields: [participationId], references: [id], onDelete: Cascade)\n\n  invitationId String?\n  invitation   Invitation? @relation(fields: [invitationId], references: [id], onDelete: Cascade)\n\n  @@index([participationId])\n  @@index([invitationId])\n  @@index([transactionId])\n  @@map("payment")\n}\n\nmodel Review {\n  id String @id @default(cuid())\n\n  rating  Int\n  comment String?\n\n  userId  String\n  eventId String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)\n  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)\n\n  @@unique([userId, eventId])\n  @@index([eventId])\n  @@map("review")\n}\n\n// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = "prisma-client"\n  output   = "../../src/generated/prisma"\n}\n\ndatasource db {\n  provider = "postgresql"\n}\n\nmodel Ticket {\n  id String @id @default(cuid())\n\n  userId  String\n  eventId String\n\n  participationId String? @unique\n\n  qrCode String @unique\n\n  status TicketStatus @default(VALID)\n\n  checkedInAt DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)\n  event         Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)\n  participation Participation? @relation(fields: [participationId], references: [id], onDelete: Cascade)\n\n  @@index([eventId])\n  @@index([userId])\n  @@map("ticket")\n}\n',
   "runtimeDataModel": {
     "models": {},
     "enums": {},
     "types": {}
   }
 };
-config.runtimeDataModel = JSON.parse('{"models":{"User":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"name","kind":"scalar","type":"String"},{"name":"email","kind":"scalar","type":"String"},{"name":"emailVerified","kind":"scalar","type":"Boolean"},{"name":"role","kind":"enum","type":"Role"},{"name":"status","kind":"enum","type":"UserStatus"},{"name":"isDeleted","kind":"scalar","type":"Boolean"},{"name":"deletedAt","kind":"scalar","type":"DateTime"},{"name":"image","kind":"scalar","type":"String"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"sessions","kind":"object","type":"Session","relationName":"SessionToUser"},{"name":"accounts","kind":"object","type":"Account","relationName":"AccountToUser"},{"name":"events","kind":"object","type":"Event","relationName":"OrganizerEvents"},{"name":"participations","kind":"object","type":"Participation","relationName":"ParticipationToUser"},{"name":"invitations","kind":"object","type":"Invitation","relationName":"InvitationToUser"},{"name":"reviews","kind":"object","type":"Review","relationName":"ReviewToUser"},{"name":"payments","kind":"object","type":"Payment","relationName":"PaymentToUser"},{"name":"tickets","kind":"object","type":"Ticket","relationName":"TicketToUser"}],"dbName":"user"},"Session":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"expiresAt","kind":"scalar","type":"DateTime"},{"name":"token","kind":"scalar","type":"String"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"ipAddress","kind":"scalar","type":"String"},{"name":"userAgent","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"user","kind":"object","type":"User","relationName":"SessionToUser"}],"dbName":"session"},"Account":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"accountId","kind":"scalar","type":"String"},{"name":"providerId","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"user","kind":"object","type":"User","relationName":"AccountToUser"},{"name":"accessToken","kind":"scalar","type":"String"},{"name":"refreshToken","kind":"scalar","type":"String"},{"name":"idToken","kind":"scalar","type":"String"},{"name":"accessTokenExpiresAt","kind":"scalar","type":"DateTime"},{"name":"refreshTokenExpiresAt","kind":"scalar","type":"DateTime"},{"name":"scope","kind":"scalar","type":"String"},{"name":"password","kind":"scalar","type":"String"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"}],"dbName":"account"},"Verification":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"identifier","kind":"scalar","type":"String"},{"name":"value","kind":"scalar","type":"String"},{"name":"expiresAt","kind":"scalar","type":"DateTime"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"}],"dbName":"verification"},"Banner":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"title","kind":"scalar","type":"String"},{"name":"description","kind":"scalar","type":"String"},{"name":"image","kind":"scalar","type":"String"},{"name":"redirectUrl","kind":"scalar","type":"String"},{"name":"position","kind":"enum","type":"BannerPosition"},{"name":"positionOrder","kind":"scalar","type":"Int"},{"name":"buttonText","kind":"scalar","type":"String"},{"name":"altText","kind":"scalar","type":"String"},{"name":"isActive","kind":"scalar","type":"Boolean"},{"name":"isDeleted","kind":"scalar","type":"Boolean"},{"name":"deletedAt","kind":"scalar","type":"DateTime"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"}],"dbName":"banner"},"Category":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"name","kind":"scalar","type":"String"},{"name":"description","kind":"scalar","type":"String"},{"name":"image","kind":"scalar","type":"String"},{"name":"isDeleted","kind":"scalar","type":"Boolean"},{"name":"deletedAt","kind":"scalar","type":"DateTime"},{"name":"events","kind":"object","type":"Event","relationName":"CategoryToEvent"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"}],"dbName":"category"},"Event":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"title","kind":"scalar","type":"String"},{"name":"description","kind":"scalar","type":"String"},{"name":"venue","kind":"scalar","type":"String"},{"name":"dateTime","kind":"scalar","type":"DateTime"},{"name":"visibility","kind":"enum","type":"EventVisibility"},{"name":"type","kind":"enum","type":"EventType"},{"name":"meetingLink","kind":"scalar","type":"String"},{"name":"fee","kind":"scalar","type":"Float"},{"name":"images","kind":"scalar","type":"String"},{"name":"categoryId","kind":"scalar","type":"String"},{"name":"category","kind":"object","type":"Category","relationName":"CategoryToEvent"},{"name":"organizerId","kind":"scalar","type":"String"},{"name":"organizer","kind":"object","type":"User","relationName":"OrganizerEvents"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"participations","kind":"object","type":"Participation","relationName":"EventToParticipation"},{"name":"invitations","kind":"object","type":"Invitation","relationName":"EventToInvitation"},{"name":"reviews","kind":"object","type":"Review","relationName":"EventToReview"},{"name":"tickets","kind":"object","type":"Ticket","relationName":"EventToTicket"}],"dbName":"event"},"Invitation":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"eventId","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"status","kind":"enum","type":"InvitationStatus"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"event","kind":"object","type":"Event","relationName":"EventToInvitation"},{"name":"user","kind":"object","type":"User","relationName":"InvitationToUser"},{"name":"payment","kind":"object","type":"Payment","relationName":"InvitationToPayment"}],"dbName":"invitation"},"Participation":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"eventId","kind":"scalar","type":"String"},{"name":"status","kind":"enum","type":"ParticipationStatus"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"user","kind":"object","type":"User","relationName":"ParticipationToUser"},{"name":"event","kind":"object","type":"Event","relationName":"EventToParticipation"},{"name":"payment","kind":"object","type":"Payment","relationName":"ParticipationToPayment"},{"name":"ticket","kind":"object","type":"Ticket","relationName":"ParticipationToTicket"}],"dbName":"participation"},"Payment":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"amount","kind":"scalar","type":"Float"},{"name":"transactionId","kind":"scalar","type":"String"},{"name":"stripeEventId","kind":"scalar","type":"String"},{"name":"status","kind":"enum","type":"PaymentStatus"},{"name":"userId","kind":"scalar","type":"String"},{"name":"user","kind":"object","type":"User","relationName":"PaymentToUser"},{"name":"invoiceUrl","kind":"scalar","type":"String"},{"name":"paymentGatewayData","kind":"scalar","type":"Json"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"participationId","kind":"scalar","type":"String"},{"name":"participation","kind":"object","type":"Participation","relationName":"ParticipationToPayment"},{"name":"invitationId","kind":"scalar","type":"String"},{"name":"invitation","kind":"object","type":"Invitation","relationName":"InvitationToPayment"}],"dbName":"payment"},"Review":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"rating","kind":"scalar","type":"Int"},{"name":"comment","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"eventId","kind":"scalar","type":"String"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"user","kind":"object","type":"User","relationName":"ReviewToUser"},{"name":"event","kind":"object","type":"Event","relationName":"EventToReview"}],"dbName":"review"},"Ticket":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"eventId","kind":"scalar","type":"String"},{"name":"participationId","kind":"scalar","type":"String"},{"name":"qrCode","kind":"scalar","type":"String"},{"name":"status","kind":"enum","type":"TicketStatus"},{"name":"checkedInAt","kind":"scalar","type":"DateTime"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"user","kind":"object","type":"User","relationName":"TicketToUser"},{"name":"event","kind":"object","type":"Event","relationName":"EventToTicket"},{"name":"participation","kind":"object","type":"Participation","relationName":"ParticipationToTicket"}],"dbName":"ticket"}},"enums":{},"types":{}}');
+config.runtimeDataModel = JSON.parse('{"models":{"User":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"name","kind":"scalar","type":"String"},{"name":"email","kind":"scalar","type":"String"},{"name":"emailVerified","kind":"scalar","type":"Boolean"},{"name":"role","kind":"enum","type":"Role"},{"name":"status","kind":"enum","type":"UserStatus"},{"name":"isDeleted","kind":"scalar","type":"Boolean"},{"name":"deletedAt","kind":"scalar","type":"DateTime"},{"name":"image","kind":"scalar","type":"String"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"sessions","kind":"object","type":"Session","relationName":"SessionToUser"},{"name":"accounts","kind":"object","type":"Account","relationName":"AccountToUser"},{"name":"events","kind":"object","type":"Event","relationName":"OrganizerEvents"},{"name":"participations","kind":"object","type":"Participation","relationName":"ParticipationToUser"},{"name":"invitations","kind":"object","type":"Invitation","relationName":"InvitationToUser"},{"name":"reviews","kind":"object","type":"Review","relationName":"ReviewToUser"},{"name":"payments","kind":"object","type":"Payment","relationName":"PaymentToUser"},{"name":"tickets","kind":"object","type":"Ticket","relationName":"TicketToUser"}],"dbName":"user"},"Session":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"expiresAt","kind":"scalar","type":"DateTime"},{"name":"token","kind":"scalar","type":"String"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"ipAddress","kind":"scalar","type":"String"},{"name":"userAgent","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"user","kind":"object","type":"User","relationName":"SessionToUser"}],"dbName":"session"},"Account":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"accountId","kind":"scalar","type":"String"},{"name":"providerId","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"user","kind":"object","type":"User","relationName":"AccountToUser"},{"name":"accessToken","kind":"scalar","type":"String"},{"name":"refreshToken","kind":"scalar","type":"String"},{"name":"idToken","kind":"scalar","type":"String"},{"name":"accessTokenExpiresAt","kind":"scalar","type":"DateTime"},{"name":"refreshTokenExpiresAt","kind":"scalar","type":"DateTime"},{"name":"scope","kind":"scalar","type":"String"},{"name":"password","kind":"scalar","type":"String"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"}],"dbName":"account"},"Verification":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"identifier","kind":"scalar","type":"String"},{"name":"value","kind":"scalar","type":"String"},{"name":"expiresAt","kind":"scalar","type":"DateTime"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"}],"dbName":"verification"},"Banner":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"title","kind":"scalar","type":"String"},{"name":"description","kind":"scalar","type":"String"},{"name":"image","kind":"scalar","type":"String"},{"name":"redirectUrl","kind":"scalar","type":"String"},{"name":"dateTime","kind":"scalar","type":"DateTime"},{"name":"type","kind":"enum","type":"EventType"},{"name":"position","kind":"enum","type":"BannerPosition"},{"name":"positionOrder","kind":"scalar","type":"Int"},{"name":"buttonText","kind":"scalar","type":"String"},{"name":"altText","kind":"scalar","type":"String"},{"name":"isActive","kind":"scalar","type":"Boolean"},{"name":"isDeleted","kind":"scalar","type":"Boolean"},{"name":"deletedAt","kind":"scalar","type":"DateTime"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"}],"dbName":"banner"},"Category":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"name","kind":"scalar","type":"String"},{"name":"description","kind":"scalar","type":"String"},{"name":"image","kind":"scalar","type":"String"},{"name":"isDeleted","kind":"scalar","type":"Boolean"},{"name":"deletedAt","kind":"scalar","type":"DateTime"},{"name":"events","kind":"object","type":"Event","relationName":"CategoryToEvent"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"}],"dbName":"category"},"Event":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"title","kind":"scalar","type":"String"},{"name":"description","kind":"scalar","type":"String"},{"name":"venue","kind":"scalar","type":"String"},{"name":"dateTime","kind":"scalar","type":"DateTime"},{"name":"visibility","kind":"enum","type":"EventVisibility"},{"name":"type","kind":"enum","type":"EventType"},{"name":"meetingLink","kind":"scalar","type":"String"},{"name":"fee","kind":"scalar","type":"Float"},{"name":"images","kind":"scalar","type":"String"},{"name":"categoryId","kind":"scalar","type":"String"},{"name":"category","kind":"object","type":"Category","relationName":"CategoryToEvent"},{"name":"organizerId","kind":"scalar","type":"String"},{"name":"organizer","kind":"object","type":"User","relationName":"OrganizerEvents"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"participations","kind":"object","type":"Participation","relationName":"EventToParticipation"},{"name":"invitations","kind":"object","type":"Invitation","relationName":"EventToInvitation"},{"name":"reviews","kind":"object","type":"Review","relationName":"EventToReview"},{"name":"tickets","kind":"object","type":"Ticket","relationName":"EventToTicket"}],"dbName":"event"},"Invitation":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"eventId","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"status","kind":"enum","type":"InvitationStatus"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"event","kind":"object","type":"Event","relationName":"EventToInvitation"},{"name":"user","kind":"object","type":"User","relationName":"InvitationToUser"},{"name":"payment","kind":"object","type":"Payment","relationName":"InvitationToPayment"}],"dbName":"invitation"},"Participation":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"eventId","kind":"scalar","type":"String"},{"name":"status","kind":"enum","type":"ParticipationStatus"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"user","kind":"object","type":"User","relationName":"ParticipationToUser"},{"name":"event","kind":"object","type":"Event","relationName":"EventToParticipation"},{"name":"payment","kind":"object","type":"Payment","relationName":"ParticipationToPayment"},{"name":"ticket","kind":"object","type":"Ticket","relationName":"ParticipationToTicket"}],"dbName":"participation"},"Payment":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"amount","kind":"scalar","type":"Float"},{"name":"transactionId","kind":"scalar","type":"String"},{"name":"stripeEventId","kind":"scalar","type":"String"},{"name":"status","kind":"enum","type":"PaymentStatus"},{"name":"userId","kind":"scalar","type":"String"},{"name":"user","kind":"object","type":"User","relationName":"PaymentToUser"},{"name":"invoiceUrl","kind":"scalar","type":"String"},{"name":"paymentGatewayData","kind":"scalar","type":"Json"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"participationId","kind":"scalar","type":"String"},{"name":"participation","kind":"object","type":"Participation","relationName":"ParticipationToPayment"},{"name":"invitationId","kind":"scalar","type":"String"},{"name":"invitation","kind":"object","type":"Invitation","relationName":"InvitationToPayment"}],"dbName":"payment"},"Review":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"rating","kind":"scalar","type":"Int"},{"name":"comment","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"eventId","kind":"scalar","type":"String"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"user","kind":"object","type":"User","relationName":"ReviewToUser"},{"name":"event","kind":"object","type":"Event","relationName":"EventToReview"}],"dbName":"review"},"Ticket":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"eventId","kind":"scalar","type":"String"},{"name":"participationId","kind":"scalar","type":"String"},{"name":"qrCode","kind":"scalar","type":"String"},{"name":"status","kind":"enum","type":"TicketStatus"},{"name":"checkedInAt","kind":"scalar","type":"DateTime"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"user","kind":"object","type":"User","relationName":"TicketToUser"},{"name":"event","kind":"object","type":"Event","relationName":"EventToTicket"},{"name":"participation","kind":"object","type":"Participation","relationName":"ParticipationToTicket"}],"dbName":"ticket"}},"enums":{},"types":{}}');
 async function decodeBase64AsWasm(wasmBase64) {
   const { Buffer } = await import("buffer");
   const wasmArray = Buffer.from(wasmBase64, "base64");
@@ -793,17 +793,34 @@ import status9 from "http-status";
 // src/app/module/event/event.service.ts
 import status8 from "http-status";
 var createEvent = async (user, payload) => {
+  const categoryExists = await prisma.category.findUnique({
+    where: { id: payload.categoryId }
+  });
+  if (!categoryExists) {
+    throw new Error("Category does not exist");
+  }
   return prisma.event.create({
     data: {
       ...payload,
-      organizerId: user.userId
+      organizerId: user.userId,
+      dateTime: new Date(payload.dateTime)
     }
   });
 };
-var getAllEvents = async () => {
+var getAllEvents = async (filters) => {
+  const { search, categoryId } = filters;
   return prisma.event.findMany({
     where: {
-      visibility: EventVisibility.PUBLIC
+      visibility: EventVisibility.PUBLIC,
+      ...search && {
+        title: {
+          contains: search,
+          mode: "insensitive"
+        }
+      },
+      ...categoryId && {
+        categoryId
+      }
     },
     select: {
       id: true,
@@ -935,16 +952,41 @@ var updateEvent = async (id, user, payload) => {
   if (event.organizerId !== user.userId && user.role !== Role.ADMIN) {
     throw new AppError_default(status8.FORBIDDEN, "Not authorized");
   }
+  if (payload.categoryId) {
+    const categoryExists = await prisma.category.findUnique({
+      where: { id: payload.categoryId }
+    });
+    if (!categoryExists) {
+      throw new AppError_default(status8.BAD_REQUEST, "Category does not exist");
+    }
+  }
+  const dataToUpdate = {
+    ...payload,
+    dateTime: payload.dateTime ? new Date(payload.dateTime) : void 0
+  };
   return prisma.event.update({
     where: { id },
-    data: payload
+    data: dataToUpdate
   });
 };
 var deleteEvent = async (id, user) => {
-  const event = await prisma.event.findUnique({ where: { id } });
-  if (!event) throw new AppError_default(status8.NOT_FOUND, "Event not found");
+  const event = await prisma.event.findUnique({
+    where: { id },
+    include: {
+      participations: true
+    }
+  });
+  if (!event) {
+    throw new AppError_default(status8.NOT_FOUND, "Event not found");
+  }
   if (event.organizerId !== user.userId && user.role !== Role.ADMIN) {
     throw new AppError_default(status8.FORBIDDEN, "Not authorized");
+  }
+  if (event.participations.length > 0) {
+    throw new AppError_default(
+      status8.BAD_REQUEST,
+      "Cannot delete event. Participants already joined."
+    );
   }
   await prisma.event.delete({
     where: { id }
@@ -983,7 +1025,13 @@ var createEvent2 = catchAsync(async (req, res) => {
   });
 });
 var getAllEvents2 = catchAsync(async (req, res) => {
-  const result = await EventService.getAllEvents();
+  const { search, categoryId } = req.query;
+  const result = await EventService.getAllEvents(
+    {
+      search,
+      categoryId
+    }
+  );
   sendResponse(res, {
     httpStatusCode: status9.OK,
     success: true,
@@ -1848,7 +1896,7 @@ var stripe = new Stripe(envVars.STRIPE.STRIPE_SECRET_KEY);
 
 // src/app/module/payment/payment.service.ts
 var createStripeSession = async (paymentId, amount) => {
-  return stripe.checkout.sessions.create({
+  const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
     line_items: [
@@ -1862,9 +1910,12 @@ var createStripeSession = async (paymentId, amount) => {
       }
     ],
     metadata: { paymentId },
+    // expire after 30 min
+    expires_at: Math.floor(Date.now() / 1e3) + 30 * 60,
     success_url: `${process.env.FRONTEND_URL}/dashboard`,
     cancel_url: `${process.env.FRONTEND_URL}/dashboard`
   });
+  return session;
 };
 var initiatePayment = async (user, payload) => {
   if (!payload.eventId && !payload.invitationId) {
@@ -2085,6 +2136,9 @@ var handleStripeWebhookEvent = async (event) => {
         }
       });
       if (!payment) return { message: "Payment not found" };
+      if (payment.status === PaymentStatus.SUCCESS) {
+        return { message: "Already paid, skipping duplicate" };
+      }
       const eventData = payment.participation?.event || payment.invitation?.event;
       if (!eventData) return { message: "Event not found" };
       if (eventData.dateTime < /* @__PURE__ */ new Date()) {
@@ -2185,9 +2239,98 @@ var handleStripeWebhookEvent = async (event) => {
   }
   return { message: "Webhook processed" };
 };
+var getMyPayments = async (user) => {
+  const payments = await prisma.payment.findMany({
+    where: {
+      userId: user.userId
+    },
+    include: {
+      participation: {
+        include: {
+          event: true
+        }
+      },
+      invitation: {
+        include: {
+          event: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+  return payments;
+};
+var getOrganizerPayments = async (user) => {
+  const payments = await prisma.payment.findMany({
+    where: {
+      OR: [
+        {
+          participation: {
+            event: {
+              organizerId: user.userId
+            }
+          }
+        },
+        {
+          invitation: {
+            event: {
+              organizerId: user.userId
+            }
+          }
+        }
+      ]
+    },
+    include: {
+      user: true,
+      participation: {
+        include: {
+          event: true
+        }
+      },
+      invitation: {
+        include: {
+          event: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+  return payments;
+};
+var getAllPayments = async (user) => {
+  if (user.role !== "ADMIN") {
+    throw new Error("Unauthorized access");
+  }
+  const payments = await prisma.payment.findMany({
+    include: {
+      user: true,
+      participation: {
+        include: {
+          event: true
+        }
+      },
+      invitation: {
+        include: {
+          event: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+  return payments;
+};
 var PaymentService = {
   initiatePayment,
-  handleStripeWebhookEvent
+  handleStripeWebhookEvent,
+  getMyPayments,
+  getOrganizerPayments,
+  getAllPayments
 };
 
 // src/app/module/payment/payment.controller.ts
@@ -2219,9 +2362,42 @@ var handleStripeWebhookEvent2 = catchAsync(
     });
   }
 );
+var getMyPayments2 = catchAsync(async (req, res) => {
+  const user = req.user;
+  const result = await PaymentService.getMyPayments(user);
+  sendResponse(res, {
+    httpStatusCode: status17.OK,
+    success: true,
+    message: "My payments fetched",
+    data: result
+  });
+});
+var getOrganizerPayments2 = catchAsync(async (req, res) => {
+  const user = req.user;
+  const result = await PaymentService.getOrganizerPayments(user);
+  sendResponse(res, {
+    httpStatusCode: status17.OK,
+    success: true,
+    message: "Organizer payments fetched",
+    data: result
+  });
+});
+var getAllPayments2 = catchAsync(async (req, res) => {
+  const user = req.user;
+  const result = await PaymentService.getAllPayments(user);
+  sendResponse(res, {
+    httpStatusCode: status17.OK,
+    success: true,
+    message: "All payments fetched",
+    data: result
+  });
+});
 var PaymentController = {
   initiatePayment: initiatePayment2,
-  handleStripeWebhookEvent: handleStripeWebhookEvent2
+  handleStripeWebhookEvent: handleStripeWebhookEvent2,
+  getMyPayments: getMyPayments2,
+  getOrganizerPayments: getOrganizerPayments2,
+  getAllPayments: getAllPayments2
 };
 
 // src/app/module/payment/payment.route.ts
@@ -2230,6 +2406,21 @@ router6.post(
   "/pay",
   checkAuth(Role.USER, Role.ADMIN),
   PaymentController.initiatePayment
+);
+router6.get(
+  "/my",
+  checkAuth(Role.USER, Role.ADMIN),
+  PaymentController.getMyPayments
+);
+router6.get(
+  "/organizer",
+  checkAuth(Role.USER, Role.ADMIN),
+  PaymentController.getOrganizerPayments
+);
+router6.get(
+  "/admin",
+  checkAuth(Role.ADMIN),
+  PaymentController.getAllPayments
 );
 var PaymentRoutes = router6;
 
@@ -2360,14 +2551,12 @@ var multerUpload = multer({ storage });
 var router7 = Router7();
 router7.post(
   "/upload-image",
-  checkAuth(Role.USER, Role.ADMIN),
   multerUpload.array("file", 10),
   // supports 1 or many
   FileController.uploadImage
 );
 router7.delete(
   "/delete-image",
-  checkAuth(Role.USER, Role.ADMIN),
   FileController.deleteImage
 );
 var FileRoutes = router7;
@@ -3099,21 +3288,196 @@ router12.patch(
 );
 var BannerRoutes = router12;
 
-// src/app/routes/index.ts
+// src/app/module/public/public.route.ts
+import { Router as Router13 } from "express";
+
+// src/app/module/public/public.controller.ts
+import status30 from "http-status";
+
+// src/app/module/public/public.service.ts
+var getStats = async () => {
+  const now = /* @__PURE__ */ new Date();
+  const [
+    totalActiveUsers,
+    totalEventsDone,
+    totalTicketsCreated
+  ] = await Promise.all([
+    prisma.user.count({
+      where: {
+        status: "ACTIVE",
+        isDeleted: false
+      }
+    }),
+    prisma.event.count({
+      where: {
+        dateTime: {
+          lt: now
+          // past events
+        }
+      }
+    }),
+    prisma.ticket.count()
+  ]);
+  return {
+    totalActiveUsers,
+    totalEventsDone,
+    totalTicketsCreated
+  };
+};
+var PublicService = {
+  getStats
+};
+
+// src/app/module/public/public.controller.ts
+var getStats2 = catchAsync(async (req, res) => {
+  const result = await PublicService.getStats();
+  sendResponse(res, {
+    httpStatusCode: status30.OK,
+    success: true,
+    message: "User stats fetched",
+    data: result
+  });
+});
+var PublicController = {
+  getStats: getStats2
+};
+
+// src/app/module/public/public.route.ts
 var router13 = Router13();
-router13.use("/auth", AuthRoutes);
-router13.use("/event", EventRoutes);
-router13.use("/participation", ParticipationRoutes);
-router13.use("/invitation", InvitationRoutes);
-router13.use("/review", ReviewRoutes);
-router13.use("/payment", PaymentRoutes);
-router13.use("/file", FileRoutes);
-router13.use("/admin", AdminRoutes);
-router13.use("/user", UserRoutes);
-router13.use("/profile", ProfileRoutes);
-router13.use("/category", CategoryRoutes);
-router13.use("/banner", BannerRoutes);
-var IndexRoutes = router13;
+router13.get("/stats", PublicController.getStats);
+var PublicRoutes = router13;
+
+// src/app/module/ticket/ticket.route.ts
+import { Router as Router14 } from "express";
+
+// src/app/module/ticket/ticket.controller.ts
+import status32 from "http-status";
+
+// src/app/module/ticket/ticket.service.ts
+import status31 from "http-status";
+var getUserTickets = async (userId) => {
+  return prisma.ticket.findMany({
+    where: { userId },
+    include: { event: true },
+    orderBy: { createdAt: "desc" }
+  });
+};
+var getEventTickets = async (eventId) => {
+  return prisma.ticket.findMany({
+    where: { eventId },
+    include: { user: true },
+    orderBy: { createdAt: "desc" }
+  });
+};
+var checkIn = async (qrCode, organizerId) => {
+  const ticket = await prisma.ticket.findUnique({
+    where: { qrCode },
+    include: { event: true, user: true }
+  });
+  if (!ticket) throw new AppError_default(status31.BAD_REQUEST, "Invalid ticket");
+  if (ticket.status === "USED") {
+    throw new AppError_default(status31.BAD_REQUEST, "Ticket already used");
+  }
+  if (ticket.event.organizerId !== organizerId) {
+    throw new AppError_default(status31.FORBIDDEN, "Unauthorized");
+  }
+  await prisma.ticket.update({
+    where: { id: ticket.id },
+    data: { status: "USED", checkedInAt: /* @__PURE__ */ new Date() }
+  });
+  return {
+    user: {
+      id: ticket.user.id,
+      name: ticket.user.name,
+      email: ticket.user.email
+    },
+    event: {
+      id: ticket.event.id,
+      title: ticket.event.title,
+      dateTime: ticket.event.dateTime
+    }
+  };
+};
+var TicketService = {
+  getUserTickets,
+  getEventTickets,
+  checkIn
+};
+
+// src/app/module/ticket/ticket.controller.ts
+var getMyTickets = catchAsync(async (req, res) => {
+  const user = req.user;
+  const result = await TicketService.getUserTickets(user.userId);
+  sendResponse(res, {
+    httpStatusCode: status32.OK,
+    success: true,
+    message: "My tickets fetched",
+    data: result
+  });
+});
+var getEventTickets2 = catchAsync(async (req, res) => {
+  const { eventId } = req.params;
+  const result = await TicketService.getEventTickets(eventId);
+  sendResponse(res, {
+    httpStatusCode: status32.OK,
+    success: true,
+    message: "Event tickets fetched",
+    data: result
+  });
+});
+var checkInTicket = catchAsync(async (req, res) => {
+  const { qrCode } = req.body;
+  const organizerId = req.user.userId;
+  const result = await TicketService.checkIn(qrCode, organizerId);
+  sendResponse(res, {
+    httpStatusCode: status32.OK,
+    success: true,
+    message: "Ticket checked in",
+    data: result
+  });
+});
+var TicketController = {
+  getMyTickets,
+  getEventTickets: getEventTickets2,
+  checkInTicket
+};
+
+// src/app/module/ticket/ticket.route.ts
+var router14 = Router14();
+router14.get(
+  "/my",
+  checkAuth(Role.USER, Role.ADMIN),
+  TicketController.getMyTickets
+);
+router14.get(
+  "/event/:eventId",
+  checkAuth(Role.ADMIN, Role.USER),
+  TicketController.getEventTickets
+);
+router14.post(
+  "/check-in",
+  checkAuth(Role.ADMIN, Role.USER),
+  TicketController.checkInTicket
+);
+var TicketRoutes = router14;
+
+// src/app/routes/index.ts
+var router15 = Router15();
+router15.use("/auth", AuthRoutes);
+router15.use("/event", EventRoutes);
+router15.use("/participation", ParticipationRoutes);
+router15.use("/invitation", InvitationRoutes);
+router15.use("/review", ReviewRoutes);
+router15.use("/payment", PaymentRoutes);
+router15.use("/file", FileRoutes);
+router15.use("/admin", AdminRoutes);
+router15.use("/user", UserRoutes);
+router15.use("/profile", ProfileRoutes);
+router15.use("/category", CategoryRoutes);
+router15.use("/banner", BannerRoutes);
+router15.use("/public", PublicRoutes);
+router15.use("/ticket", TicketRoutes);
+var IndexRoutes = router15;
 
 // src/app.ts
 import cors from "cors";

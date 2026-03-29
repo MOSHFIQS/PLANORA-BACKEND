@@ -1,4 +1,4 @@
-import { BannerPosition } from "../../../generated/prisma/enums";
+import { BannerPosition, EventType } from "../../../generated/prisma/enums";
 
 export interface ICreateBanner {
   title: string;
@@ -6,6 +6,8 @@ export interface ICreateBanner {
 
   position: BannerPosition;
   positionOrder: number;
+  dateTime: Date
+  type: EventType
 
   description?: string;
   redirectUrl?: string;
@@ -23,6 +25,8 @@ export interface IUpdateBanner {
 
   position?: BannerPosition;
   positionOrder?: number;
+  dateTime: Date;
+  type: EventType
 
   description?: string;
   redirectUrl?: string;

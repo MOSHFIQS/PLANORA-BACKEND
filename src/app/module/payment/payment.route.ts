@@ -13,4 +13,23 @@ router.post(
   PaymentController.initiatePayment
 );
 
+router.get(
+  "/my",
+  checkAuth(Role.USER, Role.ADMIN),
+  PaymentController.getMyPayments
+);
+
+// 🔹 Organizer payments (only events they created)
+router.get(
+  "/organizer",
+  checkAuth(Role.USER, Role.ADMIN),
+  PaymentController.getOrganizerPayments
+);
+
+router.get(
+  "/admin",
+  checkAuth(Role.ADMIN),
+  PaymentController.getAllPayments
+);
+
 export const PaymentRoutes = router;

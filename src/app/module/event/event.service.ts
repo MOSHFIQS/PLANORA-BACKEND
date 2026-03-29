@@ -5,24 +5,53 @@ import { EventVisibility, ParticipationStatus, PaymentStatus, Role } from "../..
 import AppError from "../../errorHelpers/AppError";
 import status from "http-status";
 
-const createEvent = async (
+export const createEvent = async (
   user: IRequestUser,
   payload: ICreateEventPayload,
 ) => {
+  // Check if categoryId exists
+  const categoryExists = await prisma.category.findUnique({
+    where: { id: payload.categoryId },
+  });
+
+  if (!categoryExists) {
+    throw new Error("Category does not exist");
+  }
+
+  // Create event
   return prisma.event.create({
     data: {
       ...payload,
       organizerId: user.userId,
+      dateTime: new Date(payload.dateTime),
     },
   });
 };
 
+const getAllEvents = async (filters: {
+  search?: string;
+  categoryId?: string;
+}) => {
+  const { search, categoryId } = filters;
 
-const getAllEvents = async () => {
   return prisma.event.findMany({
     where: {
       visibility: EventVisibility.PUBLIC,
+
+      
+      ...(search && {
+        title: {
+          contains: search,
+          mode: "insensitive", 
+        },
+      }),
+
+      
+      ...(categoryId && {
+        categoryId: categoryId,
+      }),
     },
+
     select: {
       id: true,
       title: true,
@@ -30,8 +59,9 @@ const getAllEvents = async () => {
       type: true,
       fee: true,
       images: true,
-      categoryId:true
+      categoryId: true,
     },
+
     orderBy: {
       dateTime: "asc",
     },
@@ -168,35 +198,68 @@ const getMyEvents = async (user: IRequestUser) => {
   });
 };
 
-const updateEvent = async (
+
+export const updateEvent = async (
   id: string,
   user: IRequestUser,
   payload: IUpdateEventPayload
 ) => {
+  // Find existing event
   const event = await prisma.event.findUnique({ where: { id } });
-
   if (!event) throw new AppError(status.NOT_FOUND, "Event not found");
 
-
+  // Authorization
   if (event.organizerId !== user.userId && user.role !== Role.ADMIN) {
     throw new AppError(status.FORBIDDEN, "Not authorized");
   }
+
+  // If categoryId is being updated, check it exists
+  if (payload.categoryId) {
+    const categoryExists = await prisma.category.findUnique({
+      where: { id: payload.categoryId },
+    });
+    if (!categoryExists) {
+      throw new AppError(status.BAD_REQUEST, "Category does not exist");
+    }
+  }
+
+  // Convert dateTime to Date if provided
+  const dataToUpdate = {
+    ...payload,
+    dateTime: payload.dateTime ? new Date(payload.dateTime) : undefined,
+  };
 
   return prisma.event.update({
     where: { id },
-    data: payload,
+    data: dataToUpdate,
   });
 };
-
 const deleteEvent = async (id: string, user: IRequestUser) => {
-  const event = await prisma.event.findUnique({ where: { id } });
+  const event = await prisma.event.findUnique({
+    where: { id },
+    include: {
+      participations: true,
+    },
+  });
 
-  if (!event) throw new AppError(status.NOT_FOUND, "Event not found");
+  if (!event) {
+    throw new AppError(status.NOT_FOUND, "Event not found");
+  }
 
+  //  Authorization check
   if (event.organizerId !== user.userId && user.role !== Role.ADMIN) {
     throw new AppError(status.FORBIDDEN, "Not authorized");
   }
 
+  //  Check if participants exist
+  if (event.participations.length > 0) {
+    throw new AppError(
+      status.BAD_REQUEST,
+      "Cannot delete event. Participants already joined."
+    );
+  }
+
+  //  Safe delete
   await prisma.event.delete({
     where: { id },
   });

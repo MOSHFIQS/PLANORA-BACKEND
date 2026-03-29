@@ -6,6 +6,7 @@ export interface ICreateEventPayload {
   venue: string;
   dateTime: Date | string;
   visibility: EventVisibility;
+  categoryId:string;
   fee?: number;
   image?: string;
 }
@@ -16,6 +17,7 @@ export interface IUpdateEventPayload {
   venue?: string;
   dateTime?: Date | string;
   visibility?: EventVisibility;
+  categoryId:string;
   fee?: number;
   image?: string;
 }

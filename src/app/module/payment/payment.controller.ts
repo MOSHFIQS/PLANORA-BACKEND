@@ -44,7 +44,52 @@ const handleStripeWebhookEvent = catchAsync(
      },
 );
 
+
+
+
+const getMyPayments = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user!;
+
+  const result = await PaymentService.getMyPayments(user);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "My payments fetched",
+    data: result,
+  });
+});
+
+const getOrganizerPayments = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user!;
+
+  const result = await PaymentService.getOrganizerPayments(user);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Organizer payments fetched",
+    data: result,
+  });
+});
+
+const getAllPayments = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user!;
+
+  const result = await PaymentService.getAllPayments(user);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "All payments fetched",
+    data: result,
+  });
+});
+
 export const PaymentController = {
      initiatePayment,
      handleStripeWebhookEvent,
+     getMyPayments,
+     getOrganizerPayments,
+     getAllPayments
 };

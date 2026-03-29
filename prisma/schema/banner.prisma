@@ -7,6 +7,9 @@ model Banner {
     image       String
     redirectUrl String?
 
+    dateTime    DateTime?
+    type       EventType       @default(ONLINE)
+
     position      BannerPosition
     positionOrder Int
 

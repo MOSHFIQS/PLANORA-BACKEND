@@ -11,6 +11,8 @@ import { UserRoutes } from "../module/user/user.route";
 import { ProfileRoutes } from "../module/profile/profile.route";
 import { CategoryRoutes } from "../module/category/category.route";
 import { BannerRoutes } from "../module/banner/banner.route";
+import { PublicRoutes } from "../module/public/public.route";
+import { TicketRoutes } from "../module/ticket/ticket.route";
 
 const router = Router();
 
@@ -26,5 +28,7 @@ router.use("/user", UserRoutes);
 router.use("/profile", ProfileRoutes);
 router.use("/category", CategoryRoutes);
 router.use("/banner", BannerRoutes);
+router.use("/public", PublicRoutes);
+router.use("/ticket", TicketRoutes);
 
 export const IndexRoutes = router;

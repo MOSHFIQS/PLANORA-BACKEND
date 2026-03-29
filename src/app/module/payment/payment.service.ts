@@ -14,7 +14,7 @@ import {
 } from "../../../generated/prisma/enums";
 
 const createStripeSession = async (paymentId: string, amount: number) => {
-     return stripe.checkout.sessions.create({
+     const session = await stripe.checkout.sessions.create({
           payment_method_types: ["card"],
           mode: "payment",
           line_items: [
@@ -28,10 +28,17 @@ const createStripeSession = async (paymentId: string, amount: number) => {
                },
           ],
           metadata: { paymentId },
+
+          // expire after 30 min
+          expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
+
           success_url: `${process.env.FRONTEND_URL}/dashboard`,
           cancel_url: `${process.env.FRONTEND_URL}/dashboard`,
      });
+
+     return session;
 };
+
 
 const initiatePayment = async (
      user: IRequestUser,
@@ -235,7 +242,6 @@ const initiatePayment = async (
                return { message: "Joined successfully (free invitation)" };
           }
 
-          // PAID INVITATION
           let participation = await prisma.participation.findFirst({
                where: {
                     userId: user.userId,
@@ -276,6 +282,7 @@ const initiatePayment = async (
      };
 };
 
+
 const handleStripeWebhookEvent = async (event: Stripe.Event) => {
      const existing = await prisma.payment.findFirst({
           where: { stripeEventId: event.id },
@@ -298,6 +305,11 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
                });
 
                if (!payment) return { message: "Payment not found" };
+
+               //  CRITICAL FIX (prevent double payment)
+               if (payment.status === PaymentStatus.SUCCESS) {
+                    return { message: "Already paid, skipping duplicate" };
+               }
 
                const eventData =
                     payment.participation?.event || payment.invitation?.event;
@@ -325,6 +337,7 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
                          },
                     });
 
+                    // PARTICIPATION
                     if (payment.participationId) {
                          await tx.participation.update({
                               where: { id: payment.participationId },
@@ -342,14 +355,14 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
                                    data: {
                                         userId: payment.userId,
                                         eventId: payment.participation!.eventId,
-                                        participationId:
-                                             payment.participationId,
+                                        participationId: payment.participationId,
                                         qrCode: uuidv4(),
                                    },
                               });
                          }
                     }
 
+                    // INVITATION
                     if (payment.invitationId && payment.invitation) {
                          let participation = await tx.participation.findFirst({
                               where: {
@@ -419,7 +432,109 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
      return { message: "Webhook processed" };
 };
 
+
+
+const getMyPayments = async (user: IRequestUser) => {
+     const payments = await prisma.payment.findMany({
+          where: {
+               userId: user.userId,
+          },
+          include: {
+               participation: {
+                    include: {
+                         event: true,
+                    },
+               },
+               invitation: {
+                    include: {
+                         event: true,
+                    },
+               },
+          },
+          orderBy: {
+               createdAt: "desc",
+          },
+     });
+
+     return payments;
+};
+
+// 🔹 2. Organizer → participants payments
+const getOrganizerPayments = async (user: IRequestUser) => {
+     const payments = await prisma.payment.findMany({
+          where: {
+               OR: [
+                    {
+                         participation: {
+                              event: {
+                                   organizerId: user.userId,
+                              },
+                         },
+                    },
+                    {
+                         invitation: {
+                              event: {
+                                   organizerId: user.userId,
+                              },
+                         },
+                    },
+               ],
+          },
+          include: {
+               user: true,
+               participation: {
+                    include: {
+                         event: true,
+                    },
+               },
+               invitation: {
+                    include: {
+                         event: true,
+                    },
+               },
+          },
+          orderBy: {
+               createdAt: "desc",
+          },
+     });
+
+     return payments;
+};
+
+// 🔹 3. Admin → all payments
+const getAllPayments = async (user: IRequestUser) => {
+     // Only admin allowed
+     if (user.role !== "ADMIN") {
+          throw new Error("Unauthorized access");
+     }
+
+     const payments = await prisma.payment.findMany({
+          include: {
+               user: true,
+               participation: {
+                    include: {
+                         event: true,
+                    },
+               },
+               invitation: {
+                    include: {
+                         event: true,
+                    },
+               },
+          },
+          orderBy: {
+               createdAt: "desc",
+          },
+     });
+
+     return payments;
+};
+
+
 export const PaymentService = {
      initiatePayment,
      handleStripeWebhookEvent,
+     getMyPayments,
+     getOrganizerPayments,
+     getAllPayments,
 };
