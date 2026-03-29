@@ -4,6 +4,7 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import AppError from "../../errorHelpers/AppError";
 import { InvitationService } from "./invitation.service";
+import { IQueryParams } from "../../interfaces/query.interface";
 
 
 const sendInvitation = catchAsync(async (req: Request, res: Response) => {
@@ -47,8 +48,10 @@ const getEventInvitations = catchAsync(async (req: Request, res: Response) => {
 
 const getMyInvitations = catchAsync(async (req: Request, res: Response) => {
      const user = req.user!;
+     const query = req.query;
 
-     const result = await InvitationService.getMyInvitations(user);
+     const result = await InvitationService.getMyInvitations(user, query as IQueryParams);
+     
 
      sendResponse(res, {
           httpStatusCode: status.OK,

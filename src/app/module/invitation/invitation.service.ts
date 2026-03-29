@@ -3,6 +3,8 @@ import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
 import { EventVisibility } from "../../../generated/prisma/enums";
+import { IQueryParams } from "../../interfaces/query.interface";
+import { QueryBuilder } from "../../utils/QueryBuilder";
 
 const sendInvitation = async (
   user: IRequestUser,
@@ -63,10 +65,44 @@ const getEventInvitations = async (user: IRequestUser, eventId: string) => {
 };
 
 //TODO
-const getMyInvitations = async (user: IRequestUser) => {
-  return prisma.invitation.findMany({
-    where: { userId: user.userId },
-    include: {
+// const getMyInvitations = async (user: IRequestUser) => {
+//   return prisma.invitation.findMany({
+//     where: { userId: user.userId },
+//     include: {
+//       event: {
+//         select: {
+//           id: true,
+//           title: true,
+//           dateTime: true,
+//           type: true,
+//           fee: true,
+//           images: true,
+//         },
+//       },
+
+
+//     },
+//   });
+// };
+
+const getMyInvitations = async (
+  user: IRequestUser,
+  query: IQueryParams
+) => {
+  if (!user?.userId) {
+    throw new AppError(status.UNAUTHORIZED, "Unauthorized");
+  }
+
+  const queryBuilder = new QueryBuilder(
+    prisma.invitation,
+    query
+  );
+
+  const result = await queryBuilder
+    .where({
+      userId: user.userId,
+    })
+    .include({
       event: {
         select: {
           id: true,
@@ -77,11 +113,14 @@ const getMyInvitations = async (user: IRequestUser) => {
           images: true,
         },
       },
+    })
+    .sort()
+    .paginate()
+    .execute();
 
-
-    },
-  });
+  return result;
 };
+
 
 const cancelInvitation = async (user: IRequestUser, invitationId: string) => {
   if (!user?.userId) {
