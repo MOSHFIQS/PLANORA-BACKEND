@@ -3,26 +3,81 @@ import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import { InvitationStatus, ParticipationStatus, PaymentStatus, Role, UserStatus } from "../../../generated/prisma/enums";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { IQueryParams } from "../../interfaces/query.interface";
 
 // get all users
-const getAllUsers = async () => {
-  return prisma.user.findMany({
-    where: {
+// const getAllUsers = async () => {
+//   return prisma.user.findMany({
+//     where: {
+//       isDeleted: false,
+//       role: "USER",
+//     },
+//     orderBy: { createdAt: "desc" },
+//   });
+// };
+
+// const getAllAdmins = async () => {
+//   return prisma.user.findMany({
+//     where: {
+//       isDeleted: false,
+//       role: "ADMIN",
+//     },
+//     orderBy: { createdAt: "desc" },
+//   });
+// };
+
+
+const getAllUsers = async (
+  user: IRequestUser,
+  query: IQueryParams
+) => {
+  // Admin only
+  if (user.role !== "ADMIN") {
+    throw new AppError(status.UNAUTHORIZED, "Unauthorized access");
+  }
+
+  const queryBuilder = new QueryBuilder(
+    prisma.user,
+    query
+  );
+
+  const result = await queryBuilder
+    .where({
       isDeleted: false,
       role: "USER",
-    },
-    orderBy: { createdAt: "desc" },
-  });
+    })
+    .sort()
+    .paginate()
+    .execute();
+
+  return result;
 };
 
-const getAllAdmins = async () => {
-  return prisma.user.findMany({
-    where: {
+const getAllAdmins = async (
+  user: IRequestUser,
+  query: IQueryParams
+) => {
+  // Admin only
+  if (user.role !== "ADMIN") {
+    throw new AppError(status.UNAUTHORIZED, "Unauthorized access");
+  }
+
+  const queryBuilder = new QueryBuilder(
+    prisma.user,
+    query
+  );
+
+  const result = await queryBuilder
+    .where({
       isDeleted: false,
       role: "ADMIN",
-    },
-    orderBy: { createdAt: "desc" },
-  });
+    })
+    .sort()
+    .paginate()
+    .execute();
+
+  return result;
 };
 
 // get single user

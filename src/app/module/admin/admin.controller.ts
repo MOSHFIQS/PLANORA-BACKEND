@@ -4,9 +4,13 @@ import { AdminService } from "./admin.service";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import AppError from "../../errorHelpers/AppError";
+import { IQueryParams } from "../../interfaces/query.interface";
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const result = await AdminService.getAllUsers();
+  const user = req.user;
+  if (!user) throw new AppError(status.UNAUTHORIZED, "Unauthorized");
+  const query = req.query;
+  const result = await AdminService.getAllUsers(user, query as IQueryParams);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -17,7 +21,10 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllAdmins = catchAsync(async (req: Request, res: Response) => {
-  const result = await AdminService.getAllAdmins();
+  const user = req.user;
+  if (!user) throw new AppError(status.UNAUTHORIZED, "Unauthorized");
+  const query = req.query;
+  const result = await AdminService.getAllAdmins(user, query as IQueryParams);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
