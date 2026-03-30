@@ -109,14 +109,14 @@ const updateEvent = catchAsync(async (req: Request, res: Response) => {
      });
 });
 
-const deleteEvent = catchAsync(async (req: Request, res: Response) => {
+const deleteEventByOrganizer = catchAsync(async (req: Request, res: Response) => {
      const { id } = req.params;
      const user = req.user;
      if (!user) {
           throw new AppError(status.UNAUTHORIZED, "Unauthorized");
      }
 
-     await EventService.deleteEvent(id as string, user);
+     await EventService.deleteEventByOrganizer(id as string, user);
 
      sendResponse(res, {
           httpStatusCode: status.OK,
@@ -126,7 +126,8 @@ const deleteEvent = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllEventsAdmin = catchAsync(async (req: Request, res: Response) => {
-     const result = await EventService.getAllEventsAdmin();
+     const query = req.query;
+     const result = await EventService.getAllEventsAdmin(query as IQueryParams);
 
      sendResponse(res, {
           httpStatusCode: status.OK,
@@ -136,6 +137,45 @@ const getAllEventsAdmin = catchAsync(async (req: Request, res: Response) => {
      });
 });
 
+const deleteEventByAdmin = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await EventService.deleteEventByAdmin(id as string);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Event deleted by admin",
+    data: result,
+  });
+});
+
+const updateFeaturedStatus = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { isFeatured } = req.body;
+
+  const result = await EventService.updateFeaturedStatus(id as string, isFeatured);
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Featured status updated",
+    data: result,
+  });
+});
+
+
+const getFeaturedEvents = catchAsync(async (req: Request, res: Response) => {
+  const result = await EventService.getFeaturedEvents();
+
+  sendResponse(res, {
+    httpStatusCode: status.OK,
+    success: true,
+    message: "Featured events fetched",
+    data: result,
+  });
+});
+
 export const EventController = {
      createEvent,
      getAllEvents,
@@ -143,6 +183,10 @@ export const EventController = {
      organizersSingleEventById,
      getMyEvents,
      updateEvent,
-     deleteEvent,
+     deleteEventByOrganizer,
      getAllEventsAdmin,
+     deleteEventByAdmin,
+     updateFeaturedStatus,
+     getFeaturedEvents
+
 };

@@ -18,10 +18,29 @@ router.get("/:id", checkAuth(Role.USER, Role.ADMIN), EventController.organizersS
 
 // Update/Delete — Organizer or Admin
 router.patch("/:id", checkAuth(Role.USER, Role.ADMIN), EventController.updateEvent);
-router.delete("/:id", checkAuth(Role.USER, Role.ADMIN), EventController.deleteEvent);
+router.delete("/:id", checkAuth(Role.USER, Role.ADMIN), EventController.deleteEventByOrganizer);
 
 // Admin only
 router.get("/admin/all", checkAuth(Role.ADMIN), EventController.getAllEventsAdmin);
+
+// 👇 NEW ROUTES
+router.delete(
+  "/admin/:id",
+  checkAuth(Role.ADMIN),
+  EventController.deleteEventByAdmin
+);
+
+router.patch(
+  "/admin/feature/:id",
+  checkAuth(Role.ADMIN),
+  EventController.updateFeaturedStatus
+);
+
+router.get(
+  "/featured",
+  checkAuth(Role.ADMIN),
+  EventController.getFeaturedEvents
+);
 
 
 export const EventRoutes = router;

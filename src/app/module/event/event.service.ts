@@ -119,11 +119,11 @@ const getMyEvents = async (user: IRequestUser, query: IQueryParams) => {
     .where({
       organizerId: user.userId,
     })
-    .sort()       
+    .sort()
     .paginate()
-    .execute()  
+    .execute()
 
-  return result; 
+  return result;
 };
 
 
@@ -285,7 +285,9 @@ export const updateEvent = async (
     data: dataToUpdate,
   });
 };
-const deleteEvent = async (id: string, user: IRequestUser) => {
+
+
+const deleteEventByOrganizer = async (id: string, user: IRequestUser) => {
   const event = await prisma.event.findUnique({
     where: { id },
     include: {
@@ -297,12 +299,12 @@ const deleteEvent = async (id: string, user: IRequestUser) => {
     throw new AppError(status.NOT_FOUND, "Event not found");
   }
 
-  //  Authorization check
-  if (event.organizerId !== user.userId && user.role !== Role.ADMIN) {
-    throw new AppError(status.FORBIDDEN, "Not authorized");
+  // Only organizer can delete
+  if (event.organizerId !== user.userId) {
+    throw new AppError(status.FORBIDDEN, "Only organizer can delete this event");
   }
 
-  //  Check if participants exist
+  // Check if participants exist
   if (event.participations.length > 0) {
     throw new AppError(
       status.BAD_REQUEST,
@@ -310,18 +312,93 @@ const deleteEvent = async (id: string, user: IRequestUser) => {
     );
   }
 
-  //  Safe delete
+  // Safe delete
   await prisma.event.delete({
     where: { id },
   });
+
+  return null;
 };
 
-const getAllEventsAdmin = async () => {
-  return prisma.event.findMany({
-    include: {
+const getAllEventsAdmin = async (query: IQueryParams) => {
+  const queryBuilder = new QueryBuilder(
+    prisma.event,
+    query
+  );
+
+  const result = await queryBuilder
+    .include({
       organizer: true,
+    })
+    .sort()
+    .paginate()
+    .execute();
+
+  return result;
+};
+
+
+const deleteEventByAdmin = async (id: string) => {
+  const event = await prisma.event.findUnique({
+    where: { id },
+  });
+
+  if (!event) {
+    throw new AppError(status.NOT_FOUND, "Event not found");
+  }
+
+  await prisma.event.delete({
+    where: { id },
+  });
+
+  return null;
+};
+
+
+const updateFeaturedStatus = async (id: string, isFeatured: boolean) => {
+  const event = await prisma.event.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      visibility: true,
     },
   });
+
+  if (!event) {
+    throw new AppError(status.NOT_FOUND, "Event not found");
+  }
+
+  // Prevent PRIVATE events
+  if (event.visibility !== "PUBLIC") {
+    throw new AppError(
+      status.BAD_REQUEST,
+      "Only public events can be featured"
+    );
+  }
+
+  const updatedEvent = await prisma.event.update({
+    where: { id },
+    data: { isFeatured },
+  });
+
+  return updatedEvent;
+};
+
+const getFeaturedEvents = async () => {
+  const events = await prisma.event.findMany({
+    where: {
+      isFeatured: true,
+      visibility: "PUBLIC",
+    },
+    orderBy: {
+      dateTime: "asc", // upcoming first
+    },
+    include: {
+      category: true,
+    },
+  });
+
+  return events;
 };
 
 export const EventService = {
@@ -331,6 +408,9 @@ export const EventService = {
   organizersSingleEventById,
   getMyEvents,
   updateEvent,
-  deleteEvent,
-  getAllEventsAdmin
+  deleteEventByOrganizer,
+  getAllEventsAdmin,
+  deleteEventByAdmin,
+  updateFeaturedStatus,
+  getFeaturedEvents
 };

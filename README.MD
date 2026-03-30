@@ -151,16 +151,18 @@ model Event {
      dateTime    DateTime
 
      visibility EventVisibility
-     type        EventType @default(ONLINE)
+     type       EventType       @default(ONLINE)
 
-     meetingLink String? // for ONLINE events
+     meetingLink String?
 
      fee Float @default(0)
 
-     images String[] 
+     images String[]
 
-     categoryId String
-     category   Category @relation(fields: [categoryId], references: [id])
+     isFeatured Boolean @default(false)
+
+     categoryId String?
+     category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
      organizerId String
      organizer   User   @relation("OrganizerEvents", fields: [organizerId], references: [id])
@@ -176,6 +178,7 @@ model Event {
      @@index([organizerId])
      @@index([visibility])
      @@index([dateTime])
+     @@index([isFeatured])
      @@map("event")
 }
 

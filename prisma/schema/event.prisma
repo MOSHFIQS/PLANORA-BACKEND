@@ -14,8 +14,10 @@ model Event {
 
      images String[]
 
+     isFeatured Boolean @default(false)
+
      categoryId String?
-     category   Category? @relation(fields: [categoryId], references: [id], onDelete:SetNull)
+     category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
      organizerId String
      organizer   User   @relation("OrganizerEvents", fields: [organizerId], references: [id])
@@ -31,5 +33,6 @@ model Event {
      @@index([organizerId])
      @@index([visibility])
      @@index([dateTime])
+     @@index([isFeatured])
      @@map("event")
 }
