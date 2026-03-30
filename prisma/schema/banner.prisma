@@ -7,8 +7,8 @@ model Banner {
     image       String
     redirectUrl String?
 
-    dateTime    DateTime?
-    type       EventType       @default(ONLINE)
+    dateTime DateTime?
+    type     EventType @default(ONLINE)
 
     position      BannerPosition
     positionOrder Int
@@ -18,6 +18,9 @@ model Banner {
 
     isActive Boolean @default(true)
 
+    eventId String?
+    event   Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
     isDeleted Boolean   @default(false)
     deletedAt DateTime?
 
@@ -26,5 +29,6 @@ model Banner {
 
     @@index([position])
     @@index([isActive])
+    @@index([eventId])
     @@map("banner")
 }

@@ -29,6 +29,7 @@ model Event {
      invitations    Invitation[]
      reviews        Review[]
      tickets        Ticket[]
+     banners        Banner[]
 
      @@index([organizerId])
      @@index([visibility])
