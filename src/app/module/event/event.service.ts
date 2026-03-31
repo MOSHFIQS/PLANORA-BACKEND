@@ -100,6 +100,7 @@ const getAllEvents = async (query: IQueryParams) => {
       fee: true,
       images: true,
       categoryId: true,
+      venue: true,
     })
     .sort()
     .paginate()

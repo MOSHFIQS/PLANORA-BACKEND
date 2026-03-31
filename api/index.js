@@ -1618,7 +1618,8 @@ var getAllEvents = async (query) => {
     type: true,
     fee: true,
     images: true,
-    categoryId: true
+    categoryId: true,
+    venue: true
   }).sort().paginate().execute();
   return result;
 };
@@ -2946,6 +2947,9 @@ var createStripeSession = async (paymentId, amount) => {
   return session;
 };
 var initiatePayment = async (user, payload) => {
+  if (user.role === "ADMIN") {
+    throw new AppError_default(status19.FORBIDDEN, "Admins cannot join events");
+  }
   if (!payload.eventId && !payload.invitationId) {
     throw new AppError_default(status19.BAD_REQUEST, "Invalid payment target");
   }
