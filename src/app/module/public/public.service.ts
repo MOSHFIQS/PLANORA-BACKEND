@@ -7,7 +7,10 @@ const getStats = async () => {
     totalActiveUsers,
     totalEventsDone,
     totalTicketsCreated,
+    totalOrganizers,
+    totalParticipants,
   ] = await Promise.all([
+    // Active users
     prisma.user.count({
       where: {
         status: "ACTIVE",
@@ -15,21 +18,37 @@ const getStats = async () => {
       },
     }),
 
+    // Past events
     prisma.event.count({
       where: {
         dateTime: {
-          lt: now, // past events
+          lt: now,
         },
       },
     }),
 
+    // Tickets
     prisma.ticket.count(),
+
+    prisma.user.count({
+      where: {
+        events: {
+          some: {}, 
+        },
+        isDeleted: false,
+      },
+    }),
+
+    // Participants
+    prisma.participation.count(),
   ]);
 
   return {
     totalActiveUsers,
     totalEventsDone,
     totalTicketsCreated,
+    totalOrganizers,
+    totalParticipants,
   };
 };
 

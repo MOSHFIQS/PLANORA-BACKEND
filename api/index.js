@@ -4211,7 +4211,10 @@ var getActiveBanners = async () => {
 };
 var getBannerById = async (id) => {
   const banner = await prisma.banner.findUnique({
-    where: { id }
+    where: { id },
+    include: {
+      event: true
+    }
   });
   if (!banner || banner.isDeleted) {
     throw new AppError_default(status30.NOT_FOUND, "Banner not found");
@@ -4366,28 +4369,44 @@ var getStats = async () => {
   const [
     totalActiveUsers,
     totalEventsDone,
-    totalTicketsCreated
+    totalTicketsCreated,
+    totalOrganizers,
+    totalParticipants
   ] = await Promise.all([
+    // Active users
     prisma.user.count({
       where: {
         status: "ACTIVE",
         isDeleted: false
       }
     }),
+    // Past events
     prisma.event.count({
       where: {
         dateTime: {
           lt: now
-          // past events
         }
       }
     }),
-    prisma.ticket.count()
+    // Tickets
+    prisma.ticket.count(),
+    prisma.user.count({
+      where: {
+        events: {
+          some: {}
+        },
+        isDeleted: false
+      }
+    }),
+    // Participants
+    prisma.participation.count()
   ]);
   return {
     totalActiveUsers,
     totalEventsDone,
-    totalTicketsCreated
+    totalTicketsCreated,
+    totalOrganizers,
+    totalParticipants
   };
 };
 var PublicService = {

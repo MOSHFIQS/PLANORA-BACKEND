@@ -52,6 +52,12 @@ const initiatePayment = async (
           invitationId?: string;
      },
 ) => {
+
+     //admin cant join events
+     if (user.role === "ADMIN") {
+          throw new AppError(status.FORBIDDEN, "Admins cannot join events");
+     }
+
      if (!payload.eventId && !payload.invitationId) {
           throw new AppError(status.BAD_REQUEST, "Invalid payment target");
      }

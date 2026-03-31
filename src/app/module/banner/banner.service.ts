@@ -35,6 +35,9 @@ const getActiveBanners = async () => {
 const getBannerById = async (id: string) => {
   const banner = await prisma.banner.findUnique({
     where: { id },
+    include: {
+      event: true
+    }
   });
 
   if (!banner || banner.isDeleted) {
