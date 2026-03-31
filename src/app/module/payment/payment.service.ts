@@ -368,17 +368,17 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
                               transactionId: payment.transactionId,
                               paymentDate: new Date().toISOString(),
                          });
-                         console.log("pdfBuffer",pdfBuffer);
+                         // console.log("pdfBuffer",pdfBuffer);
 
                          const upload = await uploadFileToCloudinary(
                               pdfBuffer,
                               `events/invoices/invoice-${payment.id}.pdf`
                          );
-                         console.log("upload",upload);
+                         // console.log("upload",upload);
 
                          invoiceUrl = upload?.secure_url || null;
 
-                         console.log("invoiceUrl",invoiceUrl);
+                         // console.log("invoiceUrl",invoiceUrl);
 
                          // save invoice URL
                          await tx.payment.update({

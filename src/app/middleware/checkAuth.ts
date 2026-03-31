@@ -17,7 +17,7 @@ export const checkAuth = (...authRoles: Role[]) => {
                     req,
                     "better-auth.session_token",
                );
-               console.log("sessionToken", sessionToken);
+               // console.log("sessionToken", sessionToken);
 
                if (!sessionToken) {
                     throw new Error(
@@ -63,7 +63,7 @@ export const checkAuth = (...authRoles: Role[]) => {
                                    timeRemaining.toString(),
                               );
 
-                              console.log("Session Expiring Soon!!");
+                              // console.log("Session Expiring Soon!!");
                          }
 
                          if (user.status === UserStatus.SUSPENDED) {
@@ -109,7 +109,7 @@ export const checkAuth = (...authRoles: Role[]) => {
                          );
                     }
                }
-               console.log("req.user", req?.user);
+               // console.log("req.user", req?.user);
 
                //Access Token Verification
                const accessToken = CookieUtils.getCookie(req, "accessToken");
@@ -125,7 +125,7 @@ export const checkAuth = (...authRoles: Role[]) => {
                     accessToken,
                     envVars.ACCESS_TOKEN_SECRET,
                );
-               console.log("verifiedToken",verifiedToken);
+               // console.log("verifiedToken",verifiedToken);
 
                if (!verifiedToken.success) {
                     throw new AppError(

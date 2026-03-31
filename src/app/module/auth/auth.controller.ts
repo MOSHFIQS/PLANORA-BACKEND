@@ -9,10 +9,10 @@ import AppError from "../../errorHelpers/AppError";
 const registerUser = catchAsync(async (req: Request, res: Response) => {
      const payload = req.body;
 
-     console.log(payload);
+     // console.log(payload);
 
      const result = await AuthService.registerUser(payload);
-     console.log(result);
+     // console.log(result);
 
      const { accessToken, refreshToken, token, ...rest } = result;
 
@@ -60,8 +60,8 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 const getNewToken = catchAsync(
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken;
-        console.log("refreshToken",refreshToken);
-        console.log("tokens",req.cookies);
+     //    console.log("refreshToken",refreshToken);
+     //    console.log("tokens",req.cookies);
         const betterAuthSessionToken = req.cookies["better-auth.session_token"];
         if (!refreshToken) {
             throw new AppError(status.UNAUTHORIZED, "Refresh token is missing");
