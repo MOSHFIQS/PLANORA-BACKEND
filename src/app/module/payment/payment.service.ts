@@ -11,12 +11,16 @@ import {
      PaymentStatus,
      ParticipationStatus,
      InvitationStatus,
+     AuditAction,
+     NotificationType,
 } from "../../../generated/prisma/enums";
 import { IQueryParams } from "../../interfaces/query.interface";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { sendEmail } from "../../utils/email";
 import { generateEventInvoicePdf } from "./payment.utils";
 import { uploadFileToCloudinary } from "../../config/cloudinary.config";
+import { AuditLogService } from "../audit/audit.service";
+import { NotificationService } from "../notification/notification.service";
 
 const createStripeSession = async (paymentId: string, amount: number) => {
      const session = await stripe.checkout.sessions.create({
@@ -354,6 +358,23 @@ const handleStripeWebhookEvent = async (event: Stripe.Event) => {
                          },
                     });
 
+                      // LOG & ALERT
+                    await AuditLogService.logAction(
+                         AuditAction.PAYMENT,
+                         "payment",
+                         paymentId,
+                         payment.userId,
+                         "Payment successful completed."
+                    );
+                    await NotificationService.sendNotification(
+                         payment.userId,
+                         "Payment Success",
+                         "Your recent ticket purchase was successfully verified.",
+                         NotificationType.SUCCESS,
+                         eventData.id,
+                         paymentId
+                    );
+
                     // =========================
                     // INVOICE GENERATION
                     // =========================
@@ -622,9 +643,7 @@ const getOrganizerPayments = async (
      user: IRequestUser,
      query: IQueryParams
 ) => {
-     if (!user?.userId) {
-          throw new AppError(status.UNAUTHORIZED, "Unauthorized");
-     }
+     
 
      const queryBuilder = new QueryBuilder(
           prisma.payment,
@@ -701,13 +720,9 @@ const getOrganizerPayments = async (
 
 
 const getAllPayments = async (
-     user: IRequestUser,
      query: IQueryParams
 ) => {
-     // Only admin allowed
-     if (user.role !== "ADMIN") {
-          throw new AppError(status.UNAUTHORIZED, "Unauthorized access");
-     }
+
 
      const queryBuilder = new QueryBuilder(
           prisma.payment,

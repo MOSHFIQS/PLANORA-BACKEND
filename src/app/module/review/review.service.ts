@@ -81,7 +81,7 @@ const updateReview = async (
   if (!review) throw new AppError(status.NOT_FOUND, "Review not found");
 
   if (review.userId !== user.userId) {
-    throw new AppError(status.FORBIDDEN, "Not authorized");
+    throw new AppError(status.FORBIDDEN, "You are not authorized to update this review");
   }
 
   return prisma.review.update({
@@ -110,9 +110,10 @@ const deleteReview = async (
   const isOwner = review.userId === user.userId;
   const isOrganizer = review.event.organizerId === user.userId;
   const isAdmin = user.role === "ADMIN";
+  const isSuperAdmin = user.role === "SUPERADMIN";
 
-  if (!isOwner && !isOrganizer && !isAdmin) {
-    throw new AppError(status.FORBIDDEN, "Not authorized");
+  if (!isOwner && !isOrganizer && !isAdmin && !isSuperAdmin) {
+    throw new AppError(status.FORBIDDEN, "You are not authorized to delete this review");
   }
 
   return prisma.review.delete({

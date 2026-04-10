@@ -15,14 +15,14 @@ router.post(
 
 router.get(
   "/my",
-  checkAuth(Role.USER, Role.ADMIN, Role.SUPERADMIN),
+  checkAuth(Role.USER, Role.ADMIN, Role.SUPERADMIN, Role.ORGANIZER),
   PaymentController.getMyPayments
 );
 
 // 🔹 Organizer payments (only events they created)
 router.get(
   "/organizer",
-  checkAuth(Role.ADMIN, Role.SUPERADMIN, Role.ORGANIZER),
+  checkAuth(Role.ORGANIZER),
   PaymentController.getOrganizerPayments
 );
 
