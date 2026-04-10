@@ -11,12 +11,12 @@ router.get("/active", BannerController.getActiveBanners);
 router.get("/:id", BannerController.getBannerById);
 
 // ADMIN
-router.post("/", checkAuth(Role.ADMIN), BannerController.createBanner);
-router.patch("/:id", checkAuth(Role.ADMIN), BannerController.updateBanner);
-router.delete("/:id", checkAuth(Role.ADMIN), BannerController.deleteBanner);
+router.post("/", checkAuth(Role.ADMIN, Role.SUPERADMIN), BannerController.createBanner);
+router.patch("/:id", checkAuth(Role.ADMIN, Role.SUPERADMIN), BannerController.updateBanner);
+router.delete("/:id", checkAuth(Role.ADMIN, Role.SUPERADMIN), BannerController.deleteBanner);
 router.patch(
   "/:id/status",
-  checkAuth(Role.ADMIN),
+  checkAuth(Role.ADMIN, Role.SUPERADMIN),
   BannerController.updateBannerStatus
 );
 
