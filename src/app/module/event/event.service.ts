@@ -1,13 +1,14 @@
 import { prisma } from "../../lib/prisma";
 import { IRequestUser } from "../../interfaces/requestUser.interface";
 import { ICreateEventPayload, IUpdateEventPayload } from "./event.interface";
-import { EventVisibility, ParticipationStatus, PaymentStatus, Role } from "../../../generated/prisma/enums";
+import { AuditAction, EventVisibility, ParticipationStatus, PaymentStatus, Role } from "../../../generated/prisma/enums";
 import AppError from "../../errorHelpers/AppError";
 import status from "http-status";
 import { IQueryParams } from "../../interfaces/query.interface";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { Prisma } from "../../../generated/prisma/client";
 import { eventFilterableFields, eventSearchableFields } from "./event.constant";
+import { AuditLogService } from "../audit/audit.service";
 
 export const createEvent = async (
   user: IRequestUser,
@@ -23,54 +24,25 @@ export const createEvent = async (
   }
 
   // Create event
-  return prisma.event.create({
+  const createdEvent = await prisma.event.create({
     data: {
       ...payload,
       organizerId: user.userId,
       dateTime: new Date(payload.dateTime),
     },
   });
+
+  await AuditLogService.logAction(
+    AuditAction.CREATE,
+    "event",
+    createdEvent.id,
+    user.userId,
+    `Created event: ${createdEvent.title}`
+  );
+
+  return createdEvent;
 };
 
-// const getAllEvents = async (filters: {
-//   search?: string;
-//   categoryId?: string;
-// }) => {
-//   const { search, categoryId } = filters;
-
-//   return prisma.event.findMany({
-//     where: {
-//       visibility: EventVisibility.PUBLIC,
-
-
-//       ...(search && {
-//         title: {
-//           contains: search,
-//           mode: "insensitive", 
-//         },
-//       }),
-
-
-//       ...(categoryId && {
-//         categoryId: categoryId,
-//       }),
-//     },
-
-//     select: {
-//       id: true,
-//       title: true,
-//       dateTime: true,
-//       type: true,
-//       fee: true,
-//       images: true,
-//       categoryId: true,
-//     },
-
-//     orderBy: {
-//       dateTime: "asc",
-//     },
-//   });
-// };
 
 const getAllEvents = async (query: IQueryParams) => {
   const queryBuilder = new QueryBuilder<
@@ -109,7 +81,7 @@ const getAllEvents = async (query: IQueryParams) => {
   return result;
 };
 
-const getMyEvents = async (user: IRequestUser, query: IQueryParams) => {
+const getOrganizerEvents = async (user: IRequestUser, query: IQueryParams) => {
   const queryBuilder = new QueryBuilder<
     Event,
     Prisma.EventWhereInput,
@@ -119,6 +91,13 @@ const getMyEvents = async (user: IRequestUser, query: IQueryParams) => {
   const result = await queryBuilder
     .where({
       organizerId: user.userId,
+    })
+    .include({
+      _count: {
+        select: {
+          reviews: true, // this gives reviews count
+        },
+      },
     })
     .sort()
     .paginate()
@@ -261,8 +240,8 @@ export const updateEvent = async (
   if (!event) throw new AppError(status.NOT_FOUND, "Event not found");
 
   // Authorization
-  if (event.organizerId !== user.userId && user.role !== Role.ADMIN) {
-    throw new AppError(status.FORBIDDEN, "Not authorized");
+  if (event.organizerId !== user.userId) {
+    throw new AppError(status.FORBIDDEN, "You are not authorized to update this event");
   }
 
   // If categoryId is being updated, check it exists
@@ -318,6 +297,14 @@ const deleteEventByOrganizer = async (id: string, user: IRequestUser) => {
     where: { id },
   });
 
+  await AuditLogService.logAction(
+    AuditAction.DELETE,
+    "event",
+    id,
+    user.userId,
+    "Deleted event by organizer"
+  );
+
   return null;
 };
 
@@ -339,7 +326,7 @@ const getAllEventsAdmin = async (query: IQueryParams) => {
 };
 
 
-const deleteEventByAdmin = async (id: string) => {
+const deleteEventByAdmin = async (id: string, user: IRequestUser) => {
   const event = await prisma.event.findUnique({
     where: { id },
   });
@@ -351,6 +338,14 @@ const deleteEventByAdmin = async (id: string) => {
   await prisma.event.delete({
     where: { id },
   });
+
+  await AuditLogService.logAction(
+    AuditAction.DELETE,
+    "event",
+    id,
+    user.userId,
+    "Deleted event by admin"
+  );
 
   return null;
 };
@@ -407,7 +402,7 @@ export const EventService = {
   getAllEvents,
   getSingleEventPublic,
   organizersSingleEventById,
-  getMyEvents,
+  getOrganizerEvents,
   updateEvent,
   deleteEventByOrganizer,
   getAllEventsAdmin,

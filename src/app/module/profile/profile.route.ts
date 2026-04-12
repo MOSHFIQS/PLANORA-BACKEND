@@ -5,7 +5,7 @@ import { ProfileController } from "./profile.controller";
 
 const router = Router();
 
-router.get("/me", checkAuth(Role.USER, Role.ADMIN), ProfileController.getMyProfile);
-router.patch("/me", checkAuth(Role.USER, Role.ADMIN), ProfileController.updateProfile);
+router.get("/me", checkAuth(Role.USER, Role.ADMIN, Role.ORGANIZER, Role.SUPERADMIN), ProfileController.getMyProfile);
+router.patch("/me", checkAuth(Role.USER, Role.ADMIN, Role.ORGANIZER, Role.SUPERADMIN), ProfileController.updateProfile);
 
 export const ProfileRoutes = router;

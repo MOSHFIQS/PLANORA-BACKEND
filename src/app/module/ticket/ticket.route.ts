@@ -8,20 +8,20 @@ const router = Router();
 // User actions
 router.get(
   "/my",
-  checkAuth(Role.USER, Role.ADMIN),
+  checkAuth(Role.USER, Role.ADMIN, Role.ORGANIZER, Role.SUPERADMIN),
   TicketController.getMyTickets
 );
 
-// Organizer/Admin actions
+// Organizer
 router.get(
   "/event/:eventId",
-  checkAuth(Role.ADMIN, Role.USER),
+  checkAuth(Role.ORGANIZER),
   TicketController.getEventTickets
 );
 
 router.post(
   "/check-in",
-  checkAuth(Role.ADMIN, Role.USER),
+  checkAuth(Role.ORGANIZER),
   TicketController.checkInTicket
 );
 

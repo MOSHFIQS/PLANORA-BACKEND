@@ -3,12 +3,17 @@ import status from "http-status";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { ReviewService } from "./review.service";
+import { Role } from "../../../generated/prisma/enums";
+import AppError from "../../errorHelpers/AppError";
 
 
 // Create review
 const createReview = catchAsync(async (req:Request, res:Response) => {
 
   const user = req.user!;
+  if(user.role !== Role.USER){
+    throw new AppError(status.FORBIDDEN, "Only users can create reviews");
+  }
   const result = await ReviewService.createReview(user, req.body);
 
   sendResponse(res, {

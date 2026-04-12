@@ -78,10 +78,9 @@ const getOrganizerPayments = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllPayments = catchAsync(async (req: Request, res: Response) => {
-  const user = req.user!;
   const query = req.query;
 
-  const result = await PaymentService.getAllPayments(user, query as IQueryParams);
+  const result = await PaymentService.getAllPayments(query as IQueryParams);
 
   sendResponse(res, {
     httpStatusCode: status.OK,
@@ -90,6 +89,7 @@ const getAllPayments = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 
 export const PaymentController = {
      initiatePayment,

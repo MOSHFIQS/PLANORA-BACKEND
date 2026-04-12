@@ -7,28 +7,28 @@ const router = Router();
 // Create
 router.post(
   "/",
-  checkAuth(Role.USER, Role.ADMIN),
+  checkAuth(Role.USER, Role.ADMIN, Role.ORGANIZER, Role.SUPERADMIN),
   ReviewController.createReview
 );
 
 // Update
 router.patch(
   "/:id",
-  checkAuth(Role.USER, Role.ADMIN),
+  checkAuth(Role.USER, Role.ADMIN, Role.ORGANIZER, Role.SUPERADMIN),
   ReviewController.updateReview
 );
 
 // Delete (user + organizer + admin handled in service)
 router.delete(
   "/:id",
-  checkAuth(Role.USER, Role.ADMIN),
+  checkAuth(Role.USER, Role.ADMIN, Role.ORGANIZER, Role.SUPERADMIN),
   ReviewController.deleteReview
 );
 
 // My reviews
 router.get(
   "/my",
-  checkAuth(Role.USER, Role.ADMIN),
+  checkAuth(Role.USER, Role.ADMIN, Role.ORGANIZER, Role.SUPERADMIN),
   ReviewController.getMyReviews
 );
 
@@ -43,7 +43,7 @@ router.get(
 // Organizer: specific event reviews
 router.get(
   "/organizer/events/:eventId",
-  checkAuth(Role.USER, Role.ADMIN),
+  checkAuth(Role.ORGANIZER),
   ReviewController.getOrganizerEventReviewsByEventId
 );
 
