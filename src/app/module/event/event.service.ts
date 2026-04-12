@@ -92,6 +92,13 @@ const getOrganizerEvents = async (user: IRequestUser, query: IQueryParams) => {
     .where({
       organizerId: user.userId,
     })
+    .include({
+      _count: {
+        select: {
+          reviews: true, // this gives reviews count
+        },
+      },
+    })
     .sort()
     .paginate()
     .execute()

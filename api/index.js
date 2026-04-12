@@ -1739,6 +1739,13 @@ var getOrganizerEvents = async (user, query) => {
   const queryBuilder = new QueryBuilder(prisma.event, query);
   const result = await queryBuilder.where({
     organizerId: user.userId
+  }).include({
+    _count: {
+      select: {
+        reviews: true
+        // this gives reviews count
+      }
+    }
   }).sort().paginate().execute();
   return result;
 };
