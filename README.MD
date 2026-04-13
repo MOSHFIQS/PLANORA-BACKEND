@@ -314,6 +314,11 @@ CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 
+# Google
+GOOGLE_CLIENT_ID=1055659962008-o7kmcel8qr.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOCSPX-pzWCnBW3LF3fO9ir
+GOOGLE_CALLBACK_URL=https://planora-backend-1.vercel.app/api/v1/auth/callback/google
+
 # Email (Gmail SMTP)
 EMAIL_SENDER_SMTP_HOST=smtp.gmail.com
 EMAIL_SENDER_SMTP_PORT=465
