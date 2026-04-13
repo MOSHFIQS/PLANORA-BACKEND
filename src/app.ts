@@ -8,6 +8,7 @@ import cors from "cors";
 import path from "path";
 import { auth } from "./app/lib/auth";
 import { toNodeHandler } from "better-auth/node";
+import { envVars } from "./app/config/env";
 
 const app: Application = express();
 app.set("view engine", "ejs");
@@ -18,6 +19,7 @@ app.use(cors({
           const allowedOrigins = [
                process.env.FRONTEND_URL,
                process.env.PROD_CLIENT_URL,
+               envVars.BETTER_AUTH_URL,
                "localhost:3000",
                "localhost:5000",
                "http://localhost:3000",

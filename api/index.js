@@ -5563,6 +5563,7 @@ app.use(cors({
     const allowedOrigins = [
       process.env.FRONTEND_URL,
       process.env.PROD_CLIENT_URL,
+      envVars.BETTER_AUTH_URL,
       "localhost:3000",
       "localhost:5000",
       "http://localhost:3000",
