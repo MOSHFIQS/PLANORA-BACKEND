@@ -85,6 +85,19 @@ export class PaymentController {
     return this.paymentService.getMyPayments(user, query);
   }
 
+  @Get("verify")
+  @ApiBearerAuth("bearer")
+  @Roles(Role.USER, Role.ADMIN, Role.ORGANIZER, Role.SUPERADMIN)
+  @ApiOperation({ summary: "Verify and sync payment status directly with Stripe" })
+  @ApiResponse({ status: 200, description: "Payment status verified successfully" })
+  async verifyPayment(
+    @CurrentUser() user: IRequestUser,
+    @Query("paymentId") paymentId?: string,
+    @Query("sessionId") sessionId?: string
+  ) {
+    return this.paymentService.verifyPayment(user, paymentId, sessionId);
+  }
+
   @Get("organizer")
   @ApiBearerAuth("bearer")
   @Roles(Role.ORGANIZER)

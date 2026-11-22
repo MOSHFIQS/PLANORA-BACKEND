@@ -149067,6 +149067,9 @@ let PaymentController = class PaymentController {
     async getMyPayments(user, query) {
         return this.paymentService.getMyPayments(user, query);
     }
+    async verifyPayment(user, paymentId, sessionId) {
+        return this.paymentService.verifyPayment(user, paymentId, sessionId);
+    }
     async getOrganizerPayments(user, query) {
         return this.paymentService.getOrganizerPayments(user, query);
     }
@@ -149112,6 +149115,19 @@ __decorate([
     __metadata("design:paramtypes", [Object, pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], PaymentController.prototype, "getMyPayments", null);
+__decorate([
+    (0, common_1.Get)("verify"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
+    (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Verify and sync payment status directly with Stripe" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Payment status verified successfully" }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Query)("paymentId")),
+    __param(2, (0, common_1.Query)("sessionId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, String]),
+    __metadata("design:returntype", Promise)
+], PaymentController.prototype, "verifyPayment", null);
 __decorate([
     (0, common_1.Get)("organizer"),
     (0, swagger_1.ApiBearerAuth)("bearer"),
@@ -149192,17 +149208,17 @@ var PaymentService_1;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentService = void 0;
 const common_1 = __nccwpck_require__(9147);
-const uuid_1 = __nccwpck_require__(27086);
 const prisma_service_1 = __nccwpck_require__(81829);
+const enums_1 = __nccwpck_require__(50343);
+const stripe_config_1 = __nccwpck_require__(14102);
+const env_config_1 = __nccwpck_require__(48528);
 const audit_service_1 = __nccwpck_require__(19230);
 const notification_service_1 = __nccwpck_require__(76570);
 const mail_service_1 = __nccwpck_require__(29844);
-const stripe_config_1 = __nccwpck_require__(14102);
-const cloudinary_config_1 = __nccwpck_require__(24565);
-const env_config_1 = __nccwpck_require__(48528);
-const enums_1 = __nccwpck_require__(50343);
-const query_builder_util_1 = __nccwpck_require__(44094);
+const uuid_1 = __nccwpck_require__(27086);
 const payment_utils_1 = __nccwpck_require__(48584);
+const cloudinary_config_1 = __nccwpck_require__(24565);
+const query_builder_util_1 = __nccwpck_require__(44094);
 const PAYMENT_INCLUDES = {
     user: true,
     participation: { include: { event: true } },
@@ -149228,7 +149244,7 @@ let PaymentService = PaymentService_1 = class PaymentService {
                 {
                     price_data: {
                         currency: "bdt",
-                        product_data: { name: "Event Ticket" },
+                        product_data: { name: "Event Ticket Pass" },
                         unit_amount: Math.round(amount * 100),
                     },
                     quantity: 1,
@@ -149236,8 +149252,8 @@ let PaymentService = PaymentService_1 = class PaymentService {
             ],
             metadata: { paymentId },
             expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
-            success_url: `${env_config_1.envVars.FRONTEND_URL}/dashboard`,
-            cancel_url: `${env_config_1.envVars.FRONTEND_URL}/dashboard`,
+            success_url: `${env_config_1.envVars.FRONTEND_URL}/dashboard/my/payments?session_id={CHECKOUT_SESSION_ID}&payment_id=${paymentId}`,
+            cancel_url: `${env_config_1.envVars.FRONTEND_URL}/dashboard/my/payments?canceled=true`,
         });
     }
     async resolveTarget(user, { eventId, invitationId }) {
@@ -149277,6 +149293,70 @@ let PaymentService = PaymentService_1 = class PaymentService {
     }
     async initiatePayment(user, payload) {
         const { amount, eventId, invitationId, targetFilter } = await this.resolveTarget(user, payload);
+        if (amount === 0) {
+            let participationId;
+            if (eventId) {
+                const participation = await this.prisma.participation.upsert({
+                    where: { userId_eventId: { userId: user.userId, eventId } },
+                    create: { userId: user.userId, eventId, status: enums_1.ParticipationStatus.APPROVED },
+                    update: { status: enums_1.ParticipationStatus.APPROVED },
+                });
+                participationId = participation.id;
+            }
+            if (invitationId) {
+                const invitation = await this.prisma.invitation.findUniqueOrThrow({
+                    where: { id: invitationId },
+                });
+                const participation = await this.prisma.participation.upsert({
+                    where: { userId_eventId: { userId: user.userId, eventId: invitation.eventId } },
+                    create: { userId: user.userId, eventId: invitation.eventId, status: enums_1.ParticipationStatus.APPROVED },
+                    update: { status: enums_1.ParticipationStatus.APPROVED },
+                });
+                participationId = participation.id;
+                await this.prisma.invitation.update({
+                    where: { id: invitationId },
+                    data: { status: enums_1.InvitationStatus.ACCEPTED },
+                });
+            }
+            const transactionId = `FREE-${(0, uuid_1.v4)().slice(0, 8).toUpperCase()}`;
+            const payment = await this.prisma.payment.create({
+                data: {
+                    userId: user.userId,
+                    amount: 0,
+                    status: enums_1.PaymentStatus.SUCCESS,
+                    transactionId,
+                    participationId,
+                    invitationId,
+                },
+            });
+            const targetEventId = eventId ||
+                (invitationId
+                    ? (await this.prisma.invitation.findUnique({ where: { id: invitationId } }))?.eventId
+                    : undefined);
+            if (participationId && targetEventId) {
+                const existingTicket = await this.prisma.ticket.findFirst({
+                    where: { userId: user.userId, eventId: targetEventId },
+                });
+                if (!existingTicket) {
+                    const qrCode = `PLN-TKT-${targetEventId.slice(-6).toUpperCase()}-${user.userId.slice(-6).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+                    await this.prisma.ticket.create({
+                        data: {
+                            userId: user.userId,
+                            eventId: targetEventId,
+                            participationId,
+                            qrCode,
+                            status: enums_1.TicketStatus.VALID,
+                        },
+                    });
+                }
+            }
+            return {
+                paymentId: payment.id,
+                paymentUrl: null,
+                isFree: true,
+                message: "Successfully joined free event! Your ticket is confirmed.",
+            };
+        }
         const existingPayment = await this.prisma.payment.findFirst({
             where: {
                 userId: user.userId,
@@ -149313,13 +149393,7 @@ let PaymentService = PaymentService_1 = class PaymentService {
         const session = await this.createStripeSession(payment.id, amount);
         return { paymentId: payment.id, paymentUrl: session.url };
     }
-    async handleStripeWebhookEvent(event) {
-        if (event.type !== "checkout.session.completed")
-            return;
-        const session = event.data.object;
-        const paymentId = session.metadata?.paymentId;
-        if (!paymentId)
-            return;
+    async completePaymentRecord(paymentId, stripeSessionOrIntentId) {
         const payment = await this.prisma.payment.findUnique({
             where: { id: paymentId },
             include: {
@@ -149328,8 +149402,9 @@ let PaymentService = PaymentService_1 = class PaymentService {
                 user: true,
             },
         });
-        if (!payment || payment.status === enums_1.PaymentStatus.SUCCESS)
-            return;
+        if (!payment || payment.status === enums_1.PaymentStatus.SUCCESS) {
+            return payment;
+        }
         const eventData = payment.participation?.event || payment.invitation?.event;
         const eventId = eventData?.id;
         const eventTitle = eventData?.title || "Event";
@@ -149363,22 +149438,75 @@ let PaymentService = PaymentService_1 = class PaymentService {
                 where: { id: paymentId },
                 data: {
                     status: enums_1.PaymentStatus.SUCCESS,
-                    transactionId: session.payment_intent || payment.transactionId,
+                    transactionId: stripeSessionOrIntentId || payment.transactionId,
                     participationId,
                 },
             });
             if (participationId && eventId) {
-                await tx.ticket.create({
-                    data: {
-                        userId: payment.userId,
-                        eventId,
-                        participationId,
-                        qrCode: (0, uuid_1.v4)(),
-                    },
+                const existingTicket = await tx.ticket.findFirst({
+                    where: { userId: payment.userId, eventId },
                 });
+                if (!existingTicket) {
+                    const qrCode = `PLN-TKT-${eventId.slice(-6).toUpperCase()}-${payment.userId.slice(-6).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+                    await tx.ticket.create({
+                        data: {
+                            userId: payment.userId,
+                            eventId,
+                            participationId,
+                            qrCode,
+                            status: enums_1.TicketStatus.VALID,
+                        },
+                    });
+                }
             }
         });
-        this.sendInvoiceAndNotify(payment, session, eventTitle, eventData?.dateTime, eventId).catch((err) => this.logger.error(`Webhook notification error: ${err.message}`));
+        this.sendInvoiceAndNotify(payment, { payment_intent: stripeSessionOrIntentId }, eventTitle, eventData?.dateTime, eventId).catch((err) => this.logger.error(`Webhook notification error: ${err.message}`));
+        return this.prisma.payment.findUnique({
+            where: { id: paymentId },
+            include: PAYMENT_INCLUDES,
+        });
+    }
+    async handleStripeWebhookEvent(event) {
+        if (event.type !== "checkout.session.completed")
+            return;
+        const session = event.data.object;
+        const paymentId = session.metadata?.paymentId;
+        if (!paymentId)
+            return;
+        await this.completePaymentRecord(paymentId, session.payment_intent || session.id);
+    }
+    async verifyPayment(user, paymentId, sessionId) {
+        if (sessionId) {
+            try {
+                const session = await stripe_config_1.stripe.checkout.sessions.retrieve(sessionId);
+                const pid = session.metadata?.paymentId || paymentId;
+                if (pid && (session.payment_status === "paid" || session.status === "complete")) {
+                    return await this.completePaymentRecord(pid, session.payment_intent || session.id);
+                }
+            }
+            catch (err) {
+                this.logger.warn(`Stripe session retrieval failed: ${err.message}`);
+            }
+        }
+        if (paymentId) {
+            const payment = await this.prisma.payment.findUnique({
+                where: { id: paymentId },
+            });
+            if (payment && payment.status === enums_1.PaymentStatus.PENDING) {
+                try {
+                    const sessions = await stripe_config_1.stripe.checkout.sessions.list({ limit: 20 });
+                    const matched = sessions.data.find((s) => s.metadata?.paymentId === paymentId);
+                    if (matched && (matched.payment_status === "paid" || matched.status === "complete")) {
+                        return await this.completePaymentRecord(paymentId, matched.payment_intent || matched.id);
+                    }
+                }
+                catch (err) {
+                    this.logger.warn(`Stripe session check error: ${err.message}`);
+                }
+            }
+            return payment;
+        }
+        throw new common_1.BadRequestException("Provide paymentId or sessionId to verify");
     }
     async sendInvoiceAndNotify(payment, session, title, date, eventId) {
         try {
@@ -149435,6 +149563,23 @@ let PaymentService = PaymentService_1 = class PaymentService {
     async getMyPayments(user, query) {
         if (!user?.userId)
             throw new common_1.UnauthorizedException("Unauthorized");
+        const pendingPayments = await this.prisma.payment.findMany({
+            where: { userId: user.userId, status: enums_1.PaymentStatus.PENDING },
+        });
+        if (pendingPayments.length > 0) {
+            try {
+                const sessions = await stripe_config_1.stripe.checkout.sessions.list({ limit: 25 });
+                for (const p of pendingPayments) {
+                    const matched = sessions.data.find((s) => s.metadata?.paymentId === p.id);
+                    if (matched && (matched.payment_status === "paid" || matched.status === "complete")) {
+                        await this.completePaymentRecord(p.id, matched.payment_intent || matched.id);
+                    }
+                }
+            }
+            catch (err) {
+                this.logger.warn(`Auto-sync pending payments failed: ${err.message}`);
+            }
+        }
         return this.paginatePayments(query, { userId: user.userId });
     }
     async getOrganizerPayments(user, query) {

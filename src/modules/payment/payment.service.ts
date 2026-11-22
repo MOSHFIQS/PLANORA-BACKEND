@@ -1,32 +1,31 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Injectable,
-  NotFoundException,
   BadRequestException,
   UnauthorizedException,
   Logger,
 } from "@nestjs/common";
-import Stripe from "stripe";
-import { v4 as uuidv4 } from "uuid";
 import { PrismaService } from "../../database/prisma.service";
+import Stripe from "stripe";
+import {
+  PaymentStatus,
+  ParticipationStatus,
+  TicketStatus,
+  InvitationStatus,
+  AuditAction,
+  NotificationType,
+} from "../../generated/prisma/enums";
+import { stripe } from "../../config/stripe.config";
+import { envVars } from "../../config/env.config";
+import { InitiatePaymentDto } from "./dto/initiate-payment.dto";
+import { IRequestUser } from "../../common/interfaces/request-user.interface";
 import { AuditService } from "../audit/audit.service";
 import { NotificationService } from "../notification/notification.service";
 import { MailService } from "../../mail/mail.service";
-import { stripe } from "../../config/stripe.config";
-import { uploadFileToCloudinary } from "../../config/cloudinary.config";
-import { envVars } from "../../config/env.config";
-import {
-  AuditAction,
-  InvitationStatus,
-  NotificationType,
-  ParticipationStatus,
-  PaymentStatus,
-} from "../../generated/prisma/enums";
-import { IRequestUser } from "../../common/interfaces/request-user.interface";
-import { IQueryParams } from "../../common/interfaces/query.interface";
-import { QueryBuilder } from "../../common/utils/query-builder.util";
+import { v4 as uuidv4 } from "uuid";
 import { generateEventInvoicePdf } from "./payment.utils";
-import { InitiatePaymentDto } from "./dto/initiate-payment.dto";
+import { uploadFileToCloudinary } from "../../config/cloudinary.config";
+import { QueryBuilder } from "../../common/utils/query-builder.util";
+import { IQueryParams } from "../../common/interfaces/query.interface";
 
 const PAYMENT_INCLUDES = {
   user: true,
@@ -53,7 +52,7 @@ export class PaymentService {
         {
           price_data: {
             currency: "bdt",
-            product_data: { name: "Event Ticket" },
+            product_data: { name: "Event Ticket Pass" },
             unit_amount: Math.round(amount * 100),
           },
           quantity: 1,
@@ -61,8 +60,8 @@ export class PaymentService {
       ],
       metadata: { paymentId },
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
-      success_url: `${envVars.FRONTEND_URL}/dashboard`,
-      cancel_url: `${envVars.FRONTEND_URL}/dashboard`,
+      success_url: `${envVars.FRONTEND_URL}/dashboard/my/payments?session_id={CHECKOUT_SESSION_ID}&payment_id=${paymentId}`,
+      cancel_url: `${envVars.FRONTEND_URL}/dashboard/my/payments?canceled=true`,
     });
   }
 
@@ -111,7 +110,83 @@ export class PaymentService {
   async initiatePayment(user: IRequestUser, payload: InitiatePaymentDto) {
     const { amount, eventId, invitationId, targetFilter } = await this.resolveTarget(user, payload);
 
-    // Check existing payment status
+    // ── FREE EVENT: NO PAYMENT REQUIRED, AUTO-APPROVE IMMEDIATELY ──
+    if (amount === 0) {
+      let participationId: string | undefined;
+
+      if (eventId) {
+        const participation = await this.prisma.participation.upsert({
+          where: { userId_eventId: { userId: user.userId, eventId } },
+          create: { userId: user.userId, eventId, status: ParticipationStatus.APPROVED },
+          update: { status: ParticipationStatus.APPROVED },
+        });
+        participationId = participation.id;
+      }
+
+      if (invitationId) {
+        const invitation = await this.prisma.invitation.findUniqueOrThrow({
+          where: { id: invitationId },
+        });
+        const participation = await this.prisma.participation.upsert({
+          where: { userId_eventId: { userId: user.userId, eventId: invitation.eventId } },
+          create: { userId: user.userId, eventId: invitation.eventId, status: ParticipationStatus.APPROVED },
+          update: { status: ParticipationStatus.APPROVED },
+        });
+        participationId = participation.id;
+        await this.prisma.invitation.update({
+          where: { id: invitationId },
+          data: { status: InvitationStatus.ACCEPTED },
+        });
+      }
+
+      // Create SUCCESS payment record with 0 amount
+      const transactionId = `FREE-${uuidv4().slice(0, 8).toUpperCase()}`;
+      const payment = await this.prisma.payment.create({
+        data: {
+          userId: user.userId,
+          amount: 0,
+          status: PaymentStatus.SUCCESS,
+          transactionId,
+          participationId,
+          invitationId,
+        } as any,
+      });
+
+      // Generate verified digital Ticket immediately with QR code
+      const targetEventId =
+        eventId ||
+        (invitationId
+          ? (await this.prisma.invitation.findUnique({ where: { id: invitationId } }))?.eventId
+          : undefined);
+
+      if (participationId && targetEventId) {
+        const existingTicket = await this.prisma.ticket.findFirst({
+          where: { userId: user.userId, eventId: targetEventId },
+        });
+
+        if (!existingTicket) {
+          const qrCode = `PLN-TKT-${targetEventId.slice(-6).toUpperCase()}-${user.userId.slice(-6).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+          await this.prisma.ticket.create({
+            data: {
+              userId: user.userId,
+              eventId: targetEventId,
+              participationId,
+              qrCode,
+              status: TicketStatus.VALID,
+            },
+          });
+        }
+      }
+
+      return {
+        paymentId: payment.id,
+        paymentUrl: null,
+        isFree: true,
+        message: "Successfully joined free event! Your ticket is confirmed.",
+      };
+    }
+
+    // ── PAID EVENT: CHECK EXISTING PAYMENT OR CREATE STRIPE CHECKOUT ──
     const existingPayment = await this.prisma.payment.findFirst({
       where: {
         userId: user.userId,
@@ -157,13 +232,11 @@ export class PaymentService {
     return { paymentId: payment.id, paymentUrl: session.url };
   }
 
-  async handleStripeWebhookEvent(event: Stripe.Event) {
-    if (event.type !== "checkout.session.completed") return;
-
-    const session = event.data.object as Stripe.Checkout.Session;
-    const paymentId = session.metadata?.paymentId;
-    if (!paymentId) return;
-
+  /**
+   * Completes payment, participation, and tickets in DB transaction.
+   * Shared by Stripe webhook, direct verification, and auto-sync.
+   */
+  async completePaymentRecord(paymentId: string, stripeSessionOrIntentId?: string) {
     const payment = await this.prisma.payment.findUnique({
       where: { id: paymentId },
       include: {
@@ -173,13 +246,14 @@ export class PaymentService {
       },
     });
 
-    if (!payment || payment.status === PaymentStatus.SUCCESS) return;
+    if (!payment || payment.status === PaymentStatus.SUCCESS) {
+      return payment;
+    }
 
     const eventData = payment.participation?.event || payment.invitation?.event;
     const eventId = eventData?.id;
     const eventTitle = eventData?.title || "Event";
 
-    // 1. Complete DB updates atomically in transaction
     await this.prisma.$transaction(async (tx) => {
       let participationId = payment.participationId;
 
@@ -212,27 +286,101 @@ export class PaymentService {
         where: { id: paymentId },
         data: {
           status: PaymentStatus.SUCCESS,
-          transactionId: (session.payment_intent as string) || payment.transactionId,
+          transactionId: stripeSessionOrIntentId || payment.transactionId,
           participationId,
         },
       });
 
       if (participationId && eventId) {
-        await tx.ticket.create({
-          data: {
-            userId: payment.userId,
-            eventId,
-            participationId,
-            qrCode: uuidv4(),
-          },
+        const existingTicket = await tx.ticket.findFirst({
+          where: { userId: payment.userId, eventId },
         });
+
+        if (!existingTicket) {
+          const qrCode = `PLN-TKT-${eventId.slice(-6).toUpperCase()}-${payment.userId.slice(-6).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+          await tx.ticket.create({
+            data: {
+              userId: payment.userId,
+              eventId,
+              participationId,
+              qrCode,
+              status: TicketStatus.VALID,
+            },
+          });
+        }
       }
     });
 
-    // 2. Deliver invoice and notify asynchronously (non-blocking for fast webhook response)
-    this.sendInvoiceAndNotify(payment, session, eventTitle, eventData?.dateTime, eventId).catch(
-      (err) => this.logger.error(`Webhook notification error: ${err.message}`)
+    this.sendInvoiceAndNotify(
+      payment,
+      { payment_intent: stripeSessionOrIntentId },
+      eventTitle,
+      eventData?.dateTime,
+      eventId
+    ).catch((err) => this.logger.error(`Webhook notification error: ${err.message}`));
+
+    return this.prisma.payment.findUnique({
+      where: { id: paymentId },
+      include: PAYMENT_INCLUDES,
+    });
+  }
+
+  async handleStripeWebhookEvent(event: Stripe.Event) {
+    if (event.type !== "checkout.session.completed") return;
+
+    const session = event.data.object as Stripe.Checkout.Session;
+    const paymentId = session.metadata?.paymentId;
+    if (!paymentId) return;
+
+    await this.completePaymentRecord(
+      paymentId,
+      (session.payment_intent as string) || session.id
     );
+  }
+
+  /**
+   * Direct verification endpoint for instant confirmation upon redirect
+   */
+  async verifyPayment(user: IRequestUser, paymentId?: string, sessionId?: string) {
+    if (sessionId) {
+      try {
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        const pid = session.metadata?.paymentId || paymentId;
+        if (pid && (session.payment_status === "paid" || session.status === "complete")) {
+          return await this.completePaymentRecord(
+            pid,
+            (session.payment_intent as string) || session.id
+          );
+        }
+      } catch (err: any) {
+        this.logger.warn(`Stripe session retrieval failed: ${err.message}`);
+      }
+    }
+
+    if (paymentId) {
+      const payment = await this.prisma.payment.findUnique({
+        where: { id: paymentId },
+      });
+
+      if (payment && payment.status === PaymentStatus.PENDING) {
+        try {
+          const sessions = await stripe.checkout.sessions.list({ limit: 20 });
+          const matched = sessions.data.find((s) => s.metadata?.paymentId === paymentId);
+          if (matched && (matched.payment_status === "paid" || matched.status === "complete")) {
+            return await this.completePaymentRecord(
+              paymentId,
+              (matched.payment_intent as string) || matched.id
+            );
+          }
+        } catch (err: any) {
+          this.logger.warn(`Stripe session check error: ${err.message}`);
+        }
+      }
+
+      return payment;
+    }
+
+    throw new BadRequestException("Provide paymentId or sessionId to verify");
   }
 
   private async sendInvoiceAndNotify(
@@ -313,6 +461,29 @@ export class PaymentService {
 
   async getMyPayments(user: IRequestUser, query: IQueryParams) {
     if (!user?.userId) throw new UnauthorizedException("Unauthorized");
+
+    // ── Auto-sync any PENDING payments against Stripe in real-time ──
+    const pendingPayments = await this.prisma.payment.findMany({
+      where: { userId: user.userId, status: PaymentStatus.PENDING },
+    });
+
+    if (pendingPayments.length > 0) {
+      try {
+        const sessions = await stripe.checkout.sessions.list({ limit: 25 });
+        for (const p of pendingPayments) {
+          const matched = sessions.data.find((s) => s.metadata?.paymentId === p.id);
+          if (matched && (matched.payment_status === "paid" || matched.status === "complete")) {
+            await this.completePaymentRecord(
+              p.id,
+              (matched.payment_intent as string) || matched.id
+            );
+          }
+        }
+      } catch (err: any) {
+        this.logger.warn(`Auto-sync pending payments failed: ${err.message}`);
+      }
+    }
+
     return this.paginatePayments(query, { userId: user.userId });
   }
 
