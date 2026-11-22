@@ -255,7 +255,7 @@ async function seed() {
       visibility: EventVisibility.PUBLIC,
       type: EventType.ONLINE,
       meetingLink: "https://meet.google.com/xyz-plnr-tech",
-      fee: 49.0,
+      fee: 149.0,
       images: [
         "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
@@ -276,7 +276,7 @@ async function seed() {
       dateTime: new Date(now.getTime() + 25 * 24 * 60 * 60 * 1000), // 25 days future
       visibility: EventVisibility.PUBLIC,
       type: EventType.OFFLINE,
-      fee: 35.0,
+      fee: 99.0,
       images: [
         "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1200&auto=format&fit=crop",
@@ -318,7 +318,7 @@ async function seed() {
       dateTime: new Date(now.getTime() + 12 * 24 * 60 * 60 * 1000),
       visibility: EventVisibility.PUBLIC,
       type: EventType.OFFLINE,
-      fee: 65.0,
+      fee: 199.0,
       images: [
         "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1200&auto=format&fit=crop",
@@ -339,7 +339,7 @@ async function seed() {
       dateTime: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000),
       visibility: EventVisibility.PUBLIC,
       type: EventType.OFFLINE,
-      fee: 20.0,
+      fee: 120.0,
       images: [
         "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=1200&auto=format&fit=crop",
@@ -360,7 +360,7 @@ async function seed() {
       dateTime: new Date(now.getTime() + 9 * 24 * 60 * 60 * 1000),
       visibility: EventVisibility.PUBLIC,
       type: EventType.OFFLINE,
-      fee: 45.0,
+      fee: 150.0,
       images: [
         "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?q=80&w=1200&auto=format&fit=crop",
@@ -403,7 +403,7 @@ async function seed() {
       dateTime: new Date(now.getTime() + 40 * 24 * 60 * 60 * 1000),
       visibility: EventVisibility.PUBLIC,
       type: EventType.OFFLINE,
-      fee: 40.0,
+      fee: 180.0,
       images: [
         "https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?q=80&w=1200&auto=format&fit=crop",
@@ -424,7 +424,7 @@ async function seed() {
       dateTime: new Date(now.getTime() + 22 * 24 * 60 * 60 * 1000),
       visibility: EventVisibility.PUBLIC,
       type: EventType.OFFLINE,
-      fee: 29.0,
+      fee: 129.0,
       images: [
         "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
