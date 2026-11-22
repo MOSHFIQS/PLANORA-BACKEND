@@ -168,13 +168,32 @@ export class AuthController {
     @Query("redirect") redirect: string = "/dashboard"
   ) {
     try {
-      const sessionToken = CookieUtils.getCookie(req, "better-auth.session_token");
       const headers = new Headers();
-      if (sessionToken) {
-        headers.set("cookie", `better-auth.session_token=${sessionToken}`);
+      if (req.headers.cookie) {
+        headers.set("cookie", req.headers.cookie);
+      }
+      if (req.headers["user-agent"]) {
+        headers.set("user-agent", req.headers["user-agent"] as string);
       }
 
-      const session = await auth.api.getSession({ headers });
+      // Check session token with both standard and HTTPS __Secure- prefix
+      const sessionToken = CookieUtils.getCookie(req, "better-auth.session_token");
+      if (sessionToken && !headers.get("cookie")?.includes("session_token")) {
+        headers.set("cookie", `better-auth.session_token=${sessionToken}; __Secure-better-auth.session_token=${sessionToken}`);
+      }
+
+      let session = await auth.api.getSession({ headers });
+
+      // Fallback: check session directly in DB
+      if (!session && sessionToken) {
+        const dbSession = await this.authService.findSessionByToken(sessionToken);
+        if (dbSession && dbSession.user) {
+          session = {
+            session: dbSession,
+            user: dbSession.user,
+          } as any;
+        }
+      }
 
       if (!session) {
         return res.redirect(
@@ -192,12 +211,22 @@ export class AuthController {
       res.cookie("user", JSON.stringify(user), {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         path: "/",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       });
 
       const isValidRedirect = redirect.startsWith("/") && !redirect.startsWith("//");
       const finalRedirect = isValidRedirect ? redirect : "/dashboard";
 
-      return res.redirect(`${envVars.FRONTEND_URL}${finalRedirect}`);
+      // Redirect to frontend login handler with tokens so cross-domain Vercel frontend gets cookies set properly
+      const redirectUrl = new URL(`${envVars.FRONTEND_URL}/login`);
+      redirectUrl.searchParams.set("google_login", "success");
+      redirectUrl.searchParams.set("accessToken", accessToken);
+      redirectUrl.searchParams.set("refreshToken", refreshToken);
+      redirectUrl.searchParams.set("sessionToken", session.session.token);
+      redirectUrl.searchParams.set("redirect", finalRedirect);
+
+      return res.redirect(redirectUrl.toString());
     } catch (error: any) {
       return res.redirect(
         `${envVars.FRONTEND_URL}/login?error=${encodeURIComponent(error.message || "oauth_failed")}`

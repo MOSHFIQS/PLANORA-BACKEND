@@ -40,7 +40,12 @@ export const tokenUtils = {
 
   setBetterAuthSessionCookie: (res: Response, token?: string): void => {
     if (token) {
-      res.cookie("better-auth.session_token", token, getCookieOptions(24 * 60 * 60 * 1000));
+      const isProduction = process.env.NODE_ENV === "production";
+      const opts = getCookieOptions(24 * 60 * 60 * 1000);
+      res.cookie("better-auth.session_token", token, opts);
+      if (isProduction) {
+        res.cookie("__Secure-better-auth.session_token", token, opts);
+      }
     }
   },
 
@@ -62,6 +67,11 @@ export const tokenUtils = {
       "better-auth.csrf_token",
       "better-auth.state",
       "better-auth.pkce_code_verifier",
+      "__Secure-better-auth.session_token",
+      "__Secure-better-auth.session_data",
+      "__Secure-better-auth.csrf_token",
+      "__Secure-better-auth.state",
+      "__Secure-better-auth.pkce_code_verifier",
     ];
 
     cookieNames.forEach((name) => {

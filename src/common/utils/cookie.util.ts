@@ -2,8 +2,10 @@ import { Request, Response } from "express";
 
 export class CookieUtils {
   static getCookie(req: Request, cookieName: string): string | null {
-    if (req.cookies && req.cookies[cookieName]) {
-      return req.cookies[cookieName];
+    const secureName = `__Secure-${cookieName}`;
+    if (req.cookies) {
+      if (req.cookies[cookieName]) return req.cookies[cookieName];
+      if (req.cookies[secureName]) return req.cookies[secureName];
     }
 
     const cookieHeader = req.headers.cookie;
@@ -17,7 +19,7 @@ export class CookieUtils {
       return acc;
     }, {} as Record<string, string>);
 
-    return cookies[cookieName] || null;
+    return cookies[cookieName] || cookies[secureName] || null;
   }
 
   static setCookie(

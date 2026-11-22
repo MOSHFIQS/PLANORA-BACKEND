@@ -143051,8 +143051,12 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CookieUtils = void 0;
 class CookieUtils {
     static getCookie(req, cookieName) {
-        if (req.cookies && req.cookies[cookieName]) {
-            return req.cookies[cookieName];
+        const secureName = `__Secure-${cookieName}`;
+        if (req.cookies) {
+            if (req.cookies[cookieName])
+                return req.cookies[cookieName];
+            if (req.cookies[secureName])
+                return req.cookies[secureName];
         }
         const cookieHeader = req.headers.cookie;
         if (!cookieHeader)
@@ -143064,7 +143068,7 @@ class CookieUtils {
             }
             return acc;
         }, {});
-        return cookies[cookieName] || null;
+        return cookies[cookieName] || cookies[secureName] || null;
     }
     static setCookie(res, name, value, options = {}) {
         res.cookie(name, value, {
@@ -143393,7 +143397,12 @@ exports.tokenUtils = {
     },
     setBetterAuthSessionCookie: (res, token) => {
         if (token) {
-            res.cookie("better-auth.session_token", token, getCookieOptions(24 * 60 * 60 * 1000));
+            const isProduction = process.env.NODE_ENV === "production";
+            const opts = getCookieOptions(24 * 60 * 60 * 1000);
+            res.cookie("better-auth.session_token", token, opts);
+            if (isProduction) {
+                res.cookie("__Secure-better-auth.session_token", token, opts);
+            }
         }
     },
     clearAuthCookies: (res) => {
@@ -143413,6 +143422,11 @@ exports.tokenUtils = {
             "better-auth.csrf_token",
             "better-auth.state",
             "better-auth.pkce_code_verifier",
+            "__Secure-better-auth.session_token",
+            "__Secure-better-auth.session_data",
+            "__Secure-better-auth.csrf_token",
+            "__Secure-better-auth.state",
+            "__Secure-better-auth.pkce_code_verifier",
         ];
         cookieNames.forEach((name) => {
             res.clearCookie(name, clearOpts);
@@ -145640,12 +145654,27 @@ let AuthController = class AuthController {
     }
     async googleLoginSuccess(req, res, redirect = "/dashboard") {
         try {
-            const sessionToken = cookie_util_1.CookieUtils.getCookie(req, "better-auth.session_token");
             const headers = new Headers();
-            if (sessionToken) {
-                headers.set("cookie", `better-auth.session_token=${sessionToken}`);
+            if (req.headers.cookie) {
+                headers.set("cookie", req.headers.cookie);
             }
-            const session = await auth_config_1.auth.api.getSession({ headers });
+            if (req.headers["user-agent"]) {
+                headers.set("user-agent", req.headers["user-agent"]);
+            }
+            const sessionToken = cookie_util_1.CookieUtils.getCookie(req, "better-auth.session_token");
+            if (sessionToken && !headers.get("cookie")?.includes("session_token")) {
+                headers.set("cookie", `better-auth.session_token=${sessionToken}; __Secure-better-auth.session_token=${sessionToken}`);
+            }
+            let session = await auth_config_1.auth.api.getSession({ headers });
+            if (!session && sessionToken) {
+                const dbSession = await this.authService.findSessionByToken(sessionToken);
+                if (dbSession && dbSession.user) {
+                    session = {
+                        session: dbSession,
+                        user: dbSession.user,
+                    };
+                }
+            }
             if (!session) {
                 return res.redirect(`${env_config_1.envVars.FRONTEND_URL}/login?error=${encodeURIComponent("google_session_not_found")}`);
             }
@@ -145657,10 +145686,18 @@ let AuthController = class AuthController {
             res.cookie("user", JSON.stringify(user), {
                 expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
                 path: "/",
+                secure: process.env.NODE_ENV === "production",
+                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             });
             const isValidRedirect = redirect.startsWith("/") && !redirect.startsWith("//");
             const finalRedirect = isValidRedirect ? redirect : "/dashboard";
-            return res.redirect(`${env_config_1.envVars.FRONTEND_URL}${finalRedirect}`);
+            const redirectUrl = new URL(`${env_config_1.envVars.FRONTEND_URL}/login`);
+            redirectUrl.searchParams.set("google_login", "success");
+            redirectUrl.searchParams.set("accessToken", accessToken);
+            redirectUrl.searchParams.set("refreshToken", refreshToken);
+            redirectUrl.searchParams.set("sessionToken", session.session.token);
+            redirectUrl.searchParams.set("redirect", finalRedirect);
+            return res.redirect(redirectUrl.toString());
         }
         catch (error) {
             return res.redirect(`${env_config_1.envVars.FRONTEND_URL}/login?error=${encodeURIComponent(error.message || "oauth_failed")}`);
@@ -146188,6 +146225,17 @@ let AuthService = class AuthService {
         }
         await this.prisma.session.deleteMany({
             where: { userId: user.id },
+        });
+    }
+    async findSessionByToken(token) {
+        return this.prisma.session.findFirst({
+            where: {
+                token,
+                expiresAt: { gt: new Date() },
+            },
+            include: {
+                user: true,
+            },
         });
     }
     async googleLoginSuccess(session) {

@@ -340,6 +340,18 @@ export class AuthService {
     });
   }
 
+  async findSessionByToken(token: string) {
+    return this.prisma.session.findFirst({
+      where: {
+        token,
+        expiresAt: { gt: new Date() },
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
+
   async googleLoginSuccess(session: any) {
     const user = await this.prisma.user.findUnique({
       where: { id: session.user.id },
