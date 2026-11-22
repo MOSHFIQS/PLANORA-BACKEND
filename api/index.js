@@ -142540,6 +142540,7 @@ exports.AppModule = AppModule = AppModule_1 = __decorate([
             mail_module_1.MailModule,
             nestjs_better_auth_1.AuthModule.forRoot({
                 auth: auth_config_1.auth,
+                disableGlobalAuthGuard: true,
                 bodyParser: {
                     json: { limit: "2mb" },
                     urlencoded: { limit: "2mb", extended: true },
@@ -142874,42 +142875,109 @@ const core_1 = __nccwpck_require__(87544);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const public_decorator_1 = __nccwpck_require__(96171);
 const enums_1 = __nccwpck_require__(50343);
+const prisma_service_1 = __nccwpck_require__(81829);
+const jwt_util_1 = __nccwpck_require__(82259);
+const cookie_util_1 = __nccwpck_require__(53528);
+const env_config_1 = __nccwpck_require__(48528);
 let RolesGuard = class RolesGuard {
     reflector;
-    constructor(reflector) {
-        this.reflector = reflector || new core_1.Reflector();
+    prisma;
+    constructor(reflector, prisma) {
+        this.reflector = reflector;
+        this.prisma = prisma;
     }
-    canActivate(context) {
+    async canActivate(context) {
         const isPublic = this.reflector.getAllAndOverride(public_decorator_1.IS_PUBLIC_KEY, [
             context.getHandler(),
             context.getClass(),
         ]);
+        const request = context.switchToHttp().getRequest();
+        let user = request.user || request.session?.user;
+        if (!user) {
+            let token = null;
+            const authHeader = request.headers?.authorization;
+            if (authHeader && typeof authHeader === "string" && authHeader.startsWith("Bearer ")) {
+                token = authHeader.slice(7).trim();
+            }
+            if (!token) {
+                token = cookie_util_1.CookieUtils.getCookie(request, "accessToken");
+            }
+            if (token) {
+                const verified = jwt_util_1.jwtUtils.verifyToken(token, env_config_1.envVars.ACCESS_TOKEN_SECRET || "accesssecret");
+                if (verified.success && verified.data) {
+                    const payload = verified.data;
+                    user = {
+                        userId: payload.userId || payload.id,
+                        id: payload.userId || payload.id,
+                        role: payload.role,
+                        email: payload.email,
+                        name: payload.name,
+                        status: payload.status,
+                        needPasswordChange: payload.needPasswordChange,
+                        isDeleted: payload.isDeleted,
+                        emailVerified: payload.emailVerified,
+                    };
+                }
+            }
+            if (!user) {
+                const sessionToken = cookie_util_1.CookieUtils.getCookie(request, "better-auth.session_token") ||
+                    request.headers?.["x-session-token"];
+                if (sessionToken) {
+                    const session = await this.prisma.session.findFirst({
+                        where: {
+                            token: sessionToken,
+                            expiresAt: {
+                                gt: new Date(),
+                            },
+                        },
+                        include: {
+                            user: true,
+                        },
+                    });
+                    if (session && session.user) {
+                        const u = session.user;
+                        user = {
+                            userId: u.id,
+                            id: u.id,
+                            role: u.role,
+                            email: u.email,
+                            name: u.name,
+                            status: u.status,
+                            needPasswordChange: u.needPasswordChange,
+                            isDeleted: u.isDeleted,
+                            emailVerified: u.emailVerified,
+                        };
+                    }
+                }
+            }
+        }
+        if (user) {
+            request.user = {
+                ...user,
+                userId: user.id || user.userId,
+            };
+        }
         if (isPublic) {
             return true;
+        }
+        if (!request.user) {
+            throw new common_1.UnauthorizedException("Unauthorized access! Please login.");
+        }
+        const currentUser = request.user;
+        if (currentUser.status === enums_1.UserStatus.SUSPENDED) {
+            throw new common_1.UnauthorizedException("Unauthorized access! User is suspended.");
+        }
+        if (currentUser.isDeleted) {
+            throw new common_1.UnauthorizedException("Unauthorized access! User is deleted.");
         }
         const requiredRoles = this.reflector.getAllAndOverride(roles_decorator_1.ROLES_KEY, [
             context.getHandler(),
             context.getClass(),
         ]);
-        const request = context.switchToHttp().getRequest();
-        const user = request.user || request.session?.user;
-        if (!user) {
-            throw new common_1.UnauthorizedException("Unauthorized access! Please login.");
-        }
-        request.user = {
-            ...user,
-            userId: user.id || user.userId,
-        };
-        if (user.status === enums_1.UserStatus.SUSPENDED) {
-            throw new common_1.UnauthorizedException("Unauthorized access! User is suspended.");
-        }
-        if (user.isDeleted) {
-            throw new common_1.UnauthorizedException("Unauthorized access! User is deleted.");
-        }
         if (!requiredRoles || requiredRoles.length === 0) {
             return true;
         }
-        const hasRole = requiredRoles.includes(user.role);
+        const hasRole = requiredRoles.includes(currentUser.role);
         if (!hasRole) {
             throw new common_1.ForbiddenException("Forbidden access! You do not have permission to access this resource.");
         }
@@ -142919,7 +142987,8 @@ let RolesGuard = class RolesGuard {
 exports.RolesGuard = RolesGuard;
 exports.RolesGuard = RolesGuard = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [core_1.Reflector])
+    __metadata("design:paramtypes", [core_1.Reflector,
+        prisma_service_1.PrismaService])
 ], RolesGuard);
 
 
@@ -142950,7 +143019,10 @@ let TransformResponseInterceptor = class TransformResponseInterceptor {
                 return {
                     success: true,
                     message: "Data retrieved successfully",
-                    data: res.data,
+                    data: {
+                        data: res.data,
+                        meta: res.meta,
+                    },
                     meta: res.meta,
                 };
             }

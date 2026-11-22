@@ -23,12 +23,16 @@ export class TransformResponseInterceptor<T>
           return res;
         }
 
-        // If response is a paginated result from QueryBuilder
+        // If response is a paginated result from QueryBuilder (has data and meta)
         if (res && typeof res === "object" && "data" in res && "meta" in res) {
           return {
             success: true,
             message: "Data retrieved successfully",
-            data: res.data,
+            // Keep both res.data and nested data/meta for maximum compatibility with all clients
+            data: {
+              data: res.data,
+              meta: res.meta,
+            },
             meta: res.meta,
           };
         }
