@@ -4,8 +4,8 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import { ValidationPipe } from "@nestjs/common";
 import cookieParser from "cookie-parser";
 import path from "path";
-import { AppModule } from "../src/app.module";
-import { envVars } from "../src/config/env.config";
+import { AppModule } from "./app.module";
+import { envVars } from "./config/env.config";
 
 let cachedServer: any;
 
@@ -74,4 +74,10 @@ export default async function handler(req: any, res: any) {
     cachedServer = await bootstrapServer();
   }
   return cachedServer(req, res);
+}
+
+// Ensure compatibility with both CommonJS module.exports and ESM default export
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = handler;
+  module.exports.default = handler;
 }
