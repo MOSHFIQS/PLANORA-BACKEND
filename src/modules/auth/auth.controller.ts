@@ -1,0 +1,283 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Req,
+  Res,
+  Query,
+  HttpStatus,
+  HttpCode,
+} from "@nestjs/common";
+import { Request, Response } from "express";
+import { AuthService } from "./auth.service";
+import { Public } from "../../common/decorators/public.decorator";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
+import { IRequestUser } from "../../common/interfaces/request-user.interface";
+import { tokenUtils } from "../../common/utils/token.util";
+import { CookieUtils } from "../../common/utils/cookie.util";
+import { envVars } from "../../config/env.config";
+import { auth } from "./auth.config";
+import { RegisterDto } from "./dto/register.dto";
+import { LoginDto } from "./dto/login.dto";
+import { ChangePasswordDto } from "./dto/change-password.dto";
+import {
+  VerifyEmailDto,
+  ForgetPasswordDto,
+  ResetPasswordDto,
+  ResendOtpDto,
+} from "./dto/auth-actions.dto";
+
+@Controller("auth")
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Public()
+  @Post("register")
+  @HttpCode(HttpStatus.CREATED)
+  async registerUser(
+    @Body() payload: RegisterDto,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const result = await this.authService.registerUser(payload);
+    const { accessToken, refreshToken, token, ...rest } = result;
+
+    tokenUtils.setAccessTokenCookie(res, accessToken);
+    tokenUtils.setRefreshTokenCookie(res, refreshToken);
+    tokenUtils.setBetterAuthSessionCookie(res, token as string);
+
+    return {
+      success: true,
+      message: "User registered successfully",
+      data: {
+        token,
+        accessToken,
+        refreshToken,
+        ...rest,
+      },
+    };
+  }
+
+  @Public()
+  @Post("login")
+  @HttpCode(HttpStatus.OK)
+  async loginUser(
+    @Body() payload: LoginDto,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const result = await this.authService.loginUser(payload);
+    const { accessToken, refreshToken, token, ...rest } = result;
+
+    tokenUtils.setAccessTokenCookie(res, accessToken);
+    tokenUtils.setRefreshTokenCookie(res, refreshToken);
+    tokenUtils.setBetterAuthSessionCookie(res, token);
+
+    return {
+      success: true,
+      message: "User logged in successfully",
+      data: {
+        token,
+        accessToken,
+        refreshToken,
+        ...rest,
+      },
+    };
+  }
+
+  @Public()
+  @Post("refresh-token")
+  @HttpCode(HttpStatus.OK)
+  async getNewToken(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const refreshToken = req.cookies?.refreshToken;
+    const sessionToken = req.cookies?.["better-auth.session_token"];
+
+    const result = await this.authService.getNewToken(refreshToken, sessionToken);
+    const { accessToken, refreshToken: newRefreshToken, user } = result;
+
+    tokenUtils.setAccessTokenCookie(res, accessToken);
+    tokenUtils.setRefreshTokenCookie(res, newRefreshToken);
+    tokenUtils.setBetterAuthSessionCookie(res, sessionToken);
+
+    res.cookie("user", JSON.stringify(user), {
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      path: "/",
+    });
+
+    return {
+      success: true,
+      message: "New tokens generated successfully",
+      data: {
+        accessToken,
+        refreshToken: newRefreshToken,
+        sessionToken,
+        user,
+      },
+    };
+  }
+
+  @Public()
+  @Get("login/google")
+  googleLogin(
+    @Query("redirect") redirect: string = "/dashboard",
+    @Query("role") role: string = "USER",
+    @Res() res: Response
+  ) {
+    const encodedRedirect = encodeURIComponent(redirect);
+    const encodedRole = encodeURIComponent(role);
+    const callbackURL = `${envVars.BETTER_AUTH_URL}/api/v1/auth/google/success?redirect=${encodedRedirect}&role=${encodedRole}`;
+
+    return res.render("googleRedirect", {
+      callbackURL,
+      betterAuthUrl: envVars.BETTER_AUTH_URL,
+    });
+  }
+
+  @Public()
+  @Get("google/success")
+  async googleLoginSuccess(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query("redirect") redirect: string = "/dashboard"
+  ) {
+    try {
+      const sessionToken = CookieUtils.getCookie(req, "better-auth.session_token");
+      const headers = new Headers();
+      if (sessionToken) {
+        headers.set("cookie", `better-auth.session_token=${sessionToken}`);
+      }
+
+      const session = await auth.api.getSession({ headers });
+
+      if (!session) {
+        return res.redirect(
+          `${envVars.FRONTEND_URL}/login?error=${encodeURIComponent("google_session_not_found")}`
+        );
+      }
+
+      const result = await this.authService.googleLoginSuccess(session);
+      const { accessToken, refreshToken, user } = result;
+
+      tokenUtils.setAccessTokenCookie(res, accessToken);
+      tokenUtils.setRefreshTokenCookie(res, refreshToken);
+      tokenUtils.setBetterAuthSessionCookie(res, session.session.token);
+
+      res.cookie("user", JSON.stringify(user), {
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        path: "/",
+      });
+
+      const isValidRedirect = redirect.startsWith("/") && !redirect.startsWith("//");
+      const finalRedirect = isValidRedirect ? redirect : "/dashboard";
+
+      return res.redirect(`${envVars.FRONTEND_URL}${finalRedirect}`);
+    } catch (error: any) {
+      return res.redirect(
+        `${envVars.FRONTEND_URL}/login?error=${encodeURIComponent(error.message || "oauth_failed")}`
+      );
+    }
+  }
+
+  @Public()
+  @Get("oauth/error")
+  handleOAuthError(
+    @Query("error") error: string = "oauth_failed",
+    @Res() res: Response
+  ) {
+    return res.redirect(`${envVars.FRONTEND_URL}/login?error=${encodeURIComponent(error)}`);
+  }
+
+  @Post("change-password")
+  @HttpCode(HttpStatus.OK)
+  async changePassword(
+    @Body() payload: ChangePasswordDto,
+    @CurrentUser() user: IRequestUser,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const result = await this.authService.changePassword(payload, user.userId);
+    const { accessToken, refreshToken, token } = result;
+
+    tokenUtils.setAccessTokenCookie(res, accessToken);
+    tokenUtils.setRefreshTokenCookie(res, refreshToken);
+    tokenUtils.setBetterAuthSessionCookie(res, token as string);
+
+    return {
+      success: true,
+      message: "Password changed successfully",
+      data: result,
+    };
+  }
+
+  @Post("logout")
+  @HttpCode(HttpStatus.OK)
+  async logoutUser(
+    @CurrentUser() user: IRequestUser,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    try {
+      if (user?.userId) {
+        await this.authService.logoutUser(user.userId);
+      }
+    } catch {
+      // Ignore
+    }
+
+    tokenUtils.clearAuthCookies(res);
+
+    return {
+      success: true,
+      message: "User logged out successfully",
+    };
+  }
+
+  @Public()
+  @Post("verify-email")
+  @HttpCode(HttpStatus.OK)
+  async verifyEmail(@Body() payload: VerifyEmailDto) {
+    await this.authService.verifyEmail(payload.email, payload.otp);
+    return {
+      success: true,
+      message: "Email verified successfully",
+    };
+  }
+
+  @Public()
+  @Post("forget-password")
+  @HttpCode(HttpStatus.OK)
+  async forgetPassword(@Body() payload: ForgetPasswordDto) {
+    await this.authService.forgetPassword(payload.email);
+    return {
+      success: true,
+      message: "OTP sent to your email for password reset",
+    };
+  }
+
+  @Public()
+  @Post("reset-password")
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Body() payload: ResetPasswordDto) {
+    await this.authService.resetPassword(
+      payload.email,
+      payload.otp,
+      payload.newPassword
+    );
+    return {
+      success: true,
+      message: "Password reset successfully",
+    };
+  }
+
+  @Public()
+  @Post("resend-otp")
+  @HttpCode(HttpStatus.OK)
+  async resendOTP(@Body() payload: ResendOtpDto) {
+    await this.authService.resendOTP(payload.email, payload.type);
+    return {
+      success: true,
+      message: "OTP resent successfully",
+    };
+  }
+}
