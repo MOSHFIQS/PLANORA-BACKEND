@@ -11,9 +11,7 @@ export interface EventInvoiceData {
   paymentDate: string;
 }
 
-export const generateEventInvoicePdf = async (
-  data: EventInvoiceData
-): Promise<Buffer> => {
+export const generateEventInvoicePdf = async (data: EventInvoiceData): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({ size: "A4", margin: 50 });
@@ -23,59 +21,45 @@ export const generateEventInvoicePdf = async (
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
-      // Header
-      doc.fontSize(22).font("Helvetica-Bold").text("EVENT INVOICE", { align: "center" });
-      doc.moveDown();
+      const drawDivider = () => doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke().moveDown();
 
-      doc.fontSize(10).text("Event Management System", { align: "center" });
-      doc.moveDown();
+      // Title & Subtitle
+      doc.fontSize(22).font("Helvetica-Bold").text("EVENT INVOICE", { align: "center" }).moveDown(0.5);
+      doc.fontSize(10).font("Helvetica").text("Event Management System", { align: "center" }).moveDown();
+      drawDivider();
 
-      doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
-      doc.moveDown();
+      // Sections
+      const addSection = (title: string, lines: string[]) => {
+        doc.fontSize(11).font("Helvetica-Bold").text(title);
+        doc.fontSize(10).font("Helvetica");
+        lines.forEach((line) => doc.text(line));
+        doc.moveDown();
+      };
 
-      // Invoice Info
-      doc.fontSize(11).font("Helvetica-Bold").text("Invoice Details");
-      doc
-        .font("Helvetica")
-        .fontSize(10)
-        .text(`Invoice ID: ${data.invoiceId}`)
-        .text(`Transaction ID: ${data.transactionId}`)
-        .text(`Payment Date: ${new Date(data.paymentDate).toLocaleDateString()}`);
+      addSection("Invoice Details", [
+        `Invoice ID: ${data.invoiceId}`,
+        `Transaction ID: ${data.transactionId}`,
+        `Payment Date: ${new Date(data.paymentDate).toLocaleDateString()}`,
+      ]);
 
-      doc.moveDown();
+      addSection("User Details", [
+        `Name: ${data.userName}`,
+        `Email: ${data.userEmail}`,
+      ]);
 
-      // User Info
-      doc.fontSize(11).font("Helvetica-Bold").text("User Details");
-      doc
-        .font("Helvetica")
-        .text(`Name: ${data.userName}`)
-        .text(`Email: ${data.userEmail}`);
+      addSection("Event Details", [
+        `Event Name: ${data.eventName}`,
+        `Event Date: ${new Date(data.eventDate).toLocaleDateString()}`,
+      ]);
 
-      doc.moveDown();
+      drawDivider();
 
-      // Event Info
-      doc.fontSize(11).font("Helvetica-Bold").text("Event Details");
-      doc
-        .font("Helvetica")
-        .text(`Event Name: ${data.eventName}`)
-        .text(`Event Date: ${new Date(data.eventDate).toLocaleDateString()}`);
-
-      doc.moveDown();
-
-      // Payment Summary
-      doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
-      doc.moveDown();
-
+      // Summary & Total
       doc.fontSize(11).font("Helvetica-Bold").text("Payment Summary");
-      doc.font("Helvetica").text(`Amount: ${data.amount.toFixed(2)} BDT`);
+      doc.fontSize(10).font("Helvetica").text(`Amount: ${data.amount.toFixed(2)} BDT`).moveDown();
+      doc.fontSize(11).font("Helvetica-Bold").text(`Total: ${data.amount.toFixed(2)} BDT`).moveDown(2);
 
-      doc.moveDown();
-
-      doc.font("Helvetica-Bold").text(`Total: ${data.amount.toFixed(2)} BDT`);
-
-      doc.moveDown(2);
-
-      doc.fontSize(9).text("Thank you for your payment.", { align: "center" });
+      doc.fontSize(9).font("Helvetica").text("Thank you for your payment.", { align: "center" });
 
       doc.end();
     } catch (err) {

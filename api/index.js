@@ -149199,6 +149199,11 @@ const env_config_1 = __nccwpck_require__(48528);
 const enums_1 = __nccwpck_require__(50343);
 const query_builder_util_1 = __nccwpck_require__(44094);
 const payment_utils_1 = __nccwpck_require__(48584);
+const PAYMENT_INCLUDES = {
+    user: true,
+    participation: { include: { event: true } },
+    invitation: { include: { event: true } },
+};
 let PaymentService = PaymentService_1 = class PaymentService {
     prisma;
     auditService;
@@ -149220,7 +149225,7 @@ let PaymentService = PaymentService_1 = class PaymentService {
                     price_data: {
                         currency: "bdt",
                         product_data: { name: "Event Ticket" },
-                        unit_amount: amount * 100,
+                        unit_amount: Math.round(amount * 100),
                     },
                     quantity: 1,
                 },
@@ -149231,95 +149236,65 @@ let PaymentService = PaymentService_1 = class PaymentService {
             cancel_url: `${env_config_1.envVars.FRONTEND_URL}/dashboard`,
         });
     }
-    async initiatePayment(user, payload) {
-        if (!payload.eventId && !payload.invitationId) {
-            throw new common_1.BadRequestException("Invalid payment target");
-        }
-        if (payload.eventId) {
-            const existingParticipation = await this.prisma.participation.findUnique({
-                where: {
-                    userId_eventId: {
-                        userId: user.userId,
-                        eventId: payload.eventId,
-                    },
-                },
-            });
-            if (existingParticipation?.status === enums_1.ParticipationStatus.APPROVED) {
+    async resolveTarget(user, { eventId, invitationId }) {
+        if (eventId) {
+            const [event, part] = await Promise.all([
+                this.prisma.event.findUniqueOrThrow({ where: { id: eventId } }),
+                this.prisma.participation.findUnique({
+                    where: { userId_eventId: { userId: user.userId, eventId } },
+                }),
+            ]);
+            if (part?.status === enums_1.ParticipationStatus.APPROVED) {
                 throw new common_1.BadRequestException("You already joined this event");
             }
-        }
-        if (payload.invitationId) {
-            const invitation = await this.prisma.invitation.findUnique({
-                where: { id: payload.invitationId },
-            });
-            if (invitation?.status === enums_1.InvitationStatus.ACCEPTED) {
-                throw new common_1.BadRequestException("Invitation already accepted");
-            }
-        }
-        const successPayment = await this.prisma.payment.findFirst({
-            where: {
-                userId: user.userId,
-                status: enums_1.PaymentStatus.SUCCESS,
-                ...(payload.eventId && {
-                    participation: { eventId: payload.eventId },
-                }),
-                ...(payload.invitationId && {
-                    invitationId: payload.invitationId,
-                }),
-            },
-        });
-        if (successPayment) {
-            throw new common_1.BadRequestException("Payment already completed");
-        }
-        const existingPendingPayment = await this.prisma.payment.findFirst({
-            where: {
-                userId: user.userId,
-                status: enums_1.PaymentStatus.PENDING,
-                ...(payload.eventId && {
-                    participation: { eventId: payload.eventId },
-                }),
-                ...(payload.invitationId && {
-                    invitationId: payload.invitationId,
-                }),
-            },
-            include: { participation: true },
-        });
-        if (existingPendingPayment) {
-            const session = await this.createStripeSession(existingPendingPayment.id, existingPendingPayment.amount);
             return {
-                paymentId: existingPendingPayment.id,
-                paymentUrl: session.url,
+                amount: event.fee,
+                eventId,
+                invitationId: undefined,
+                targetFilter: { participation: { eventId } },
             };
         }
-        let amount = 0;
-        let participationId;
-        if (payload.eventId) {
-            const event = await this.prisma.event.findUniqueOrThrow({
-                where: { id: payload.eventId },
+        if (invitationId) {
+            const invitation = await this.prisma.invitation.findUniqueOrThrow({
+                where: { id: invitationId },
+                include: { event: true },
             });
-            amount = event.fee;
+            if (invitation.status === enums_1.InvitationStatus.ACCEPTED) {
+                throw new common_1.BadRequestException("Invitation already accepted");
+            }
+            return {
+                amount: invitation.event.fee,
+                eventId: undefined,
+                invitationId,
+                targetFilter: { invitationId },
+            };
+        }
+        throw new common_1.BadRequestException("Invalid payment target");
+    }
+    async initiatePayment(user, payload) {
+        const { amount, eventId, invitationId, targetFilter } = await this.resolveTarget(user, payload);
+        const existingPayment = await this.prisma.payment.findFirst({
+            where: {
+                userId: user.userId,
+                ...targetFilter,
+                status: { in: [enums_1.PaymentStatus.SUCCESS, enums_1.PaymentStatus.PENDING] },
+            },
+        });
+        if (existingPayment?.status === enums_1.PaymentStatus.SUCCESS) {
+            throw new common_1.BadRequestException("Payment already completed");
+        }
+        if (existingPayment) {
+            const session = await this.createStripeSession(existingPayment.id, existingPayment.amount);
+            return { paymentId: existingPayment.id, paymentUrl: session.url };
+        }
+        let participationId;
+        if (eventId) {
             const participation = await this.prisma.participation.upsert({
-                where: {
-                    userId_eventId: {
-                        userId: user.userId,
-                        eventId: payload.eventId,
-                    },
-                },
-                create: {
-                    userId: user.userId,
-                    eventId: payload.eventId,
-                    status: enums_1.ParticipationStatus.PENDING,
-                },
+                where: { userId_eventId: { userId: user.userId, eventId } },
+                create: { userId: user.userId, eventId, status: enums_1.ParticipationStatus.PENDING },
                 update: {},
             });
             participationId = participation.id;
-        }
-        if (payload.invitationId) {
-            const invitation = await this.prisma.invitation.findUniqueOrThrow({
-                where: { id: payload.invitationId },
-                include: { event: true },
-            });
-            amount = invitation.event.fee;
         }
         const payment = await this.prisma.payment.create({
             data: {
@@ -149327,172 +149302,147 @@ let PaymentService = PaymentService_1 = class PaymentService {
                 amount,
                 status: enums_1.PaymentStatus.PENDING,
                 transactionId: (0, uuid_1.v4)(),
-                ...(participationId && { participationId }),
-                ...(payload.invitationId && { invitationId: payload.invitationId }),
+                participationId,
+                invitationId,
             },
         });
         const session = await this.createStripeSession(payment.id, amount);
-        return {
-            paymentId: payment.id,
-            paymentUrl: session.url,
-        };
+        return { paymentId: payment.id, paymentUrl: session.url };
     }
     async handleStripeWebhookEvent(event) {
-        if (event.type === "checkout.session.completed") {
-            const session = event.data.object;
-            const paymentId = session.metadata?.paymentId;
-            if (!paymentId)
-                return;
-            const payment = await this.prisma.payment.findUnique({
-                where: { id: paymentId },
-                include: {
-                    participation: { include: { event: true } },
-                    invitation: { include: { event: true } },
-                    user: true,
-                },
-            });
-            if (!payment || payment.status === enums_1.PaymentStatus.SUCCESS)
-                return;
-            let eventId = payment.participation?.eventId;
-            let eventTitle = payment.participation?.event?.title;
-            let eventDateTime = payment.participation?.event?.dateTime;
+        if (event.type !== "checkout.session.completed")
+            return;
+        const session = event.data.object;
+        const paymentId = session.metadata?.paymentId;
+        if (!paymentId)
+            return;
+        const payment = await this.prisma.payment.findUnique({
+            where: { id: paymentId },
+            include: {
+                participation: { include: { event: true } },
+                invitation: { include: { event: true } },
+                user: true,
+            },
+        });
+        if (!payment || payment.status === enums_1.PaymentStatus.SUCCESS)
+            return;
+        const eventData = payment.participation?.event || payment.invitation?.event;
+        const eventId = eventData?.id;
+        const eventTitle = eventData?.title || "Event";
+        await this.prisma.$transaction(async (tx) => {
             let participationId = payment.participationId;
             if (payment.invitation) {
-                eventId = payment.invitation.eventId;
-                eventTitle = payment.invitation.event.title;
-                eventDateTime = payment.invitation.event.dateTime;
-                const participation = await this.prisma.participation.upsert({
+                const participation = await tx.participation.upsert({
                     where: {
-                        userId_eventId: {
-                            userId: payment.userId,
-                            eventId,
-                        },
+                        userId_eventId: { userId: payment.userId, eventId: payment.invitation.eventId },
                     },
                     create: {
                         userId: payment.userId,
-                        eventId,
+                        eventId: payment.invitation.eventId,
                         status: enums_1.ParticipationStatus.APPROVED,
                     },
-                    update: {
-                        status: enums_1.ParticipationStatus.APPROVED,
-                    },
+                    update: { status: enums_1.ParticipationStatus.APPROVED },
                 });
                 participationId = participation.id;
-                await this.prisma.invitation.update({
+                await tx.invitation.update({
                     where: { id: payment.invitation.id },
                     data: { status: enums_1.InvitationStatus.ACCEPTED },
                 });
             }
-            await this.prisma.$transaction(async (tx) => {
-                await tx.payment.update({
-                    where: { id: paymentId },
-                    data: {
-                        status: enums_1.PaymentStatus.SUCCESS,
-                        transactionId: session.payment_intent,
-                        participationId,
-                    },
+            else if (participationId) {
+                await tx.participation.update({
+                    where: { id: participationId },
+                    data: { status: enums_1.ParticipationStatus.APPROVED },
                 });
-                if (participationId) {
-                    await tx.participation.update({
-                        where: { id: participationId },
-                        data: { status: enums_1.ParticipationStatus.APPROVED },
-                    });
-                    await tx.ticket.create({
-                        data: {
-                            userId: payment.userId,
-                            eventId: eventId,
-                            participationId,
-                            qrCode: (0, uuid_1.v4)(),
-                        },
-                    });
-                }
+            }
+            await tx.payment.update({
+                where: { id: paymentId },
+                data: {
+                    status: enums_1.PaymentStatus.SUCCESS,
+                    transactionId: session.payment_intent || payment.transactionId,
+                    participationId,
+                },
             });
-            try {
-                const invoicePdf = await (0, payment_utils_1.generateEventInvoicePdf)({
-                    invoiceId: payment.id,
-                    userName: payment.user.name,
-                    userEmail: payment.user.email,
-                    eventName: eventTitle || "Event",
-                    eventDate: eventDateTime ? eventDateTime.toISOString() : new Date().toISOString(),
-                    amount: payment.amount,
-                    transactionId: session.payment_intent,
-                    paymentDate: new Date().toISOString(),
-                });
-                const uploadResult = await (0, cloudinary_config_1.uploadFileToCloudinary)(invoicePdf, `invoice-${payment.id}.pdf`);
-                await this.prisma.payment.update({
-                    where: { id: payment.id },
-                    data: { invoiceUrl: uploadResult.secure_url },
-                });
-                await this.mailService.sendEmail({
-                    to: payment.user.email,
-                    subject: "Your Event Payment Invoice",
-                    templateName: "invoice",
-                    templateData: {
-                        userName: payment.user.name,
-                        eventName: eventTitle,
-                        amount: payment.amount,
-                        invoiceUrl: uploadResult.secure_url,
+            if (participationId && eventId) {
+                await tx.ticket.create({
+                    data: {
+                        userId: payment.userId,
+                        eventId,
+                        participationId,
+                        qrCode: (0, uuid_1.v4)(),
                     },
-                    attachments: [
-                        {
-                            filename: `invoice-${payment.id}.pdf`,
-                            content: invoicePdf,
-                            contentType: "application/pdf",
-                        },
-                    ],
                 });
             }
-            catch (err) {
-                this.logger.error("Failed to generate/upload/send invoice:", err.message);
-            }
-            await this.auditService.logAction(enums_1.AuditAction.PAYMENT, "payment", payment.id, payment.userId, `Payment successful for event: ${eventTitle}`);
-            await this.notificationService.sendNotification(payment.userId, "Payment Successful", `Your payment for ${eventTitle} was successful!`, enums_1.NotificationType.SUCCESS, eventId, payment.id);
-        }
+        });
+        this.sendInvoiceAndNotify(payment, session, eventTitle, eventData?.dateTime, eventId).catch((err) => this.logger.error(`Webhook notification error: ${err.message}`));
     }
-    async getMyPayments(user, query) {
-        if (!user?.userId) {
-            throw new common_1.UnauthorizedException("Unauthorized");
+    async sendInvoiceAndNotify(payment, session, title, date, eventId) {
+        try {
+            const invoicePdf = await (0, payment_utils_1.generateEventInvoicePdf)({
+                invoiceId: payment.id,
+                userName: payment.user.name,
+                userEmail: payment.user.email,
+                eventName: title,
+                eventDate: date ? date.toISOString() : new Date().toISOString(),
+                amount: payment.amount,
+                transactionId: session.payment_intent || payment.transactionId,
+                paymentDate: new Date().toISOString(),
+            });
+            const { secure_url } = await (0, cloudinary_config_1.uploadFileToCloudinary)(invoicePdf, `invoice-${payment.id}.pdf`);
+            await this.prisma.payment.update({
+                where: { id: payment.id },
+                data: { invoiceUrl: secure_url },
+            });
+            await this.mailService.sendEmail({
+                to: payment.user.email,
+                subject: "Your Event Payment Invoice",
+                templateName: "invoice",
+                templateData: {
+                    userName: payment.user.name,
+                    eventName: title,
+                    amount: payment.amount,
+                    invoiceUrl: secure_url,
+                },
+                attachments: [
+                    {
+                        filename: `invoice-${payment.id}.pdf`,
+                        content: invoicePdf,
+                        contentType: "application/pdf",
+                    },
+                ],
+            });
         }
-        const queryBuilder = new query_builder_util_1.QueryBuilder(this.prisma.payment, query);
-        return queryBuilder
-            .where({ userId: user.userId })
-            .include({
-            participation: { include: { event: true } },
-            invitation: { include: { event: true } },
-        })
+        catch (err) {
+            this.logger.error(`Invoice delivery failed for payment ${payment.id}: ${err.message}`);
+        }
+        await Promise.all([
+            this.auditService.logAction(enums_1.AuditAction.PAYMENT, "payment", payment.id, payment.userId, `Payment successful for: ${title}`),
+            this.notificationService.sendNotification(payment.userId, "Payment Successful", `Your payment for ${title} was successful!`, enums_1.NotificationType.SUCCESS, eventId, payment.id),
+        ]);
+    }
+    paginatePayments(query, where = {}) {
+        return new query_builder_util_1.QueryBuilder(this.prisma.payment, query)
+            .where(where)
+            .include(PAYMENT_INCLUDES)
             .sort()
             .paginate()
             .execute();
     }
+    async getMyPayments(user, query) {
+        if (!user?.userId)
+            throw new common_1.UnauthorizedException("Unauthorized");
+        return this.paginatePayments(query, { userId: user.userId });
+    }
     async getOrganizerPayments(user, query) {
-        const queryBuilder = new query_builder_util_1.QueryBuilder(this.prisma.payment, query);
-        return queryBuilder
-            .where({
+        return this.paginatePayments(query, {
             OR: [
                 { participation: { event: { organizerId: user.userId } } },
                 { invitation: { event: { organizerId: user.userId } } },
             ],
-        })
-            .include({
-            user: true,
-            participation: { include: { event: true } },
-            invitation: { include: { event: true } },
-        })
-            .sort()
-            .paginate()
-            .execute();
+        });
     }
     async getAllPayments(query) {
-        const queryBuilder = new query_builder_util_1.QueryBuilder(this.prisma.payment, query);
-        return queryBuilder
-            .include({
-            user: true,
-            participation: { include: { event: true } },
-            invitation: { include: { event: true } },
-        })
-            .sort()
-            .paginate()
-            .execute();
+        return this.paginatePayments(query);
     }
 };
 exports.PaymentService = PaymentService;
@@ -149526,40 +149476,34 @@ const generateEventInvoicePdf = async (data) => {
             doc.on("data", (chunk) => chunks.push(chunk));
             doc.on("end", () => resolve(Buffer.concat(chunks)));
             doc.on("error", reject);
-            doc.fontSize(22).font("Helvetica-Bold").text("EVENT INVOICE", { align: "center" });
-            doc.moveDown();
-            doc.fontSize(10).text("Event Management System", { align: "center" });
-            doc.moveDown();
-            doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
-            doc.moveDown();
-            doc.fontSize(11).font("Helvetica-Bold").text("Invoice Details");
-            doc
-                .font("Helvetica")
-                .fontSize(10)
-                .text(`Invoice ID: ${data.invoiceId}`)
-                .text(`Transaction ID: ${data.transactionId}`)
-                .text(`Payment Date: ${new Date(data.paymentDate).toLocaleDateString()}`);
-            doc.moveDown();
-            doc.fontSize(11).font("Helvetica-Bold").text("User Details");
-            doc
-                .font("Helvetica")
-                .text(`Name: ${data.userName}`)
-                .text(`Email: ${data.userEmail}`);
-            doc.moveDown();
-            doc.fontSize(11).font("Helvetica-Bold").text("Event Details");
-            doc
-                .font("Helvetica")
-                .text(`Event Name: ${data.eventName}`)
-                .text(`Event Date: ${new Date(data.eventDate).toLocaleDateString()}`);
-            doc.moveDown();
-            doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
-            doc.moveDown();
+            const drawDivider = () => doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke().moveDown();
+            doc.fontSize(22).font("Helvetica-Bold").text("EVENT INVOICE", { align: "center" }).moveDown(0.5);
+            doc.fontSize(10).font("Helvetica").text("Event Management System", { align: "center" }).moveDown();
+            drawDivider();
+            const addSection = (title, lines) => {
+                doc.fontSize(11).font("Helvetica-Bold").text(title);
+                doc.fontSize(10).font("Helvetica");
+                lines.forEach((line) => doc.text(line));
+                doc.moveDown();
+            };
+            addSection("Invoice Details", [
+                `Invoice ID: ${data.invoiceId}`,
+                `Transaction ID: ${data.transactionId}`,
+                `Payment Date: ${new Date(data.paymentDate).toLocaleDateString()}`,
+            ]);
+            addSection("User Details", [
+                `Name: ${data.userName}`,
+                `Email: ${data.userEmail}`,
+            ]);
+            addSection("Event Details", [
+                `Event Name: ${data.eventName}`,
+                `Event Date: ${new Date(data.eventDate).toLocaleDateString()}`,
+            ]);
+            drawDivider();
             doc.fontSize(11).font("Helvetica-Bold").text("Payment Summary");
-            doc.font("Helvetica").text(`Amount: ${data.amount.toFixed(2)} BDT`);
-            doc.moveDown();
-            doc.font("Helvetica-Bold").text(`Total: ${data.amount.toFixed(2)} BDT`);
-            doc.moveDown(2);
-            doc.fontSize(9).text("Thank you for your payment.", { align: "center" });
+            doc.fontSize(10).font("Helvetica").text(`Amount: ${data.amount.toFixed(2)} BDT`).moveDown();
+            doc.fontSize(11).font("Helvetica-Bold").text(`Total: ${data.amount.toFixed(2)} BDT`).moveDown(2);
+            doc.fontSize(9).font("Helvetica").text("Thank you for your payment.", { align: "center" });
             doc.end();
         }
         catch (err) {
