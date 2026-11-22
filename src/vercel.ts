@@ -1,18 +1,40 @@
 import "reflect-metadata";
+import Module from "module";
+import express from "express";
+import { ExpressAdapter, NestExpressApplication } from "@nestjs/platform-express";
 import { NestFactory } from "@nestjs/core";
-import { NestExpressApplication } from "@nestjs/platform-express";
 import { ValidationPipe } from "@nestjs/common";
 import cookieParser from "cookie-parser";
+import ejs from "ejs";
 import path from "path";
 import { AppModule } from "./app.module";
 import { envVars } from "./config/env.config";
 
+// Intercept Module._load so dynamic createRequire calls inside bundled dependencies
+// (such as @thallesp/nestjs-better-auth's getExpressBodyParser and express view engines)
+// resolve directly to the bundled instances without looking in external node_modules.
+const origLoad = (Module as any)._load;
+(Module as any)._load = function (request: string, parent: any, isMain: boolean) {
+  if (request === "express") {
+    return express;
+  }
+  if (request === "ejs") {
+    return ejs;
+  }
+  return origLoad.apply(this, arguments);
+};
+
 let cachedServer: any;
 
 async function bootstrapServer() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    bodyParser: false,
-  });
+  const expressApp = express();
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    new ExpressAdapter(expressApp),
+    {
+      bodyParser: false,
+    }
+  );
 
   // Configure view engine for EJS (OAuth redirects & email templates)
   app.setBaseViewsDir(path.resolve(process.cwd(), "src/mail/templates"));
@@ -66,7 +88,7 @@ async function bootstrapServer() {
   );
 
   await app.init();
-  return app.getHttpAdapter().getInstance();
+  return expressApp;
 }
 
 export default async function handler(req: any, res: any) {
