@@ -219,11 +219,12 @@ async function seed() {
     console.log(`  ✓ Category: ${cat.name}`);
   }
 
-  // 4. CREATE 17 REALISTIC EVENTS (INCLUDING 7 PRIVATE EVENTS)
-  console.log("\n🎪 Creating 17 Realistic Events (with 7 Private Events)...");
+  // 4. CREATE 17 REALISTIC EVENTS (EACH WITH 5 RICH REALISTIC IMAGES)
+  console.log("\n🎪 Creating 17 Realistic Events (5 Gallery Images Each)...");
   const now = new Date();
 
   const eventsData = [
+    // 0: Global AI Summit
     {
       title: "Global AI & NextGen Intelligent Systems Summit 2026",
       description:
@@ -237,11 +238,14 @@ async function seed() {
         "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: true,
       categoryIndex: 0,
       organizerId: organizer.id,
     },
+    // 1: TypeScript Masterclass
     {
       title: "Full-Stack TypeScript & Cloud Architecture Masterclass",
       description:
@@ -255,11 +259,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: true,
       categoryIndex: 0,
       organizerId: organizer.id,
     },
+    // 2: Acoustic Sunset & Indie Music Fest
     {
       title: "Acoustic Sunset & Indie Music Festival 2026",
       description:
@@ -273,11 +281,14 @@ async function seed() {
         "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: true,
       categoryIndex: 1,
       organizerId: organizer.id,
     },
+    // 3: Private SaaS Forum
     {
       title: "SaaS Founders & Seed-to-Series-A Private Venture Forum",
       description:
@@ -290,11 +301,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1531497865144-0464ef8fb9a9?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 2,
       organizerId: organizer.id,
     },
+    // 4: Mindfulness Retreat
     {
       title: "Mindfulness, Breathwork & Sound Healing Retreat",
       description:
@@ -307,11 +322,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1508672019048-805c876b67e2?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 3,
       organizerId: organizer.id,
     },
+    // 5: Modern Sculpture & Arts Biennial
     {
       title: "Modern Sculpture & Contemporary Visual Arts Biennial",
       description:
@@ -324,11 +343,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1561214115-f2f134cc4912?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 4,
       organizerId: organizer.id,
     },
+    // 6: Artisanal Coffee Roasting Masterclass
     {
       title: "Artisanal Coffee Roasting & Sensory Cupping Masterclass",
       description:
@@ -341,11 +364,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1509785307050-d4066910ec1e?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1497636577773-f1231844b336?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 5,
       organizerId: organizer.id,
     },
+    // 7: UX Research & Figma Architecture Sprint
     {
       title: "UX Research, Design Systems & Figma Architecture Sprint",
       description:
@@ -359,11 +386,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1542744094-3a31f272c490?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 6,
       organizerId: organizer.id,
     },
+    // 8: Midnight Half Marathon
     {
       title: "City Lights Midnight Half Marathon & 10K Endurance Run",
       description:
@@ -376,11 +407,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 7,
       organizerId: organizer.id,
     },
+    // 9: Apex Arena Esports Invitational
     {
       title: "Apex Arena Esports Invitational & Fan Convention",
       description:
@@ -393,12 +428,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1511882150382-421056c89033?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 8,
       organizerId: organizer.id,
     },
-    // Past event for reviews and checked-in tickets
+    // 10: Next.js Summit (Past event for checked-in history & reviews)
     {
       title: "Next.js 15 & Modern Web Development Summit 2025",
       description:
@@ -411,12 +449,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 0,
       organizerId: organizer.id,
     },
-    // PRIVATE EVENT 2:
+    // 11: PRIVATE EVENT 2 - Executive Roundtable
     {
       title: "Private VIP Executive Roundtable: Tech Governance & AI Policy",
       description:
@@ -429,12 +470,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 2,
       organizerId: superAdmin.id,
     },
-    // PRIVATE EVENT 3:
+    // 12: PRIVATE EVENT 3 - Cyber Security War Room
     {
       title: "Closed Cyber Security Red Team & Zero-Day Defense War Room",
       description:
@@ -447,12 +491,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 0,
       organizerId: organizer.id,
     },
-    // PRIVATE EVENT 4:
+    // 13: PRIVATE EVENT 4 - Quant Trading Summit
     {
       title: "Fintech & High-Frequency Quantitative Trading Closed Summit",
       description:
@@ -466,12 +513,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1642543492481-44e81e3914a7?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 2,
       organizerId: organizer.id,
     },
-    // PRIVATE EVENT 5:
+    // 14: PRIVATE EVENT 5 - VC Matchmaking Dinner
     {
       title: "Venture Capital GP & LP Private Matchmaking Dinner",
       description:
@@ -484,12 +534,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 2,
       organizerId: superAdmin.id,
     },
-    // PRIVATE EVENT 6:
+    // 15: PRIVATE EVENT 6 - AI Agents Steering Committee
     {
       title: "NextGen Autonomous AI Agents Engineering Steering Committee",
       description:
@@ -503,12 +556,15 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1535378917042-10a22c95931a?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 0,
       organizerId: organizer.id,
     },
-    // PRIVATE EVENT 7:
+    // 16: PRIVATE EVENT 7 - Angel Dealflow Showcase
     {
       title: "Angel Syndicate & Family Office Private Dealflow Showcase",
       description:
@@ -521,6 +577,9 @@ async function seed() {
       images: [
         "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1200&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1580674684081-7617fbf3d745?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?q=80&w=1200&auto=format&fit=crop",
       ],
       isFeatured: false,
       categoryIndex: 2,
@@ -551,8 +610,8 @@ async function seed() {
     console.log(`  ✓ Event [${ed.visibility} - ${ed.type}]: ${event.title}`);
   }
 
-  // 5. CREATE HOMEPAGE BANNERS
-  console.log("\n🖼️ Creating Homepage Feature Banners...");
+  // 5. CREATE HOMEPAGE BANNERS (8 Banners across MAIN & SECONDARY)
+  console.log("\n🖼️ Creating 8 Homepage Feature Banners...");
   const bannersData = [
     {
       title: "Experience the Future: Global AI Summit 2026",
@@ -575,8 +634,28 @@ async function seed() {
       eventIndex: 2,
     },
     {
+      title: "Apex Arena Esports Invitational & Fan Convention",
+      description: "Top 16 regional squads clash live on stage with LAN side tournaments, arcade alleys, and hardware giveaways.",
+      image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop",
+      position: BannerPosition.MAIN,
+      positionOrder: 3,
+      buttonText: "Reserve Seat",
+      altText: "Esports Invitational Banner",
+      eventIndex: 9,
+    },
+    {
+      title: "City Lights Midnight Half Marathon & 10K Run",
+      description: "An electric night run through illuminated skyline courses with neon cheer stations and finisher medals.",
+      image: "https://images.unsplash.com/photo-1530549387789-4c1017266635?q=80&w=1920&auto=format&fit=crop",
+      position: BannerPosition.MAIN,
+      positionOrder: 4,
+      buttonText: "Register to Run",
+      altText: "Midnight Half Marathon Banner",
+      eventIndex: 8,
+    },
+    {
       title: "Master High-Scale Web Architecture: Next.js 16 & NestJS",
-      description: "Zero-downtime databases, edge caching, and scalable micro-services live masterclass.",
+      description: "Zero-downtime databases, edge caching, and scalable microservices live masterclass.",
       image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1920&auto=format&fit=crop",
       position: BannerPosition.SECONDARY,
       positionOrder: 1,
@@ -593,6 +672,26 @@ async function seed() {
       buttonText: "Request Access",
       altText: "Executive Tech Governance Symposium Banner",
       eventIndex: 11,
+    },
+    {
+      title: "Tactical Defense: Closed Cyber Security Red Team War Room",
+      description: "Simulating zero-day defense, adversarial breakouts, and sovereign perimeter hardening.",
+      image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1920&auto=format&fit=crop",
+      position: BannerPosition.SECONDARY,
+      positionOrder: 3,
+      buttonText: "View Briefing",
+      altText: "Cyber Security Red Team Banner",
+      eventIndex: 12,
+    },
+    {
+      title: "Artisanal Coffee Roasting & Sensory Cupping Experience",
+      description: "Hands-on roasting science and blind cupping masterclass with certified Q-graders.",
+      image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1920&auto=format&fit=crop",
+      position: BannerPosition.SECONDARY,
+      positionOrder: 4,
+      buttonText: "Explore Workshop",
+      altText: "Artisanal Coffee Roasting Banner",
+      eventIndex: 6,
     },
   ];
 
@@ -614,20 +713,11 @@ async function seed() {
     console.log(`  ✓ Banner [${banner.position} #${banner.positionOrder}]: ${banner.title}`);
   }
 
-  // 6. CREATE PARTICIPATIONS & TICKETS (NORMAL USER MOSHFIQUR + COMMUNITY)
-  console.log("\n🎟️ Creating Participations & Verified Tickets...");
+  // 6. CREATE PARTICIPATIONS & TICKETS (COMMUNITY USERS ONLY; NO PRE-JOIN FOR NORMAL USER TO ALLOW PAYMENT FLOW TESTING)
+  console.log("\n🎟️ Creating Participations & Verified Tickets (Leaving user 'moshfiqs.dev' unjoined for payment testing)...");
 
   const participantsList = [
-    // Moshfiqur (Normal User) participations & tickets
-    { user: normalUser, eventIndex: 0, status: ParticipationStatus.APPROVED, used: false },
-    { user: normalUser, eventIndex: 1, status: ParticipationStatus.APPROVED, used: false },
-    { user: normalUser, eventIndex: 2, status: ParticipationStatus.APPROVED, used: false },
-    { user: normalUser, eventIndex: 3, status: ParticipationStatus.APPROVED, used: false }, // Accepted private event!
-    { user: normalUser, eventIndex: 10, status: ParticipationStatus.APPROVED, used: true }, // Past event with used ticket!
-    { user: normalUser, eventIndex: 11, status: ParticipationStatus.APPROVED, used: false }, // Accepted private roundtable!
-    { user: normalUser, eventIndex: 4, status: ParticipationStatus.PENDING, used: false }, // Pending approval
-
-    // Community Members
+    // Community Members on various events (so numbers look active, but moshfiqs.dev has NO pre-joined upcoming events!)
     { user: createdUsers["sophia.martinez@gmail.com"], eventIndex: 0, status: ParticipationStatus.APPROVED, used: false },
     { user: createdUsers["alex.vance@gmail.com"], eventIndex: 0, status: ParticipationStatus.APPROVED, used: false },
     { user: createdUsers["elena.rostova@gmail.com"], eventIndex: 0, status: ParticipationStatus.PENDING, used: false },
@@ -673,18 +763,18 @@ async function seed() {
   }
 
   // 7. CREATE INVITATIONS (RICH INVITATIONS FOR PRIVATE EVENTS)
-  console.log("\n✉️ Creating 15+ Realistic Event Invitations for Private Events...");
+  console.log("\n✉️ Creating Realistic Event Invitations for Private Events...");
   const invitationsList = [
-    // Invitations for normal user Moshfiqur (Accepted, Pending, Declined for dashboard testing!)
-    { user: normalUser, eventIndex: 3, status: InvitationStatus.ACCEPTED }, // Private SaaS Forum (Accepted)
-    { user: normalUser, eventIndex: 11, status: InvitationStatus.ACCEPTED }, // Private VIP Roundtable (Accepted)
-    { user: normalUser, eventIndex: 12, status: InvitationStatus.PENDING }, // Private Cyber Security War Room (Pending - can accept in UI!)
-    { user: normalUser, eventIndex: 13, status: InvitationStatus.PENDING }, // Private Fintech Summit (Pending - can accept in UI!)
-    { user: normalUser, eventIndex: 14, status: InvitationStatus.DECLINED }, // Private VC Dinner (Declined)
+    // Invitations for normal user Moshfiqur (Pending invitations so user can accept and test payment!)
+    { user: normalUser, eventIndex: 3, status: InvitationStatus.PENDING }, // Private SaaS Forum (Pending - can accept & pay!)
+    { user: normalUser, eventIndex: 11, status: InvitationStatus.ACCEPTED }, // Private VIP Roundtable (Accepted!)
+    { user: normalUser, eventIndex: 12, status: InvitationStatus.PENDING }, // Private Cyber Security War Room (Pending - can accept & pay!)
+    { user: normalUser, eventIndex: 13, status: InvitationStatus.PENDING }, // Private Fintech Summit (Pending - can accept & pay!)
+    { user: normalUser, eventIndex: 14, status: InvitationStatus.PENDING }, // Private VC Dinner (Pending!)
     { user: normalUser, eventIndex: 15, status: InvitationStatus.PENDING }, // Private AI Steering Committee (Pending!)
     { user: normalUser, eventIndex: 16, status: InvitationStatus.PENDING }, // Private Angel Dealflow (Pending!)
 
-    // Other users' invitations
+    // Other community users' invitations
     { user: createdUsers["marcus.sterling@gmail.com"], eventIndex: 11, status: InvitationStatus.PENDING },
     { user: createdUsers["sophia.martinez@gmail.com"], eventIndex: 11, status: InvitationStatus.ACCEPTED },
     { user: createdUsers["priya.sharma@gmail.com"], eventIndex: 12, status: InvitationStatus.PENDING },
@@ -711,13 +801,6 @@ async function seed() {
   console.log("\n⭐ Creating Realistic Attendee Reviews...");
   const reviewsList = [
     {
-      user: normalUser,
-      eventIndex: 10,
-      rating: 5,
-      comment:
-        "The Turbopack deep dive was mind-blowing! Outstanding speaker lineup, seamless registration with Planora, and top-tier technical depth.",
-    },
-    {
       user: createdUsers["alex.vance@gmail.com"],
       eventIndex: 10,
       rating: 5,
@@ -732,25 +815,11 @@ async function seed() {
         "Fantastic insights on streaming SSR and cache tags. Venue Wi-Fi was rock-solid and the workshop labs were challenging.",
     },
     {
-      user: normalUser,
-      eventIndex: 0,
-      rating: 5,
-      comment:
-        "The keynote on frontier autonomous agents exceeded all expectations. Incredible organization and venue setup.",
-    },
-    {
       user: createdUsers["sophia.martinez@gmail.com"],
       eventIndex: 0,
       rating: 5,
       comment:
         "A monumental event. The AI ethics breakout panel was particularly timely and sparked brilliant discussions.",
-    },
-    {
-      user: normalUser,
-      eventIndex: 2,
-      rating: 5,
-      comment:
-        "The twilight bonfire set by the lake was pure magic. Perfect sound design and a warm, inclusive community atmosphere.",
     },
     {
       user: createdUsers["priya.sharma@gmail.com"],
@@ -860,13 +929,6 @@ async function seed() {
       entityId: superAdmin.id,
       description: "Super Admin authenticated from authorized management IP",
       actorId: superAdmin.id,
-    },
-    {
-      action: AuditAction.CREATE,
-      entityType: "ticket",
-      entityId: randomUUID(),
-      description: "Issued verified QR entry ticket for participant",
-      actorId: organizer.id,
     },
   ];
 
