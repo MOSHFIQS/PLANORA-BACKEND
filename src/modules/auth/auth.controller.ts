@@ -241,8 +241,8 @@ export class AuthController {
     };
   }
 
+  @Public()
   @Post("logout")
-  @ApiBearerAuth("bearer")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Log out user & clear session cookies" })
   @ApiResponse({ status: 200, description: "User logged out successfully" })

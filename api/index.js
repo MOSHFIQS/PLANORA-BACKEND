@@ -143404,11 +143404,23 @@ exports.tokenUtils = {
             secure: isProduction,
             sameSite: isProduction ? "none" : "lax",
         };
-        const clearOptsNone = { path: "/", sameSite: "none", secure: true };
-        ["accessToken", "refreshToken", "better-auth.session_token", "user"].forEach((name) => {
+        const clearOptsNone = { path: "/", sameSite: "none", secure: true, httpOnly: true };
+        const cookieNames = [
+            "accessToken",
+            "refreshToken",
+            "better-auth.session_token",
+            "better-auth.session_data",
+            "better-auth.csrf_token",
+            "better-auth.state",
+            "better-auth.pkce_code_verifier",
+        ];
+        cookieNames.forEach((name) => {
             res.clearCookie(name, clearOpts);
             res.clearCookie(name, clearOptsNone);
+            res.clearCookie(name, { path: "/" });
         });
+        res.clearCookie("user", { path: "/" });
+        res.clearCookie("user", { path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax" });
     },
 };
 
@@ -145805,8 +145817,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "changePassword", null);
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Post)("logout"),
-    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOperation)({ summary: "Log out user & clear session cookies" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "User logged out successfully" }),

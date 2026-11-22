@@ -52,11 +52,26 @@ export const tokenUtils = {
       secure: isProduction,
       sameSite: isProduction ? ("none" as const) : ("lax" as const),
     };
-    const clearOptsNone = { path: "/", sameSite: "none" as const, secure: true };
+    const clearOptsNone = { path: "/", sameSite: "none" as const, secure: true, httpOnly: true };
 
-    ["accessToken", "refreshToken", "better-auth.session_token", "user"].forEach((name) => {
+    const cookieNames = [
+      "accessToken",
+      "refreshToken",
+      "better-auth.session_token",
+      "better-auth.session_data",
+      "better-auth.csrf_token",
+      "better-auth.state",
+      "better-auth.pkce_code_verifier",
+    ];
+
+    cookieNames.forEach((name) => {
       res.clearCookie(name, clearOpts);
       res.clearCookie(name, clearOptsNone);
+      res.clearCookie(name, { path: "/" });
     });
+
+    // "user" cookie is client-accessible (httpOnly: false)
+    res.clearCookie("user", { path: "/" });
+    res.clearCookie("user", { path: "/", secure: isProduction, sameSite: isProduction ? "none" : "lax" });
   },
 };
