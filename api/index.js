@@ -149318,7 +149318,7 @@ let PaymentService = PaymentService_1 = class PaymentService {
                     data: { status: enums_1.InvitationStatus.ACCEPTED },
                 });
             }
-            const transactionId = `FREE-${(0, uuid_1.v4)().slice(0, 8).toUpperCase()}`;
+            const transactionId = (0, uuid_1.v4)();
             const payment = await this.prisma.payment.create({
                 data: {
                     userId: user.userId,
@@ -149438,7 +149438,7 @@ let PaymentService = PaymentService_1 = class PaymentService {
                 where: { id: paymentId },
                 data: {
                     status: enums_1.PaymentStatus.SUCCESS,
-                    transactionId: stripeSessionOrIntentId || payment.transactionId,
+                    stripeEventId: stripeSessionOrIntentId || payment.stripeEventId,
                     participationId,
                 },
             });

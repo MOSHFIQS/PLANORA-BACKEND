@@ -140,7 +140,7 @@ export class PaymentService {
       }
 
       // Create SUCCESS payment record with 0 amount
-      const transactionId = `FREE-${uuidv4().slice(0, 8).toUpperCase()}`;
+      const transactionId = uuidv4();
       const payment = await this.prisma.payment.create({
         data: {
           userId: user.userId,
@@ -286,7 +286,7 @@ export class PaymentService {
         where: { id: paymentId },
         data: {
           status: PaymentStatus.SUCCESS,
-          transactionId: stripeSessionOrIntentId || payment.transactionId,
+          stripeEventId: stripeSessionOrIntentId || payment.stripeEventId,
           participationId,
         },
       });
