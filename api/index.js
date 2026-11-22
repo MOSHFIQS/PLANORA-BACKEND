@@ -142438,7 +142438,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const public_decorator_1 = __nccwpck_require__(96171);
 let AppController = class AppController {
     getHealth() {
@@ -142451,11 +142452,14 @@ exports.AppController = AppController;
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: "Health check endpoint" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "API status is active and healthy" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AppController.prototype, "getHealth", null);
 exports.AppController = AppController = __decorate([
+    (0, swagger_1.ApiTags)("App"),
     (0, common_1.Controller)()
 ], AppController);
 
@@ -142476,10 +142480,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var AppModule_1;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AppModule = void 0;
-const common_1 = __nccwpck_require__(76332);
-const config_1 = __nccwpck_require__(68632);
+const common_1 = __nccwpck_require__(9147);
+const config_1 = __nccwpck_require__(91300);
 const core_1 = __nccwpck_require__(87544);
-const nestjs_better_auth_1 = __nccwpck_require__(86501);
+const nestjs_better_auth_1 = __nccwpck_require__(93476);
 const app_controller_1 = __nccwpck_require__(44751);
 const prisma_module_1 = __nccwpck_require__(30980);
 const mail_module_1 = __nccwpck_require__(48011);
@@ -142600,7 +142604,7 @@ exports.RoleHierarchy = {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CurrentUser = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 exports.CurrentUser = (0, common_1.createParamDecorator)((data, ctx) => {
     const request = ctx.switchToHttp().getRequest();
     const user = request.user || request.session?.user;
@@ -142630,8 +142634,8 @@ exports.CurrentUser = (0, common_1.createParamDecorator)((data, ctx) => {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AllowAnonymous = exports.Public = exports.IS_PUBLIC_KEY = void 0;
-const common_1 = __nccwpck_require__(76332);
-const nestjs_better_auth_1 = __nccwpck_require__(86501);
+const common_1 = __nccwpck_require__(9147);
+const nestjs_better_auth_1 = __nccwpck_require__(93476);
 Object.defineProperty(exports, "AllowAnonymous", ({ enumerable: true, get: function () { return nestjs_better_auth_1.AllowAnonymous; } }));
 exports.IS_PUBLIC_KEY = "PUBLIC";
 const Public = () => {
@@ -142652,8 +142656,8 @@ exports.Public = Public;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Roles = exports.ROLES_KEY = void 0;
-const common_1 = __nccwpck_require__(76332);
-const nestjs_better_auth_1 = __nccwpck_require__(86501);
+const common_1 = __nccwpck_require__(9147);
+const nestjs_better_auth_1 = __nccwpck_require__(93476);
 exports.ROLES_KEY = "ROLES";
 const Roles = (...roles) => {
     return (target, key, descriptor) => {
@@ -142662,6 +142666,68 @@ const Roles = (...roles) => {
     };
 };
 exports.Roles = Roles;
+
+
+/***/ }),
+
+/***/ 40415:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PaginationQueryDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
+const class_validator_1 = __nccwpck_require__(93839);
+class PaginationQueryDto {
+    searchTerm;
+    page;
+    limit;
+    sortBy;
+    sortOrder;
+}
+exports.PaginationQueryDto = PaginationQueryDto;
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Search term / keyword for filtering" }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], PaginationQueryDto.prototype, "searchTerm", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Page number", default: 1 }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Object)
+], PaginationQueryDto.prototype, "page", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Number of records per page", default: 10 }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Object)
+], PaginationQueryDto.prototype, "limit", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Field name to sort by", default: "createdAt" }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], PaginationQueryDto.prototype, "sortBy", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: "Sort direction",
+        enum: ["asc", "desc"],
+        default: "desc",
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], PaginationQueryDto.prototype, "sortOrder", void 0);
 
 
 /***/ }),
@@ -142709,7 +142775,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var GlobalExceptionFilter_1;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GlobalExceptionFilter = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const app_error_1 = __importDefault(__nccwpck_require__(26859));
 let GlobalExceptionFilter = GlobalExceptionFilter_1 = class GlobalExceptionFilter {
     logger = new common_1.Logger(GlobalExceptionFilter_1.name);
@@ -142786,7 +142852,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RolesGuard = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const core_1 = __nccwpck_require__(87544);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const public_decorator_1 = __nccwpck_require__(96171);
@@ -142855,7 +142921,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TransformResponseInterceptor = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const operators_1 = __nccwpck_require__(91350);
 let TransformResponseInterceptor = class TransformResponseInterceptor {
     intercept(context, next) {
@@ -143269,7 +143335,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.cloudinary = exports.deleteFileFromCloudinary = exports.uploadFileToCloudinary = void 0;
 const cloudinary_1 = __nccwpck_require__(52264);
 Object.defineProperty(exports, "cloudinary", ({ enumerable: true, get: function () { return cloudinary_1.v2; } }));
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const env_config_1 = __nccwpck_require__(48528);
 cloudinary_1.v2.config({
     cloud_name: env_config_1.envVars.CLOUDINARY_CLOUD_NAME,
@@ -143390,6 +143456,66 @@ exports.stripe = new stripe_1.default(env_config_1.envVars.STRIPE_SECRET_KEY);
 
 /***/ }),
 
+/***/ 41697:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.setupSwagger = setupSwagger;
+const swagger_1 = __nccwpck_require__(67461);
+function setupSwagger(app) {
+    const config = new swagger_1.DocumentBuilder()
+        .setTitle("Planora API")
+        .setDescription("Planora Event Management & Ticketing Platform - Complete REST API Documentation with zero-level clean architecture.")
+        .setVersion("1.0.0")
+        .addBearerAuth({
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+        name: "Authorization",
+        description: "Enter your Bearer Token or Session Token",
+        in: "header",
+    }, "bearer")
+        .addTag("App", "General application health and status")
+        .addTag("Auth", "Authentication, Better-Auth integration, registration, login & tokens")
+        .addTag("Profile", "User profile retrieval and update operations")
+        .addTag("Admin", "Super Admin and Admin operations (Users, Roles, Status)")
+        .addTag("Category", "Event category management (CRUD)")
+        .addTag("Banner", "Homepage and promotional banners management")
+        .addTag("Event", "Events discovery, creation, updates, and featured status")
+        .addTag("Ticket", "Tickets management, user ticket retrieval, QR check-in")
+        .addTag("Participation", "Participant tracking, registrations, and status updates")
+        .addTag("Payment", "Stripe payment intents, webhooks, and invoices")
+        .addTag("Review", "Event reviews, ratings, and feedback")
+        .addTag("Invitation", "Speaker and VIP event invitations")
+        .addTag("Notification", "User notifications and read state management")
+        .addTag("Stat", "Platform, Admin, Organizer, and User analytical statistics")
+        .addTag("Audit", "System activity and security audit logs")
+        .addTag("File", "Image and media uploads to Cloudinary")
+        .build();
+    const document = swagger_1.SwaggerModule.createDocument(app, config);
+    const customOptions = {
+        customSiteTitle: "Planora API Documentation",
+        customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css",
+        customJs: [
+            "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-bundle.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-standalone-preset.js",
+        ],
+        swaggerOptions: {
+            persistAuthorization: true,
+            displayRequestDuration: true,
+            filter: true,
+            docExpansion: "none",
+        },
+    };
+    swagger_1.SwaggerModule.setup("docs", app, document, customOptions);
+    swagger_1.SwaggerModule.setup("api/docs", app, document, customOptions);
+}
+
+
+/***/ }),
+
 /***/ 30980:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -143403,7 +143529,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PrismaModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 let PrismaModule = class PrismaModule {
 };
@@ -143436,7 +143562,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var PrismaService_1;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PrismaService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const adapter_pg_1 = __nccwpck_require__(41540);
 const client_1 = __nccwpck_require__(29202);
 const env_config_1 = __nccwpck_require__(48528);
@@ -143962,7 +144088,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MailModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const mail_service_1 = __nccwpck_require__(29844);
 let MailModule = class MailModule {
 };
@@ -143998,7 +144124,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var MailService_1;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MailService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const ejs_1 = __importDefault(__nccwpck_require__(87763));
 const nodemailer_1 = __importDefault(__nccwpck_require__(25831));
 const path_1 = __importDefault(__nccwpck_require__(16928));
@@ -144068,11 +144194,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AdminController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const admin_service_1 = __nccwpck_require__(90670);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const current_user_decorator_1 = __nccwpck_require__(9253);
 const enums_1 = __nccwpck_require__(50343);
+const pagination_query_dto_1 = __nccwpck_require__(40415);
 const create_admin_dto_1 = __nccwpck_require__(95521);
 const update_user_dto_1 = __nccwpck_require__(54426);
 let AdminController = class AdminController {
@@ -144106,15 +144234,20 @@ exports.AdminController = AdminController;
 __decorate([
     (0, common_1.Get)("users"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get all platform users with filtering & pagination" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of users returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "getAllUsers", null);
 __decorate([
     (0, common_1.Get)("users/:id"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get user details by ID" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "User ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User details returned successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -144123,6 +144256,9 @@ __decorate([
 __decorate([
     (0, common_1.Patch)("users/:id/status"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Update user account status (e.g. ACTIVE, BLOCKED)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "User ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User status updated successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, current_user_decorator_1.CurrentUser)()),
@@ -144133,6 +144269,9 @@ __decorate([
 __decorate([
     (0, common_1.Patch)("users/:id/role"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Update user role (e.g. USER, ORGANIZER, ADMIN)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "User ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User role updated successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, current_user_decorator_1.CurrentUser)()),
@@ -144143,6 +144282,9 @@ __decorate([
 __decorate([
     (0, common_1.Delete)("users/:id"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Delete user account" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "User ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User deleted successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
@@ -144152,21 +144294,27 @@ __decorate([
 __decorate([
     (0, common_1.Get)("admins"),
     (0, roles_decorator_1.Roles)(enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get all admins (SuperAdmin only)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of admins returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "getAllAdmins", null);
 __decorate([
     (0, common_1.Post)("admins"),
     (0, roles_decorator_1.Roles)(enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Create new admin or superadmin (SuperAdmin only)" }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "Admin created successfully" }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_admin_dto_1.CreateAdminDto]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "createAdmin", null);
 exports.AdminController = AdminController = __decorate([
+    (0, swagger_1.ApiTags)("Admin"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.Controller)("admin"),
     __metadata("design:paramtypes", [admin_service_1.AdminService])
 ], AdminController);
@@ -144187,7 +144335,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AdminModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const admin_controller_1 = __nccwpck_require__(25413);
 const admin_service_1 = __nccwpck_require__(90670);
 let AdminModule = class AdminModule {
@@ -144220,7 +144368,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AdminService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const audit_service_1 = __nccwpck_require__(19230);
 const notification_service_1 = __nccwpck_require__(76570);
@@ -144372,6 +144520,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateAdminDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class CreateAdminDto {
     name;
@@ -144381,21 +144530,25 @@ class CreateAdminDto {
 }
 exports.CreateAdminDto = CreateAdminDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Admin full name", example: "Admin Manager" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateAdminDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Admin email address", example: "admin@planora.com" }),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateAdminDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Admin account password (min 6 chars)", example: "SuperSecret123" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
 ], CreateAdminDto.prototype, "password", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Role assignment", enum: ["ADMIN", "SUPERADMIN"], example: "ADMIN" }),
     (0, class_validator_1.IsIn)(["ADMIN", "SUPERADMIN"]),
     __metadata("design:type", String)
 ], CreateAdminDto.prototype, "role", void 0);
@@ -144419,6 +144572,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateUserRoleDto = exports.UpdateUserStatusDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 const enums_1 = __nccwpck_require__(50343);
 class UpdateUserStatusDto {
@@ -144426,6 +144580,7 @@ class UpdateUserStatusDto {
 }
 exports.UpdateUserStatusDto = UpdateUserStatusDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "New account status", enum: enums_1.UserStatus, example: enums_1.UserStatus.ACTIVE }),
     (0, class_validator_1.IsEnum)(enums_1.UserStatus),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -144435,6 +144590,7 @@ class UpdateUserRoleDto {
 }
 exports.UpdateUserRoleDto = UpdateUserRoleDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "New role assignment", enum: enums_1.Role, example: enums_1.Role.ORGANIZER }),
     (0, class_validator_1.IsEnum)(enums_1.Role),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -144462,10 +144618,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuditController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const audit_service_1 = __nccwpck_require__(19230);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const enums_1 = __nccwpck_require__(50343);
+const pagination_query_dto_1 = __nccwpck_require__(40415);
 let AuditController = class AuditController {
     auditService;
     constructor(auditService) {
@@ -144479,12 +144637,16 @@ exports.AuditController = AuditController;
 __decorate([
     (0, common_1.Get)(),
     (0, roles_decorator_1.Roles)(enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get system audit logs (SuperAdmin only)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Audit logs with pagination returned successfully" }),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], AuditController.prototype, "getAllLogs", null);
 exports.AuditController = AuditController = __decorate([
+    (0, swagger_1.ApiTags)("Audit"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.Controller)("audit"),
     __metadata("design:paramtypes", [audit_service_1.AuditService])
 ], AuditController);
@@ -144505,7 +144667,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuditModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const audit_controller_1 = __nccwpck_require__(33461);
 const audit_service_1 = __nccwpck_require__(19230);
 let AuditModule = class AuditModule {
@@ -144540,7 +144702,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var AuditService_1;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuditService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const query_builder_util_1 = __nccwpck_require__(44094);
 let AuditService = AuditService_1 = class AuditService {
@@ -144772,7 +144934,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const auth_service_1 = __nccwpck_require__(63280);
 const public_decorator_1 = __nccwpck_require__(96171);
 const current_user_decorator_1 = __nccwpck_require__(9253);
@@ -144946,6 +145109,9 @@ __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)("register"),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    (0, swagger_1.ApiOperation)({ summary: "Register new user account (Password + OTP verification sent)" }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "User registered successfully, verification email sent" }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: "User with this email already exists" }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
@@ -144956,6 +145122,9 @@ __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)("login"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: "Log in with email and password" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User logged in successfully; tokens and cookies set" }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: "Invalid credentials or unverified email" }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
@@ -144966,6 +145135,9 @@ __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)("refresh-token"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: "Refresh access token using refreshToken cookie / session cookie" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "New access & refresh tokens generated successfully" }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: "Invalid or expired refresh token" }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
@@ -144975,6 +145147,10 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)("login/google"),
+    (0, swagger_1.ApiOperation)({ summary: "Initiate Google OAuth2 social login" }),
+    (0, swagger_1.ApiQuery)({ name: "redirect", required: false, description: "Destination redirect route after OAuth", example: "/dashboard" }),
+    (0, swagger_1.ApiQuery)({ name: "role", required: false, description: "User role to assign upon creation", example: "USER" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Renders Google OAuth authorization redirect page" }),
     __param(0, (0, common_1.Query)("redirect")),
     __param(1, (0, common_1.Query)("role")),
     __param(2, (0, common_1.Res)()),
@@ -144985,6 +145161,9 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)("google/success"),
+    (0, swagger_1.ApiOperation)({ summary: "Google OAuth callback handler" }),
+    (0, swagger_1.ApiQuery)({ name: "redirect", required: false, example: "/dashboard" }),
+    (0, swagger_1.ApiResponse)({ status: 302, description: "Redirects user back to frontend client" }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)()),
     __param(2, (0, common_1.Query)("redirect")),
@@ -144995,6 +145174,8 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)("oauth/error"),
+    (0, swagger_1.ApiOperation)({ summary: "Google OAuth error fallback handler" }),
+    (0, swagger_1.ApiQuery)({ name: "error", required: false, example: "oauth_failed" }),
     __param(0, (0, common_1.Query)("error")),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
@@ -145003,7 +145184,11 @@ __decorate([
 ], AuthController.prototype, "handleOAuthError", null);
 __decorate([
     (0, common_1.Post)("change-password"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: "Change account password for authenticated user" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Password updated successfully" }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: "Current password incorrect" }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __param(2, (0, common_1.Res)({ passthrough: true })),
@@ -145013,7 +145198,10 @@ __decorate([
 ], AuthController.prototype, "changePassword", null);
 __decorate([
     (0, common_1.Post)("logout"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: "Log out user & clear session cookies" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User logged out successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
@@ -145024,6 +145212,9 @@ __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)("verify-email"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: "Verify email with 6-digit OTP" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Email verified successfully" }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: "Invalid or expired OTP" }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_actions_dto_1.VerifyEmailDto]),
@@ -145033,6 +145224,8 @@ __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)("forget-password"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: "Request password reset OTP to email" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "OTP sent to email successfully" }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_actions_dto_1.ForgetPasswordDto]),
@@ -145042,6 +145235,9 @@ __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)("reset-password"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: "Reset password using OTP code" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Password reset successfully" }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: "Invalid OTP or user not found" }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_actions_dto_1.ResetPasswordDto]),
@@ -145051,12 +145247,15 @@ __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)("resend-otp"),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: "Resend verification or password reset OTP" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "OTP resent successfully" }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [auth_actions_dto_1.ResendOtpDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "resendOTP", null);
 exports.AuthController = AuthController = __decorate([
+    (0, swagger_1.ApiTags)("Auth"),
     (0, common_1.Controller)("auth"),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
@@ -145077,7 +145276,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const auth_controller_1 = __nccwpck_require__(96611);
 const auth_service_1 = __nccwpck_require__(63280);
 let AuthModule = class AuthModule {
@@ -145110,7 +145309,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const audit_service_1 = __nccwpck_require__(19230);
 const auth_config_1 = __nccwpck_require__(6157);
@@ -145462,6 +145661,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ResendOtpDto = exports.ResetPasswordDto = exports.ForgetPasswordDto = exports.VerifyEmailDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class VerifyEmailDto {
     email;
@@ -145469,11 +145669,13 @@ class VerifyEmailDto {
 }
 exports.VerifyEmailDto = VerifyEmailDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "User's email address", example: "user@planora.com" }),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], VerifyEmailDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "6-digit verification OTP code", example: "123456" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -145483,6 +145685,7 @@ class ForgetPasswordDto {
 }
 exports.ForgetPasswordDto = ForgetPasswordDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Email address associated with the account", example: "user@planora.com" }),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -145494,16 +145697,19 @@ class ResetPasswordDto {
 }
 exports.ResetPasswordDto = ResetPasswordDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Email address", example: "user@planora.com" }),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], ResetPasswordDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Password reset OTP code", example: "123456" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], ResetPasswordDto.prototype, "otp", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "New password (min 6 characters)", example: "NewSecurePassword123" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
@@ -145514,11 +145720,17 @@ class ResendOtpDto {
 }
 exports.ResendOtpDto = ResendOtpDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Email address", example: "user@planora.com" }),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], ResendOtpDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "OTP purpose type",
+        enum: ["email-verification", "forget-password"],
+        example: "email-verification",
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -145543,6 +145755,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ChangePasswordDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class ChangePasswordDto {
     currentPassword;
@@ -145550,11 +145763,13 @@ class ChangePasswordDto {
 }
 exports.ChangePasswordDto = ChangePasswordDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Current account password", example: "OldPassword123" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], ChangePasswordDto.prototype, "currentPassword", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "New password (min 6 characters)", example: "NewPassword123" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
@@ -145579,6 +145794,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LoginDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class LoginDto {
     email;
@@ -145586,11 +145802,13 @@ class LoginDto {
 }
 exports.LoginDto = LoginDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Registered email address", example: "user@planora.com" }),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], LoginDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Account password", example: "Password123" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -145615,6 +145833,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RegisterDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 const enums_1 = __nccwpck_require__(50343);
 class RegisterDto {
@@ -145625,21 +145844,25 @@ class RegisterDto {
 }
 exports.RegisterDto = RegisterDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "User's full name", example: "Moshfiqur Rahman" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Valid email address", example: "user@planora.com" }),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "email", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Password (min 6 characters)", example: "Password123" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "password", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "User role", enum: enums_1.Role, example: enums_1.Role.USER, default: enums_1.Role.USER }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], RegisterDto.prototype, "role", void 0);
@@ -145666,7 +145889,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BannerController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const banner_service_1 = __nccwpck_require__(61104);
 const public_decorator_1 = __nccwpck_require__(96171);
 const roles_decorator_1 = __nccwpck_require__(55683);
@@ -145703,6 +145927,8 @@ exports.BannerController = BannerController;
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: "Get all banners" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of all banners returned successfully" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -145710,6 +145936,8 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)("active"),
+    (0, swagger_1.ApiOperation)({ summary: "Get all active banners" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of active banners returned successfully" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -145717,6 +145945,10 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)(":id"),
+    (0, swagger_1.ApiOperation)({ summary: "Get banner by ID" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Banner ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Banner details returned successfully" }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: "Banner not found" }),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -145724,7 +145956,10 @@ __decorate([
 ], BannerController.prototype, "getBannerById", null);
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Create new banner (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "Banner created successfully" }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [banner_dto_1.CreateBannerDto]),
@@ -145732,7 +145967,11 @@ __decorate([
 ], BannerController.prototype, "createBanner", null);
 __decorate([
     (0, common_1.Patch)(":id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Update banner by ID (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Banner ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Banner updated successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -145741,7 +145980,11 @@ __decorate([
 ], BannerController.prototype, "updateBanner", null);
 __decorate([
     (0, common_1.Delete)(":id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Delete banner by ID (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Banner ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Banner deleted successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -145749,7 +145992,11 @@ __decorate([
 ], BannerController.prototype, "deleteBanner", null);
 __decorate([
     (0, common_1.Patch)(":id/status"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Update banner active status (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Banner ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Banner status updated successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -145757,6 +146004,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BannerController.prototype, "updateBannerStatus", null);
 exports.BannerController = BannerController = __decorate([
+    (0, swagger_1.ApiTags)("Banner"),
     (0, common_1.Controller)("banner"),
     __metadata("design:paramtypes", [banner_service_1.BannerService])
 ], BannerController);
@@ -145777,7 +146025,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BannerModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const banner_controller_1 = __nccwpck_require__(58947);
 const banner_service_1 = __nccwpck_require__(61104);
 let BannerModule = class BannerModule {
@@ -145810,7 +146058,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BannerService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 let BannerService = class BannerService {
     prisma;
@@ -145902,6 +146150,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateBannerStatusDto = exports.UpdateBannerDto = exports.CreateBannerDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class CreateBannerDto {
     title;
@@ -145912,26 +146161,31 @@ class CreateBannerDto {
 }
 exports.CreateBannerDto = CreateBannerDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Banner title", example: "Tech Summit 2026 Announcement" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateBannerDto.prototype, "title", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Banner image URL", example: "https://res.cloudinary.com/.../banner.jpg" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateBannerDto.prototype, "image", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Target link when clicked", example: "https://planora.com/events/123" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateBannerDto.prototype, "link", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Position display order", example: 1, default: 0 }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], CreateBannerDto.prototype, "positionOrder", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Associated Event ID (optional)", example: "evt_12345" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -145946,31 +146200,37 @@ class UpdateBannerDto {
 }
 exports.UpdateBannerDto = UpdateBannerDto;
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated banner title", example: "Tech Summit - Registration Closing Soon" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateBannerDto.prototype, "title", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated banner image URL" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateBannerDto.prototype, "image", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated target link" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateBannerDto.prototype, "link", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated position display order" }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], UpdateBannerDto.prototype, "positionOrder", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated associated Event ID" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateBannerDto.prototype, "eventId", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Active status flag", example: true }),
     (0, class_validator_1.IsBoolean)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Boolean)
@@ -145980,6 +146240,7 @@ class UpdateBannerStatusDto {
 }
 exports.UpdateBannerStatusDto = UpdateBannerStatusDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Active status flag", example: true }),
     (0, class_validator_1.IsBoolean)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Boolean)
@@ -146007,7 +146268,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CategoryController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const category_service_1 = __nccwpck_require__(71396);
 const public_decorator_1 = __nccwpck_require__(96171);
 const roles_decorator_1 = __nccwpck_require__(55683);
@@ -146038,6 +146300,8 @@ exports.CategoryController = CategoryController;
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: "Get all event categories" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of all categories returned successfully" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -146045,6 +146309,10 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)(":id"),
+    (0, swagger_1.ApiOperation)({ summary: "Get single category by ID" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Category ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Category details returned successfully" }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: "Category not found" }),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -146052,7 +146320,10 @@ __decorate([
 ], CategoryController.prototype, "getSingleCategory", null);
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Create new category (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "Category created successfully" }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [category_dto_1.CreateCategoryDto]),
@@ -146060,7 +146331,11 @@ __decorate([
 ], CategoryController.prototype, "createCategory", null);
 __decorate([
     (0, common_1.Patch)(":id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Update category by ID (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Category ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Category updated successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -146069,13 +146344,18 @@ __decorate([
 ], CategoryController.prototype, "updateCategory", null);
 __decorate([
     (0, common_1.Delete)(":id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Delete category by ID (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Category ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Category deleted successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], CategoryController.prototype, "deleteCategory", null);
 exports.CategoryController = CategoryController = __decorate([
+    (0, swagger_1.ApiTags)("Category"),
     (0, common_1.Controller)("category"),
     __metadata("design:paramtypes", [category_service_1.CategoryService])
 ], CategoryController);
@@ -146096,7 +146376,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CategoryModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const category_controller_1 = __nccwpck_require__(16847);
 const category_service_1 = __nccwpck_require__(71396);
 let CategoryModule = class CategoryModule {
@@ -146129,7 +146409,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CategoryService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 let CategoryService = class CategoryService {
     prisma;
@@ -146199,6 +146479,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateCategoryDto = exports.CreateCategoryDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class CreateCategoryDto {
     name;
@@ -146206,11 +146487,16 @@ class CreateCategoryDto {
 }
 exports.CreateCategoryDto = CreateCategoryDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Category name", example: "Technology & Coding" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateCategoryDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: "Detailed category description",
+        example: "Workshops, seminars, and hackathons for developers",
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -146221,11 +146507,16 @@ class UpdateCategoryDto {
 }
 exports.UpdateCategoryDto = UpdateCategoryDto;
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated category name", example: "AI & Machine Learning" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateCategoryDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: "Updated category description",
+        example: "All events related to AI and Deep Learning",
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -146250,6 +146541,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateFeaturedDto = exports.UpdateEventDto = exports.CreateEventDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 const enums_1 = __nccwpck_require__(50343);
 class CreateEventDto {
@@ -146267,57 +146559,68 @@ class CreateEventDto {
 }
 exports.CreateEventDto = CreateEventDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Event title", example: "Global AI Conference 2026" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateEventDto.prototype, "title", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Detailed event description", example: "Join leading researchers in AI and machine learning." }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateEventDto.prototype, "description", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Event date and time (ISO string or formatted date)", example: "2026-12-15T09:00:00.000Z" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateEventDto.prototype, "dateTime", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Event venue or address", example: "Bangabandhu International Conference Center, Dhaka" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateEventDto.prototype, "venue", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Event format", enum: enums_1.EventType, example: enums_1.EventType.OFFLINE }),
     (0, class_validator_1.IsEnum)(enums_1.EventType),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateEventDto.prototype, "type", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Ticket entry fee (0 for free events)", example: 500 }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CreateEventDto.prototype, "fee", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Array of image URLs for gallery/banner", example: ["https://res.cloudinary.com/.../event1.jpg"] }),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.IsString)({ each: true }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Array)
 ], CreateEventDto.prototype, "images", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Category ID", example: "cat_12345" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateEventDto.prototype, "categoryId", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Online meeting URL (if virtual/hybrid)", example: "https://meet.google.com/xyz-abc" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateEventDto.prototype, "meetingLink", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Event visibility", enum: enums_1.EventVisibility, example: enums_1.EventVisibility.PUBLIC }),
     (0, class_validator_1.IsEnum)(enums_1.EventVisibility),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateEventDto.prototype, "visibility", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Feature event on homepage (optional)", example: false }),
     (0, class_validator_1.IsBoolean)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Boolean)
@@ -146337,57 +146640,68 @@ class UpdateEventDto {
 }
 exports.UpdateEventDto = UpdateEventDto;
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated event title" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateEventDto.prototype, "title", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated event description" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateEventDto.prototype, "description", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated event date and time" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateEventDto.prototype, "dateTime", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated event venue" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateEventDto.prototype, "venue", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated event format", enum: enums_1.EventType }),
     (0, class_validator_1.IsEnum)(enums_1.EventType),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateEventDto.prototype, "type", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated ticket entry fee" }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], UpdateEventDto.prototype, "fee", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated event image URLs", type: [String] }),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.IsString)({ each: true }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Array)
 ], UpdateEventDto.prototype, "images", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated category ID" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateEventDto.prototype, "categoryId", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated meeting URL" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateEventDto.prototype, "meetingLink", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated event visibility", enum: enums_1.EventVisibility }),
     (0, class_validator_1.IsEnum)(enums_1.EventVisibility),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateEventDto.prototype, "visibility", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Featured status" }),
     (0, class_validator_1.IsBoolean)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Boolean)
@@ -146397,6 +146711,7 @@ class UpdateFeaturedDto {
 }
 exports.UpdateFeaturedDto = UpdateFeaturedDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Set featured flag", example: true }),
     (0, class_validator_1.IsBoolean)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Boolean)
@@ -146424,12 +146739,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EventController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const event_service_1 = __nccwpck_require__(63438);
 const public_decorator_1 = __nccwpck_require__(96171);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const current_user_decorator_1 = __nccwpck_require__(9253);
 const enums_1 = __nccwpck_require__(50343);
+const pagination_query_dto_1 = __nccwpck_require__(40415);
 const event_dto_1 = __nccwpck_require__(74522);
 let EventController = class EventController {
     eventService;
@@ -146463,10 +146780,10 @@ let EventController = class EventController {
     async organizersSingleEventById(id) {
         return this.eventService.organizersSingleEventById(id);
     }
-    async updateEvent(id, user, payload) {
+    async updateEvent(user, id, payload) {
         return this.eventService.updateEvent(id, user, payload);
     }
-    async deleteEventByOrganizer(id, user) {
+    async deleteEvent(user, id) {
         return this.eventService.deleteEventByOrganizer(id, user);
     }
 };
@@ -146474,21 +146791,30 @@ exports.EventController = EventController;
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: "Get all public events with filtering, search & pagination" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Events list returned successfully" }),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], EventController.prototype, "getAllEvents", null);
 __decorate([
     (0, common_1.Get)("featured"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get all featured events (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Featured events returned successfully" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], EventController.prototype, "getFeaturedEvents", null);
 __decorate([
     (0, common_1.Get)("public/:id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN, enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Get single event public details with user participation check" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Event details returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
@@ -146497,15 +146823,22 @@ __decorate([
 ], EventController.prototype, "getSingleEventPublic", null);
 __decorate([
     (0, common_1.Get)("admin/all"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get all events across platform (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "All events returned successfully" }),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], EventController.prototype, "getAllEventsAdmin", null);
 __decorate([
     (0, common_1.Delete)("admin/:id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Delete event by Admin/SuperAdmin" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Event deleted successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
@@ -146514,7 +146847,11 @@ __decorate([
 ], EventController.prototype, "deleteEventByAdmin", null);
 __decorate([
     (0, common_1.Patch)("admin/feature/:id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Toggle event featured status (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Featured status updated successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -146523,7 +146860,10 @@ __decorate([
 ], EventController.prototype, "updateFeaturedStatus", null);
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Create new event (Organizer only)" }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "Event created successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -146532,16 +146872,23 @@ __decorate([
 ], EventController.prototype, "createEvent", null);
 __decorate([
     (0, common_1.Get)("me/events"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Get all events created by logged-in organizer" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Organizer's events returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], EventController.prototype, "getOrganizerEvents", null);
 __decorate([
     (0, common_1.Get)(":id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Get organizer event details by ID" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Organizer event details returned successfully" }),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -146549,24 +146896,33 @@ __decorate([
 ], EventController.prototype, "organizersSingleEventById", null);
 __decorate([
     (0, common_1.Patch)(":id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
-    __param(0, (0, common_1.Param)("id")),
-    __param(1, (0, current_user_decorator_1.CurrentUser)()),
+    (0, swagger_1.ApiOperation)({ summary: "Update event details (Organizer only)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Event updated successfully" }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Param)("id")),
     __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object, event_dto_1.UpdateEventDto]),
+    __metadata("design:paramtypes", [Object, String, event_dto_1.UpdateEventDto]),
     __metadata("design:returntype", Promise)
 ], EventController.prototype, "updateEvent", null);
 __decorate([
     (0, common_1.Delete)(":id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
-    __param(0, (0, common_1.Param)("id")),
-    __param(1, (0, current_user_decorator_1.CurrentUser)()),
+    (0, swagger_1.ApiOperation)({ summary: "Delete event (Organizer only)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Event deleted successfully" }),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
-], EventController.prototype, "deleteEventByOrganizer", null);
+], EventController.prototype, "deleteEvent", null);
 exports.EventController = EventController = __decorate([
+    (0, swagger_1.ApiTags)("Event"),
     (0, common_1.Controller)("event"),
     __metadata("design:paramtypes", [event_service_1.EventService])
 ], EventController);
@@ -146587,7 +146943,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EventModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const event_controller_1 = __nccwpck_require__(19077);
 const event_service_1 = __nccwpck_require__(63438);
 let EventModule = class EventModule {
@@ -146620,7 +146976,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EventService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const audit_service_1 = __nccwpck_require__(19230);
 const enums_1 = __nccwpck_require__(50343);
@@ -146896,12 +147252,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DeleteFileDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class DeleteFileDto {
     urls;
 }
 exports.DeleteFileDto = DeleteFileDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "Cloudinary image URL or array of URLs to delete",
+        example: ["https://res.cloudinary.com/.../image.jpg"],
+    }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Object)
 ], DeleteFileDto.prototype, "urls", void 0);
@@ -146928,7 +147289,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FileController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const platform_express_1 = __nccwpck_require__(32253);
 const file_service_1 = __nccwpck_require__(15508);
 const public_decorator_1 = __nccwpck_require__(96171);
@@ -146949,6 +147311,24 @@ exports.FileController = FileController;
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)("upload-image"),
+    (0, swagger_1.ApiOperation)({ summary: "Upload up to 10 images to Cloudinary" }),
+    (0, swagger_1.ApiConsumes)("multipart/form-data"),
+    (0, swagger_1.ApiBody)({
+        schema: {
+            type: "object",
+            properties: {
+                file: {
+                    type: "array",
+                    items: {
+                        type: "string",
+                        format: "binary",
+                    },
+                    description: "Select 1 to 10 image files",
+                },
+            },
+        },
+    }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "Images uploaded successfully", schema: { example: ["https://res.cloudinary.com/.../img1.jpg"] } }),
     (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)("file", 10)),
     __param(0, (0, common_1.UploadedFiles)()),
     __metadata("design:type", Function),
@@ -146958,12 +147338,15 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Delete)("delete-image"),
+    (0, swagger_1.ApiOperation)({ summary: "Delete images from Cloudinary" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Images deleted successfully" }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [delete_file_dto_1.DeleteFileDto]),
     __metadata("design:returntype", Promise)
 ], FileController.prototype, "deleteImage", null);
 exports.FileController = FileController = __decorate([
+    (0, swagger_1.ApiTags)("File"),
     (0, common_1.Controller)("file"),
     __metadata("design:paramtypes", [file_service_1.FileService])
 ], FileController);
@@ -146984,7 +147367,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FileModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const file_controller_1 = __nccwpck_require__(5407);
 const file_service_1 = __nccwpck_require__(15508);
 let FileModule = class FileModule {
@@ -147014,7 +147397,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FileService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const cloudinary_config_1 = __nccwpck_require__(24565);
 let FileService = class FileService {
     async uploadImage(files) {
@@ -147065,6 +147448,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SendInvitationDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class SendInvitationDto {
     eventId;
@@ -147072,11 +147456,13 @@ class SendInvitationDto {
 }
 exports.SendInvitationDto = SendInvitationDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Event ID to invite guest to", example: "evt_12345" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], SendInvitationDto.prototype, "eventId", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "User ID of the guest or speaker to invite", example: "usr_67890" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -147104,11 +147490,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.InvitationController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const invitation_service_1 = __nccwpck_require__(19682);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const current_user_decorator_1 = __nccwpck_require__(9253);
 const enums_1 = __nccwpck_require__(50343);
+const pagination_query_dto_1 = __nccwpck_require__(40415);
 const send_invitation_dto_1 = __nccwpck_require__(63197);
 let InvitationController = class InvitationController {
     invitationService;
@@ -147132,6 +147520,8 @@ exports.InvitationController = InvitationController;
 __decorate([
     (0, common_1.Post)("send"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Send event invitation to a user (Organizer only)" }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "Invitation sent successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -147141,6 +147531,9 @@ __decorate([
 __decorate([
     (0, common_1.Get)("event/:eventId"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Get all invitations for an event (Organizer only)" }),
+    (0, swagger_1.ApiParam)({ name: "eventId", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of invitations returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Param)("eventId")),
     __metadata("design:type", Function),
@@ -147150,15 +147543,20 @@ __decorate([
 __decorate([
     (0, common_1.Get)("my"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get invitations received by current user" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User's received invitations returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], InvitationController.prototype, "getMyInvitations", null);
 __decorate([
     (0, common_1.Delete)(":id"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Cancel or decline invitation" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Invitation ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Invitation cancelled successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
@@ -147166,6 +147564,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], InvitationController.prototype, "cancelInvitation", null);
 exports.InvitationController = InvitationController = __decorate([
+    (0, swagger_1.ApiTags)("Invitation"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.Controller)("invitation"),
     __metadata("design:paramtypes", [invitation_service_1.InvitationService])
 ], InvitationController);
@@ -147186,7 +147586,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.InvitationModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const invitation_controller_1 = __nccwpck_require__(70321);
 const invitation_service_1 = __nccwpck_require__(19682);
 let InvitationModule = class InvitationModule {
@@ -147219,7 +147619,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.InvitationService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const audit_service_1 = __nccwpck_require__(19230);
 const notification_service_1 = __nccwpck_require__(76570);
@@ -147349,7 +147749,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const notification_service_1 = __nccwpck_require__(76570);
 const current_user_decorator_1 = __nccwpck_require__(9253);
 const roles_decorator_1 = __nccwpck_require__(55683);
@@ -147375,6 +147776,8 @@ let NotificationController = class NotificationController {
 exports.NotificationController = NotificationController;
 __decorate([
     (0, common_1.Get)(),
+    (0, swagger_1.ApiOperation)({ summary: "Get all notifications for logged-in user" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User notifications list returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -147382,6 +147785,8 @@ __decorate([
 ], NotificationController.prototype, "getMyNotifications", null);
 __decorate([
     (0, common_1.Get)("unread-count"),
+    (0, swagger_1.ApiOperation)({ summary: "Get unread notifications count" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Unread notifications count returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -147389,6 +147794,8 @@ __decorate([
 ], NotificationController.prototype, "getUnreadCount", null);
 __decorate([
     (0, common_1.Patch)("mark-all-read"),
+    (0, swagger_1.ApiOperation)({ summary: "Mark all notifications as read" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "All notifications marked as read" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -147396,6 +147803,9 @@ __decorate([
 ], NotificationController.prototype, "markAllAsRead", null);
 __decorate([
     (0, common_1.Patch)(":id/read"),
+    (0, swagger_1.ApiOperation)({ summary: "Mark single notification as read" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Notification ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Notification marked as read" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
@@ -147403,6 +147813,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], NotificationController.prototype, "markAsRead", null);
 exports.NotificationController = NotificationController = __decorate([
+    (0, swagger_1.ApiTags)("Notification"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.Controller)("notification"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ORGANIZER, enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
     __metadata("design:paramtypes", [notification_service_1.NotificationService])
@@ -147424,7 +147836,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const notification_controller_1 = __nccwpck_require__(28153);
 const notification_service_1 = __nccwpck_require__(76570);
 let NotificationModule = class NotificationModule {
@@ -147459,7 +147871,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var NotificationService_1;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NotificationService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const enums_1 = __nccwpck_require__(50343);
 let NotificationService = NotificationService_1 = class NotificationService {
@@ -147545,6 +147957,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateParticipationStatusDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 const enums_1 = __nccwpck_require__(50343);
 class UpdateParticipationStatusDto {
@@ -147552,6 +147965,11 @@ class UpdateParticipationStatusDto {
 }
 exports.UpdateParticipationStatusDto = UpdateParticipationStatusDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "New participation status",
+        enum: enums_1.ParticipationStatus,
+        example: enums_1.ParticipationStatus.APPROVED,
+    }),
     (0, class_validator_1.IsEnum)(enums_1.ParticipationStatus),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -147579,11 +147997,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ParticipationController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const participation_service_1 = __nccwpck_require__(55454);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const current_user_decorator_1 = __nccwpck_require__(9253);
 const enums_1 = __nccwpck_require__(50343);
+const pagination_query_dto_1 = __nccwpck_require__(40415);
 const update_participation_status_dto_1 = __nccwpck_require__(86469);
 let ParticipationController = class ParticipationController {
     participationService;
@@ -147607,15 +148027,20 @@ exports.ParticipationController = ParticipationController;
 __decorate([
     (0, common_1.Get)("my-events"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get events current user is participating in" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Participating events returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], ParticipationController.prototype, "getMyEvents", null);
 __decorate([
     (0, common_1.Get)("event/:eventId"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Get participants for an event (Organizer only)" }),
+    (0, swagger_1.ApiParam)({ name: "eventId", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Event participants returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Param)("eventId")),
     __metadata("design:type", Function),
@@ -147625,6 +148050,8 @@ __decorate([
 __decorate([
     (0, common_1.Get)("my-all-participants"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Get all participants across all events created by organizer" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "All participants list returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -147633,6 +148060,9 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(":id/status"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Update participant status (e.g. CONFIRMED, CANCELLED)" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Participation ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Participant status updated successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Param)("id")),
     __param(2, (0, common_1.Body)()),
@@ -147641,6 +148071,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ParticipationController.prototype, "updateStatus", null);
 exports.ParticipationController = ParticipationController = __decorate([
+    (0, swagger_1.ApiTags)("Participation"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.Controller)("participation"),
     __metadata("design:paramtypes", [participation_service_1.ParticipationService])
 ], ParticipationController);
@@ -147661,7 +148093,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ParticipationModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const participation_controller_1 = __nccwpck_require__(65717);
 const participation_service_1 = __nccwpck_require__(55454);
 let ParticipationModule = class ParticipationModule {
@@ -147694,7 +148126,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ParticipationService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const query_builder_util_1 = __nccwpck_require__(44094);
 const enums_1 = __nccwpck_require__(50343);
@@ -147892,6 +148324,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.InitiatePaymentDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class InitiatePaymentDto {
     eventId;
@@ -147899,11 +148332,13 @@ class InitiatePaymentDto {
 }
 exports.InitiatePaymentDto = InitiatePaymentDto;
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Event ID to buy ticket for", example: "evt_12345" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], InitiatePaymentDto.prototype, "eventId", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Invitation ID if paying via invitation", example: "inv_67890" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -147931,12 +148366,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const payment_service_1 = __nccwpck_require__(24142);
 const public_decorator_1 = __nccwpck_require__(96171);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const current_user_decorator_1 = __nccwpck_require__(9253);
 const enums_1 = __nccwpck_require__(50343);
+const pagination_query_dto_1 = __nccwpck_require__(40415);
 const stripe_config_1 = __nccwpck_require__(14102);
 const env_config_1 = __nccwpck_require__(48528);
 const initiate_payment_dto_1 = __nccwpck_require__(70008);
@@ -147968,14 +148405,17 @@ let PaymentController = class PaymentController {
     async getOrganizerPayments(user, query) {
         return this.paymentService.getOrganizerPayments(user, query);
     }
-    async getAllPayments(query) {
+    async getAllPaymentsAdmin(query) {
         return this.paymentService.getAllPayments(query);
     }
 };
 exports.PaymentController = PaymentController;
 __decorate([
     (0, common_1.Post)("pay"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN, enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Initiate Stripe checkout session / payment intent" }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "Payment session created successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -147985,6 +148425,10 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Post)("webhook"),
+    (0, swagger_1.ApiOperation)({ summary: "Stripe Webhook handler (raw payload verification)" }),
+    (0, swagger_1.ApiHeader)({ name: "stripe-signature", description: "Stripe webhook signature" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Webhook event processed" }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: "Invalid webhook signature" }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Headers)("stripe-signature")),
     __metadata("design:type", Function),
@@ -147993,31 +148437,41 @@ __decorate([
 ], PaymentController.prototype, "handleStripeWebhook", null);
 __decorate([
     (0, common_1.Get)("my"),
-    (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN, enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
+    (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get payments and invoices of logged in user" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User payments list returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], PaymentController.prototype, "getMyPayments", null);
 __decorate([
     (0, common_1.Get)("organizer"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Get payments received for organizer's events" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Organizer payments list returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], PaymentController.prototype, "getOrganizerPayments", null);
 __decorate([
     (0, common_1.Get)("admin"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get all platform payments (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "All platform payments returned successfully" }),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
-], PaymentController.prototype, "getAllPayments", null);
+], PaymentController.prototype, "getAllPaymentsAdmin", null);
 exports.PaymentController = PaymentController = __decorate([
+    (0, swagger_1.ApiTags)("Payment"),
     (0, common_1.Controller)("payment"),
     __metadata("design:paramtypes", [payment_service_1.PaymentService])
 ], PaymentController);
@@ -148038,7 +148492,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const payment_controller_1 = __nccwpck_require__(3557);
 const payment_service_1 = __nccwpck_require__(24142);
 let PaymentModule = class PaymentModule {
@@ -148072,7 +148526,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var PaymentService_1;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaymentService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const uuid_1 = __nccwpck_require__(27086);
 const prisma_service_1 = __nccwpck_require__(81829);
 const audit_service_1 = __nccwpck_require__(19230);
@@ -148473,6 +148927,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateProfileDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class UpdateProfileDto {
     name;
@@ -148480,11 +148935,13 @@ class UpdateProfileDto {
 }
 exports.UpdateProfileDto = UpdateProfileDto;
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated user full name", example: "Moshfiqur Rahman" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateProfileDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated user profile picture URL", example: "https://res.cloudinary.com/.../avatar.jpg" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -148512,7 +148969,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProfileController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const profile_service_1 = __nccwpck_require__(27218);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const current_user_decorator_1 = __nccwpck_require__(9253);
@@ -148533,6 +148991,8 @@ let ProfileController = class ProfileController {
 exports.ProfileController = ProfileController;
 __decorate([
     (0, common_1.Get)("me"),
+    (0, swagger_1.ApiOperation)({ summary: "Get current logged-in user profile" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Profile details returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -148540,6 +149000,8 @@ __decorate([
 ], ProfileController.prototype, "getMyProfile", null);
 __decorate([
     (0, common_1.Patch)("me"),
+    (0, swagger_1.ApiOperation)({ summary: "Update current logged-in user profile (name, avatar image)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Profile updated successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -148547,6 +149009,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "updateProfile", null);
 exports.ProfileController = ProfileController = __decorate([
+    (0, swagger_1.ApiTags)("Profile"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.Controller)("profile"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
     __metadata("design:paramtypes", [profile_service_1.ProfileService])
@@ -148568,7 +149032,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProfileModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const profile_controller_1 = __nccwpck_require__(28257);
 const profile_service_1 = __nccwpck_require__(27218);
 let ProfileModule = class ProfileModule {
@@ -148601,7 +149065,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ProfileService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 let ProfileService = class ProfileService {
     prisma;
@@ -148662,6 +149126,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateReviewDto = exports.CreateReviewDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class CreateReviewDto {
     eventId;
@@ -148671,11 +149136,13 @@ class CreateReviewDto {
 }
 exports.CreateReviewDto = CreateReviewDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Target Event ID", example: "evt_12345" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateReviewDto.prototype, "eventId", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Rating score between 1 and 5", example: 5, minimum: 1, maximum: 5 }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.Min)(1),
     (0, class_validator_1.Max)(5),
@@ -148683,11 +149150,13 @@ __decorate([
     __metadata("design:type", Number)
 ], CreateReviewDto.prototype, "rating", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Review comment or feedback", example: "Incredible speaker lineup and great venue!" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateReviewDto.prototype, "comment", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Alternative alias for review comment" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -148699,6 +149168,7 @@ class UpdateReviewDto {
 }
 exports.UpdateReviewDto = UpdateReviewDto;
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated rating score (1-5)", example: 4, minimum: 1, maximum: 5 }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.Min)(1),
     (0, class_validator_1.Max)(5),
@@ -148706,11 +149176,13 @@ __decorate([
     __metadata("design:type", Number)
 ], UpdateReviewDto.prototype, "rating", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated review comment", example: "Updated review text" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateReviewDto.prototype, "comment", void 0);
 __decorate([
+    (0, swagger_1.ApiPropertyOptional)({ description: "Updated feedback alias" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
@@ -148738,7 +149210,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReviewController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const review_service_1 = __nccwpck_require__(45684);
 const public_decorator_1 = __nccwpck_require__(96171);
 const roles_decorator_1 = __nccwpck_require__(55683);
@@ -148765,14 +149238,17 @@ let ReviewController = class ReviewController {
     async getEventReviews(eventId) {
         return this.reviewService.getEventReviews(eventId);
     }
-    async getOrganizerEventReviewsByEventId(user, eventId) {
+    async getOrganizerEventReviews(user, eventId) {
         return this.reviewService.getOrganizerEventReviewsByEventId(user, eventId);
     }
 };
 exports.ReviewController = ReviewController;
 __decorate([
     (0, common_1.Post)(),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Create review and rating for an attended event" }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: "Review submitted successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -148781,7 +149257,11 @@ __decorate([
 ], ReviewController.prototype, "createReview", null);
 __decorate([
     (0, common_1.Patch)(":id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Update existing review" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Review ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Review updated successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Param)("id")),
     __param(2, (0, common_1.Body)()),
@@ -148791,7 +149271,11 @@ __decorate([
 ], ReviewController.prototype, "updateReview", null);
 __decorate([
     (0, common_1.Delete)(":id"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Delete review" }),
+    (0, swagger_1.ApiParam)({ name: "id", description: "Review ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Review deleted successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
@@ -148800,7 +149284,10 @@ __decorate([
 ], ReviewController.prototype, "deleteReview", null);
 __decorate([
     (0, common_1.Get)("my"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get all reviews created by current user" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "List of user's reviews returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -148809,6 +149296,9 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)("event/:eventId"),
+    (0, swagger_1.ApiOperation)({ summary: "Get public reviews for an event" }),
+    (0, swagger_1.ApiParam)({ name: "eventId", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Event reviews list returned successfully" }),
     __param(0, (0, common_1.Param)("eventId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -148816,14 +149306,19 @@ __decorate([
 ], ReviewController.prototype, "getEventReviews", null);
 __decorate([
     (0, common_1.Get)("organizer/events/:eventId"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Get organizer event review analytics (Organizer only)" }),
+    (0, swagger_1.ApiParam)({ name: "eventId", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Organizer review analytics returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Param)("eventId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
-], ReviewController.prototype, "getOrganizerEventReviewsByEventId", null);
+], ReviewController.prototype, "getOrganizerEventReviews", null);
 exports.ReviewController = ReviewController = __decorate([
+    (0, swagger_1.ApiTags)("Review"),
     (0, common_1.Controller)("review"),
     __metadata("design:paramtypes", [review_service_1.ReviewService])
 ], ReviewController);
@@ -148844,7 +149339,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReviewModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const review_controller_1 = __nccwpck_require__(13055);
 const review_service_1 = __nccwpck_require__(45684);
 let ReviewModule = class ReviewModule {
@@ -148877,7 +149372,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ReviewService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const enums_1 = __nccwpck_require__(50343);
 let ReviewService = class ReviewService {
@@ -149047,7 +149542,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const stat_service_1 = __nccwpck_require__(18988);
 const public_decorator_1 = __nccwpck_require__(96171);
 const roles_decorator_1 = __nccwpck_require__(55683);
@@ -149077,21 +149573,30 @@ let StatController = class StatController {
 exports.StatController = StatController;
 __decorate([
     (0, common_1.Get)("superadmin"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get platform overall statistics (SuperAdmin)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "SuperAdmin platform stats returned successfully" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], StatController.prototype, "getSuperAdminStats", null);
 __decorate([
     (0, common_1.Get)("admin"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get admin statistics (Admin/SuperAdmin)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Admin platform stats returned successfully" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], StatController.prototype, "getAdminStats", null);
 __decorate([
     (0, common_1.Get)("organizer"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER, enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get organizer event statistics" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Organizer stats returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -149099,7 +149604,10 @@ __decorate([
 ], StatController.prototype, "getOrganizerStats", null);
 __decorate([
     (0, common_1.Get)("user"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ORGANIZER, enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get current user event & ticket statistics" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User stats returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -149108,11 +149616,14 @@ __decorate([
 __decorate([
     (0, public_decorator_1.Public)(),
     (0, common_1.Get)("public"),
+    (0, swagger_1.ApiOperation)({ summary: "Get public platform counts (Events, Users, Organizers)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Public stats returned successfully" }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], StatController.prototype, "getPublicStats", null);
 exports.StatController = StatController = __decorate([
+    (0, swagger_1.ApiTags)("Stat"),
     (0, common_1.Controller)("stat"),
     __metadata("design:paramtypes", [stat_service_1.StatService])
 ], StatController);
@@ -149133,7 +149644,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const stat_controller_1 = __nccwpck_require__(14535);
 const stat_service_1 = __nccwpck_require__(18988);
 let StatModule = class StatModule {
@@ -149166,7 +149677,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.StatService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const enums_1 = __nccwpck_require__(50343);
 let StatService = class StatService {
@@ -149385,12 +149896,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CheckInTicketDto = void 0;
+const swagger_1 = __nccwpck_require__(67461);
 const class_validator_1 = __nccwpck_require__(93839);
 class CheckInTicketDto {
     qrCode;
 }
 exports.CheckInTicketDto = CheckInTicketDto;
 __decorate([
+    (0, swagger_1.ApiProperty)({ description: "Ticket QR code string / unique hash", example: "TKT-QR-987456321" }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
@@ -149418,11 +149931,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TicketController = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
+const swagger_1 = __nccwpck_require__(67461);
 const ticket_service_1 = __nccwpck_require__(61836);
 const roles_decorator_1 = __nccwpck_require__(55683);
 const current_user_decorator_1 = __nccwpck_require__(9253);
 const enums_1 = __nccwpck_require__(50343);
+const pagination_query_dto_1 = __nccwpck_require__(40415);
 const check_in_ticket_dto_1 = __nccwpck_require__(13187);
 let TicketController = class TicketController {
     ticketService;
@@ -149443,15 +149958,20 @@ exports.TicketController = TicketController;
 __decorate([
     (0, common_1.Get)("my"),
     (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.ORGANIZER, enums_1.Role.SUPERADMIN),
+    (0, swagger_1.ApiOperation)({ summary: "Get current user's purchased tickets with pagination" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "User tickets returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, pagination_query_dto_1.PaginationQueryDto]),
     __metadata("design:returntype", Promise)
 ], TicketController.prototype, "getMyTickets", null);
 __decorate([
     (0, common_1.Get)("event/:eventId"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Get all tickets for an event (Organizer only)" }),
+    (0, swagger_1.ApiParam)({ name: "eventId", description: "Event ID" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Event tickets returned successfully" }),
     __param(0, (0, common_1.Param)("eventId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -149460,6 +149980,9 @@ __decorate([
 __decorate([
     (0, common_1.Post)("check-in"),
     (0, roles_decorator_1.Roles)(enums_1.Role.ORGANIZER),
+    (0, swagger_1.ApiOperation)({ summary: "Scan and check in a ticket using QR Code (Organizer only)" }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: "Ticket verified and checked in successfully" }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: "Invalid or already used ticket" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -149467,6 +149990,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TicketController.prototype, "checkIn", null);
 exports.TicketController = TicketController = __decorate([
+    (0, swagger_1.ApiTags)("Ticket"),
+    (0, swagger_1.ApiBearerAuth)("bearer"),
     (0, common_1.Controller)("ticket"),
     __metadata("design:paramtypes", [ticket_service_1.TicketService])
 ], TicketController);
@@ -149487,7 +150012,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TicketModule = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const ticket_controller_1 = __nccwpck_require__(31847);
 const ticket_service_1 = __nccwpck_require__(61836);
 let TicketModule = class TicketModule {
@@ -149520,7 +150045,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TicketService = void 0;
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const prisma_service_1 = __nccwpck_require__(81829);
 const query_builder_util_1 = __nccwpck_require__(44094);
 let TicketService = class TicketService {
@@ -149600,12 +150125,13 @@ const module_1 = __importDefault(__nccwpck_require__(73339));
 const express_1 = __importDefault(__nccwpck_require__(35917));
 const platform_express_1 = __nccwpck_require__(32253);
 const core_1 = __nccwpck_require__(87544);
-const common_1 = __nccwpck_require__(76332);
+const common_1 = __nccwpck_require__(9147);
 const cookie_parser_1 = __importDefault(__nccwpck_require__(1037));
 const ejs_1 = __importDefault(__nccwpck_require__(87763));
 const path_1 = __importDefault(__nccwpck_require__(16928));
 const app_module_1 = __nccwpck_require__(29979);
 const env_config_1 = __nccwpck_require__(48528);
+const swagger_config_1 = __nccwpck_require__(41697);
 const origLoad = module_1.default._load;
 module_1.default._load = function (request, parent, isMain) {
     if (request === "express") {
@@ -149613,6 +150139,9 @@ module_1.default._load = function (request, parent, isMain) {
     }
     if (request === "ejs") {
         return ejs_1.default;
+    }
+    if (request.includes("swagger-ui-dist")) {
+        return () => process.cwd();
     }
     return origLoad.apply(this, arguments);
 };
@@ -149654,8 +150183,17 @@ async function bootstrapServer() {
         credentials: true,
     });
     app.setGlobalPrefix("api/v1", {
-        exclude: ["api/auth/{*path}", "api/auth", "/"],
+        exclude: [
+            "docs",
+            "docs/{*path}",
+            "api/docs",
+            "api/docs/{*path}",
+            "api/auth/{*path}",
+            "api/auth",
+            "/",
+        ],
     });
+    (0, swagger_config_1.setupSwagger)(app);
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
         transform: true,
@@ -149819,6 +150357,14 @@ module.exports = require("node:fs");
 
 "use strict";
 module.exports = require("node:http");
+
+/***/ }),
+
+/***/ 98995:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:module");
 
 /***/ }),
 
@@ -203701,7 +204247,7 @@ class NotCommittedOrRolledBackAssertingExecutor {
 }
 
 // EXTERNAL MODULE: ./node_modules/.pnpm/kysely@0.29.9/node_modules/kysely/dist/operation-node/table-node.js
-var table_node = __nccwpck_require__(53243);
+var table_node = __nccwpck_require__(75624);
 // EXTERNAL MODULE: ./node_modules/.pnpm/kysely@0.29.9/node_modules/kysely/dist/operation-node/reference-node.js
 var reference_node = __nccwpck_require__(85812);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@better-auth+core@1.7.27_@b_49675c12c19555397867e4801410f163/node_modules/@better-auth/core/dist/db/adapter/factory.mjs + 3 modules
@@ -208662,7 +209208,7 @@ class UnsupportedMediaTypeException extends HttpException {
 
 /***/ }),
 
-/***/ 76332:
+/***/ 9147:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -208753,7 +209299,7 @@ __nccwpck_require__.d(__webpack_exports__, {
   Res: () => (/* reexport */ decorators/* Res */.hw),
   Response: () => (/* reexport */ decorators/* Response */.YK),
   SSE_ABORT_CONTROLLER: () => (/* reexport */ decorators/* SSE_ABORT_CONTROLLER */.IB),
-  Scope: () => (/* reexport */ Scope),
+  Scope: () => (/* reexport */ interfaces/* Scope */.H),
   Search: () => (/* reexport */ decorators/* Search */.OG),
   SerializeOptions: () => (/* reexport */ SerializeOptions),
   ServiceUnavailableException: () => (/* reexport */ exceptions/* ServiceUnavailableException */.ld),
@@ -208776,7 +209322,7 @@ __nccwpck_require__.d(__webpack_exports__, {
   UseGuards: () => (/* reexport */ decorators/* UseGuards */.M2),
   UseInterceptors: () => (/* reexport */ decorators/* UseInterceptors */.MH),
   UsePipes: () => (/* reexport */ decorators/* UsePipes */.vf),
-  VERSION_NEUTRAL: () => (/* reexport */ VERSION_NEUTRAL),
+  VERSION_NEUTRAL: () => (/* reexport */ interfaces/* VERSION_NEUTRAL */.t),
   ValidationPipe: () => (/* reexport */ validation_pipe/* ValidationPipe */.o),
   Version: () => (/* reexport */ decorators/* Version */.Rx),
   VersioningType: () => (/* reexport */ enums/* VersioningType */.dK),
@@ -208908,40 +209454,8 @@ class StreamableFile {
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/file-stream/index.js
 
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/interfaces/scope-options.interface.js
-/**
- * @publicApi
- */
-var Scope;
-(function (Scope) {
-    /**
-     * The provider can be shared across multiple classes. The provider lifetime
-     * is strictly tied to the application lifecycle. Once the application has
-     * bootstrapped, all providers have been instantiated.
-     */
-    Scope[Scope["DEFAULT"] = 0] = "DEFAULT";
-    /**
-     * A new private instance of the provider is instantiated for every use
-     */
-    Scope[Scope["TRANSIENT"] = 1] = "TRANSIENT";
-    /**
-     * A new instance is instantiated for each request processing pipeline
-     */
-    Scope[Scope["REQUEST"] = 2] = "REQUEST";
-})(Scope || (Scope = {}));
-
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/interfaces/version-options.interface.js
-/**
- * Indicates that this will work for any version passed in the request, or no version.
- *
- * @publicApi
- */
-const VERSION_NEUTRAL = Symbol('VERSION_NEUTRAL');
-
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/interfaces/index.js
-
-
-
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/interfaces/index.js + 2 modules
+var interfaces = __nccwpck_require__(27940);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/utils/random-string-generator.util.js
 var random_string_generator_util = __nccwpck_require__(70032);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/module-utils/constants.js
@@ -210805,6 +211319,54 @@ const forwardRef = (fn) => ({
 
 
 
+
+
+
+
+/***/ }),
+
+/***/ 27940:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  H: () => (/* reexport */ Scope),
+  t: () => (/* reexport */ VERSION_NEUTRAL)
+});
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/interfaces/scope-options.interface.js
+/**
+ * @publicApi
+ */
+var Scope;
+(function (Scope) {
+    /**
+     * The provider can be shared across multiple classes. The provider lifetime
+     * is strictly tied to the application lifecycle. Once the application has
+     * bootstrapped, all providers have been instantiated.
+     */
+    Scope[Scope["DEFAULT"] = 0] = "DEFAULT";
+    /**
+     * A new private instance of the provider is instantiated for every use
+     */
+    Scope[Scope["TRANSIENT"] = 1] = "TRANSIENT";
+    /**
+     * A new instance is instantiated for each request processing pipeline
+     */
+    Scope[Scope["REQUEST"] = 2] = "REQUEST";
+})(Scope || (Scope = {}));
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/interfaces/version-options.interface.js
+/**
+ * Indicates that this will work for any version passed in the request, or no version.
+ *
+ * @publicApi
+ */
+const VERSION_NEUTRAL = Symbol('VERSION_NEUTRAL');
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/interfaces/index.js
 
 
 
@@ -213374,7 +213936,7 @@ function stripProtoKeys(value) {
 
 /***/ }),
 
-/***/ 68632:
+/***/ 91300:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -213391,8 +213953,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   registerAs: () => (/* reexport */ registerAs)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/utils/shared.utils.js
 var shared_utils = __nccwpck_require__(60701);
 // EXTERNAL MODULE: ./node_modules/.pnpm/dotenv-expand@13.0.0/node_modules/dotenv-expand/lib/main.js
@@ -213496,174 +214058,8 @@ const getDefaultParser = () => dist.parse;
 
 
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/toKey.mjs
-// src/compat/_internal/toKey.ts
-/**
-* Converts `value` to a string key if it's not a string or symbol.
-*
-* @private
-* @param {unknown} value The value to inspect.
-* @returns {string|symbol} Returns the key.
-*/
-function toKey(value) {
-	var _value$valueOf;
-	if (typeof value === "string" || typeof value === "symbol") return value;
-	if (Object.is(value === null || value === void 0 || (_value$valueOf = value.valueOf) === null || _value$valueOf === void 0 ? void 0 : _value$valueOf.call(value), -0)) return "-0";
-	return String(value);
-}
-
-
-;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isSymbol.mjs
-// src/compat/predicate/isSymbol.ts
-/**
-* Check whether a value is a symbol.
-*
-* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `symbol`.
-*
-* @param value The value to check.
-* @returns Returns `true` if `value` is a symbol, else `false`.
-* @example
-* isSymbol(Symbol.iterator);
-* // => true
-*
-* isSymbol('abc');
-* // => false
-*/
-function isSymbol(value) {
-	return typeof value === "symbol" || value instanceof Symbol;
-}
-
-
-;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/baseToString.mjs
-
-// src/compat/_internal/baseToString.ts
-/**
-* Converts `value` to a string like Lodash's `baseToString`.
-*
-* Unlike `toString`, `null` and `undefined` are not special-cased, so `null` becomes `'null'`.
-*
-* @param value - The value to convert.
-* @returns The converted string.
-*/
-function baseToString(value) {
-	if (typeof value === "string") return value;
-	if (Array.isArray(value)) {
-		let result = "";
-		for (let i = 0; i < value.length; i++) {
-			if (i > 0) result += ",";
-			result += baseToString(value[i]);
-		}
-		return result;
-	}
-	if (isSymbol(value)) return value.toString();
-	const result = value + "";
-	if (result === "0" && Object.is(Number(value), -0)) return "-0";
-	return result;
-}
-
-
-;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/toString.mjs
-
-// src/compat/util/toString.ts
-/**
-* Converts `value` to a string.
-*
-* An empty string is returned for `null` and `undefined` values.
-* The sign of `-0` is preserved.
-*
-* @param value - The value to convert.
-* @returns Returns the converted string.
-*
-* @example
-* toString(null) // returns ''
-* toString(undefined) // returns ''
-* toString(-0) // returns '-0'
-* toString([1, 2, -0]) // returns '1,2,-0'
-* toString([Symbol('a'), Symbol('b')]) // returns 'Symbol(a),Symbol(b)'
-*/
-function toString_toString(value) {
-	if (value == null) return "";
-	return baseToString(value);
-}
-
-
-;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/toPath.mjs
-
-
-// src/compat/util/toPath.ts
-/**
-* Converts a deep key string into an array of path segments.
-*
-* This function takes a string representing a deep key (e.g., 'a.b.c' or 'a[b][c]') and breaks it down into an array of strings, each representing a segment of the path.
-*
-* @param deepKey - The deep key string to convert.
-* @returns An array of strings, each representing a segment of the path.
-*
-* Examples:
-*
-* toPath('a.b.c') // Returns ['a', 'b', 'c']
-* toPath('a[b][c]') // Returns ['a', 'b', 'c']
-* toPath('.a.b.c') // Returns ['', 'a', 'b', 'c']
-* toPath('a["b.c"].d') // Returns ['a', 'b.c', 'd']
-* toPath('') // Returns []
-* toPath('.a[b].c.d[e]["f.g"].h') // Returns ['', 'a', 'b', 'c', 'd', 'e', 'f.g', 'h']
-*/
-function toPath(deepKey) {
-	if (Array.isArray(deepKey)) return deepKey.map(toKey);
-	if (typeof deepKey === "symbol") return [deepKey];
-	deepKey = toString_toString(deepKey);
-	const result = [];
-	const length = deepKey.length;
-	if (length === 0) return result;
-	let index = 0;
-	let key = "";
-	let quoteChar = "";
-	let bracket = false;
-	let bracketHadQuote = false;
-	const bracketNumberRegex = /^-?\d+(?:\.\d+)?$/;
-	if (deepKey.charCodeAt(0) === 46) result.push("");
-	while (index < length) {
-		const char = deepKey[index];
-		if (quoteChar) {
-			if (char === "\\" && index + 1 < length) {
-				index++;
-				key += deepKey[index];
-			} else if (char === quoteChar) quoteChar = "";
-			else key += char;
-		} else if (bracket) {
-			if (char === "\"" || char === "'") {
-				quoteChar = char;
-				bracketHadQuote = true;
-			} else if (char === "]") {
-				bracket = false;
-				if (!bracketHadQuote && key.includes(".") && !bracketNumberRegex.test(key)) {
-					const segments = key.split(".");
-					for (let i = 0; i < segments.length; i++) if (segments[i] !== "") result.push(segments[i]);
-				} else result.push(key);
-				key = "";
-			} else key += char;
-		} else if (char === "[") {
-			bracket = true;
-			bracketHadQuote = false;
-			if (key) {
-				result.push(key);
-				key = "";
-			}
-		} else if (char === ".") {
-			if (key) {
-				result.push(key);
-				key = "";
-			}
-			const next = deepKey[index + 1];
-			if (next === void 0 || next === ".") result.push("");
-		} else key += char;
-		index++;
-	}
-	if (key) result.push(key);
-	return result;
-}
-
-
+// EXTERNAL MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/toPath.mjs + 2 modules
+var toPath = __nccwpck_require__(25326);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+config@12.1.1_@nest_8fc2ed85f7725b1ec7be6eafd6d4fb8f/node_modules/@nestjs/config/dist/utils/property-path.util.js
 
 /**
@@ -213750,7 +214146,7 @@ function toSegments(object, path) {
     if (typeof path !== 'string' || isReachable(object, path)) {
         return [path];
     }
-    const segments = toPath(path);
+    const segments = (0,toPath/* toPath */.b)(path);
     return segments.length > 1 ? segments : [path];
 }
 function isIndex(key) {
@@ -215713,7 +216109,7 @@ class BaseExceptionFilterContext extends _helpers_context_creator_js__WEBPACK_IM
 /* harmony export */   $: () => (/* binding */ BaseExceptionFilter)
 /* harmony export */ });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(1848);
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 /* harmony import */ var http__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(58611);
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(48237);
 /* harmony import */ var _helpers_http_adapter_host_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(86789);
@@ -216029,8 +216425,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   hU: () => (/* binding */ warnOnInvalidFilter)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/internal.js + 1 modules
 var internal = __nccwpck_require__(77800);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/errors/messages.js
@@ -216306,7 +216702,7 @@ class ContextIdFactory {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   j: () => (/* binding */ ContextUtils)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 /* harmony import */ var _nestjs_common_pipes_validation_pipe_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(30256);
 /* harmony import */ var _errors_messages_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(34368);
 /* harmony import */ var _class_ref_registry_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(61864);
@@ -216429,7 +216825,7 @@ class ContextUtils {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   I: () => (/* binding */ destroyUnsentBody)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 /* harmony import */ var _nestjs_common_internal__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(77800);
 /* harmony import */ var _router_streaming_body_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(62909);
 
@@ -216526,8 +216922,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   r: () => (/* binding */ ExternalContextCreator)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/internal.js + 1 modules
 var internal = __nccwpck_require__(77800);
 // EXTERNAL MODULE: ./node_modules/.pnpm/rxjs@7.8.2/node_modules/rxjs/dist/cjs/index.js
@@ -217083,7 +217479,7 @@ function isDurable(provider) {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   i: () => (/* binding */ loadAdapter)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 
 const MISSING_REQUIRED_DEPENDENCY = (defaultPlatform, transport) => `No driver (${transport}) has been selected. In order to use the default driver, please, install the "${defaultPlatform}" package ($ npm install ${defaultPlatform}).`;
 const logger = new _nestjs_common__WEBPACK_IMPORTED_MODULE_0__.Logger('PackageLoader');
@@ -217112,7 +217508,7 @@ async function loadAdapter(defaultPlatform, transport, loaderFn) {
 /* harmony export */   i$: () => (/* binding */ VERSIONED_ROUTE_MAPPED_MESSAGE)
 /* harmony export */ });
 /* unused harmony export INVALID_EXECUTION_CONTEXT */
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 
 const MODULE_INIT_MESSAGE = (text, module) => `${module} dependencies initialized`;
 const ROUTE_MAPPED_MESSAGE = (path, method) => `Mapped {${path}, ${_nestjs_common__WEBPACK_IMPORTED_MODULE_0__.RequestMethod[method]}} route`;
@@ -217163,7 +217559,7 @@ async function optionalRequire(packageName, loaderFn) {
 /* harmony export */   t: () => (/* binding */ RouterMethodFactory)
 /* harmony export */ });
 /* unused harmony export REQUEST_METHOD_MAP */
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 
 const REQUEST_METHOD_MAP = {
     [_nestjs_common__WEBPACK_IMPORTED_MODULE_0__.RequestMethod.GET]: 'get',
@@ -217205,7 +217601,7 @@ class RouterMethodFactory {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   k: () => (/* binding */ makeSafeInstanceDecorator)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 
 const logger = new _nestjs_common__WEBPACK_IMPORTED_MODULE_0__.Logger('InstrumentLogger');
 /**
@@ -217694,8 +218090,8 @@ var application_config = __nccwpck_require__(2545);
 var constants = __nccwpck_require__(48237);
 // EXTERNAL MODULE: ./node_modules/.pnpm/tslib@2.9.1/node_modules/tslib/modules/index.js
 var modules = __nccwpck_require__(1848);
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/metadata-scanner.js
 var metadata_scanner = __nccwpck_require__(42452);
 // EXTERNAL MODULE: ./node_modules/.pnpm/uid@2.0.2/node_modules/uid/dist/index.mjs
@@ -218340,7 +218736,7 @@ var services = __nccwpck_require__(917);
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   u: () => (/* binding */ AbstractInstanceResolver)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 /* harmony import */ var _errors_exceptions_index_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(1337);
 
 
@@ -218567,8 +218963,8 @@ class ByReferenceModuleOpaqueKeyFactory {
 
 // EXTERNAL MODULE: ./node_modules/.pnpm/fast-safe-stringify@2.1.1/node_modules/fast-safe-stringify/index.js
 var fast_safe_stringify = __nccwpck_require__(88461);
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/injector/opaque-key-factory/deep-hashed-module-opaque-key-factory.js
 
 
@@ -219028,8 +219424,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   z: () => (/* binding */ Injector)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/internal.js + 1 modules
 var internal = __nccwpck_require__(77800);
 // EXTERNAL MODULE: ./node_modules/.pnpm/iterare@1.2.1/node_modules/iterare/lib/index.js
@@ -220415,7 +220811,7 @@ class InstanceLinksHost {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   N: () => (/* binding */ InstanceLoader)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 /* harmony import */ var _discovery_discoverable_meta_host_collection_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(93990);
 /* harmony import */ var _helpers_messages_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(55532);
 /* harmony import */ var _internal_core_module_internal_core_module_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(52915);
@@ -220540,8 +220936,8 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 // UNUSED EXPORTS: INSTANCE_METADATA_SYMBOL
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/internal.js + 1 modules
 var internal = __nccwpck_require__(77800);
 // EXTERNAL MODULE: ./node_modules/.pnpm/iterare@1.2.1/node_modules/iterare/lib/index.js
@@ -221125,8 +221521,8 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 // EXTERNAL MODULE: ./node_modules/.pnpm/tslib@2.9.1/node_modules/tslib/modules/index.js
 var modules = __nccwpck_require__(1848);
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/router/request/request-constants.js
 var request_constants = __nccwpck_require__(57267);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/router/request/request-providers.js
@@ -221205,8 +221601,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   O: () => (/* binding */ LazyModuleLoader)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/injector/helpers/silent-logger.js
 
 const noop = () => { };
@@ -221333,8 +221729,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   U: () => (/* binding */ ModuleRef)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/internal.js + 1 modules
 var internal = __nccwpck_require__(77800);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/errors/messages.js
@@ -221520,8 +221916,8 @@ var instance_wrapper = __nccwpck_require__(84382);
 var module_ref = __nccwpck_require__(86884);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/internal.js + 1 modules
 var internal = __nccwpck_require__(77800);
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/injector/module.js
 
 
@@ -223018,7 +223414,7 @@ class MiddlewareBuilder {
 /* harmony export */   vs: () => (/* binding */ mapToExcludeRoute)
 /* harmony export */ });
 /* unused harmony exports LINE_TERMINATOR, mapToClass, isMiddlewareClass, assignToken, isMiddlewareRouteExcluded */
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 /* harmony import */ var iterare__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(45657);
 /* harmony import */ var path_to_regexp__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(91654);
 /* harmony import */ var uid__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(47100);
@@ -223467,8 +223863,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   G: () => (/* binding */ NestApplicationContext)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/constants.js
 var constants = __nccwpck_require__(48237);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/errors/exceptions/index.js + 5 modules
@@ -224165,8 +224561,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   Z: () => (/* binding */ NestApplication)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/iterare@1.2.1/node_modules/iterare/lib/index.js
 var lib = __nccwpck_require__(45657);
 // EXTERNAL MODULE: external "os"
@@ -227306,7 +227702,7 @@ class PipesContextCreator extends _helpers_context_creator_js__WEBPACK_IMPORTED_
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   t: () => (/* binding */ LegacyRouteConverter)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 
 const UNSUPPORTED_PATH_MESSAGE = (text, route) => `Unsupported route path: "${route}". In previous versions, the symbols ?, *, and + were used to denote optional or repeating path parameters. The latest version of "path-to-regexp" now requires the use of named parameters. For example, instead of using a route like /users/* to capture all routes starting with "/users", you should use /users/{*path}. The braces keep the wildcard optional, so it covers the same paths as /users/* did, while /users/*path is narrower and requires at least one extra segment. For more details, refer to the migration guide.`;
 class LegacyRouteConverter {
@@ -227493,7 +227889,7 @@ const REQUEST_CONTEXT_ID = Symbol('REQUEST_CONTEXT_ID');
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   J: () => (/* binding */ RoutePathFactory)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 /* harmony import */ var _utils_index_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(12400);
 /* harmony import */ var _nestjs_common_internal__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(77800);
 
@@ -227665,8 +228061,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   A: () => (/* binding */ RouterExceptionFilters)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/iterare@1.2.1/node_modules/iterare/lib/index.js
 var lib = __nccwpck_require__(45657);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/exceptions/base-exception-filter-context.js
@@ -228080,8 +228476,8 @@ class RouteParamsFactory {
     }
 }
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/rxjs@7.8.2/node_modules/rxjs/dist/cjs/index.js
 var cjs = __nccwpck_require__(74648);
 // EXTERNAL MODULE: ./node_modules/.pnpm/rxjs@7.8.2/node_modules/rxjs/dist/cjs/operators/index.js
@@ -229703,7 +230099,7 @@ class RouterProxy {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   Z: () => (/* binding */ RoutesResolver)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 /* harmony import */ var _nestjs_common_internal__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(77800);
 /* harmony import */ var _helpers_messages_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(55532);
 /* harmony import */ var _metadata_scanner_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(42452);
@@ -230052,8 +230448,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   p2: () => (/* reexport */ toExcludedPathMatcher)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/internal.js + 1 modules
 var internal = __nccwpck_require__(77800);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/router/utils/exclude-route.util.js
@@ -230252,8 +230648,8 @@ var class_ref_registry = __nccwpck_require__(61864);
 var get_class_scope = __nccwpck_require__(77514);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/injector/constants.js
 var injector_constants = __nccwpck_require__(96992);
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/helpers/external-context-creator.js + 4 modules
 var external_context_creator = __nccwpck_require__(6005);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/helpers/http-adapter-host.js
@@ -230922,7 +231318,7 @@ class DependenciesScanner {
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   J: () => (/* binding */ Reflector)
 /* harmony export */ });
-/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(76332);
+/* harmony import */ var _nestjs_common__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9147);
 /* harmony import */ var uid__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(47100);
 /* harmony import */ var _nestjs_common_internal__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(77800);
 
@@ -231097,8 +231493,8 @@ __nccwpck_require__.d(internal_namespaceObject, {
   optionalRequire: () => (optional_require/* optionalRequire */.I)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/cors@2.8.6/node_modules/cors/lib/index.js
 var lib = __nccwpck_require__(97047);
 // EXTERNAL MODULE: ./node_modules/.pnpm/express@5.3.0/node_modules/express/index.js
@@ -232611,6 +233007,12411 @@ MulterModule = MulterModule_1 = (0,modules/* __decorate */.Cg)([
  * https://nestjs.com
  * MIT Licensed
  */
+
+
+
+
+
+/***/ }),
+
+/***/ 67461:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+// ESM COMPAT FLAG
+__nccwpck_require__.r(__webpack_exports__);
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  ApiAcceptedResponse: () => (/* reexport */ ApiAcceptedResponse),
+  ApiAmbiguousResponse: () => (/* reexport */ ApiAmbiguousResponse),
+  ApiBadGatewayResponse: () => (/* reexport */ ApiBadGatewayResponse),
+  ApiBadRequestResponse: () => (/* reexport */ ApiBadRequestResponse),
+  ApiBasicAuth: () => (/* reexport */ ApiBasicAuth),
+  ApiBearerAuth: () => (/* reexport */ ApiBearerAuth),
+  ApiBody: () => (/* reexport */ ApiBody),
+  ApiCallbacks: () => (/* reexport */ ApiCallbacks),
+  ApiConflictResponse: () => (/* reexport */ ApiConflictResponse),
+  ApiConsumes: () => (/* reexport */ ApiConsumes),
+  ApiContinueResponse: () => (/* reexport */ ApiContinueResponse),
+  ApiCookieAuth: () => (/* reexport */ ApiCookieAuth),
+  ApiCreatedResponse: () => (/* reexport */ ApiCreatedResponse),
+  ApiDefaultGetter: () => (/* reexport */ ApiDefaultGetter),
+  ApiDefaultResponse: () => (/* reexport */ ApiDefaultResponse),
+  ApiEarlyhintsResponse: () => (/* reexport */ ApiEarlyhintsResponse),
+  ApiExcludeController: () => (/* reexport */ ApiExcludeController),
+  ApiExcludeEndpoint: () => (/* reexport */ ApiExcludeEndpoint),
+  ApiExpectationFailedResponse: () => (/* reexport */ ApiExpectationFailedResponse),
+  ApiExtension: () => (/* reexport */ ApiExtension),
+  ApiExtraModels: () => (/* reexport */ ApiExtraModels),
+  ApiFailedDependencyResponse: () => (/* reexport */ ApiFailedDependencyResponse),
+  ApiForbiddenResponse: () => (/* reexport */ ApiForbiddenResponse),
+  ApiFoundResponse: () => (/* reexport */ ApiFoundResponse),
+  ApiGatewayTimeoutResponse: () => (/* reexport */ ApiGatewayTimeoutResponse),
+  ApiGoneResponse: () => (/* reexport */ ApiGoneResponse),
+  ApiHeader: () => (/* reexport */ ApiHeader),
+  ApiHeaders: () => (/* reexport */ ApiHeaders),
+  ApiHideProperty: () => (/* reexport */ ApiHideProperty),
+  ApiHttpVersionNotSupportedResponse: () => (/* reexport */ ApiHttpVersionNotSupportedResponse),
+  ApiIAmATeapotResponse: () => (/* reexport */ ApiIAmATeapotResponse),
+  ApiIncludeEndpoint: () => (/* reexport */ ApiIncludeEndpoint),
+  ApiInternalServerErrorResponse: () => (/* reexport */ ApiInternalServerErrorResponse),
+  ApiLengthRequiredResponse: () => (/* reexport */ ApiLengthRequiredResponse),
+  ApiLink: () => (/* reexport */ ApiLink),
+  ApiMethodNotAllowedResponse: () => (/* reexport */ ApiMethodNotAllowedResponse),
+  ApiMisdirectedResponse: () => (/* reexport */ ApiMisdirectedResponse),
+  ApiMovedPermanentlyResponse: () => (/* reexport */ ApiMovedPermanentlyResponse),
+  ApiNoContentResponse: () => (/* reexport */ ApiNoContentResponse),
+  ApiNonAuthoritativeInformationResponse: () => (/* reexport */ ApiNonAuthoritativeInformationResponse),
+  ApiNotAcceptableResponse: () => (/* reexport */ ApiNotAcceptableResponse),
+  ApiNotFoundResponse: () => (/* reexport */ ApiNotFoundResponse),
+  ApiNotImplementedResponse: () => (/* reexport */ ApiNotImplementedResponse),
+  ApiNotModifiedResponse: () => (/* reexport */ ApiNotModifiedResponse),
+  ApiOAuth2: () => (/* reexport */ ApiOAuth2),
+  ApiOkResponse: () => (/* reexport */ ApiOkResponse),
+  ApiOperation: () => (/* reexport */ ApiOperation),
+  ApiParam: () => (/* reexport */ ApiParam),
+  ApiPartialContentResponse: () => (/* reexport */ ApiPartialContentResponse),
+  ApiPayloadTooLargeResponse: () => (/* reexport */ ApiPayloadTooLargeResponse),
+  ApiPaymentRequiredResponse: () => (/* reexport */ ApiPaymentRequiredResponse),
+  ApiPermanentRedirectResponse: () => (/* reexport */ ApiPermanentRedirectResponse),
+  ApiPreconditionFailedResponse: () => (/* reexport */ ApiPreconditionFailedResponse),
+  ApiPreconditionRequiredResponse: () => (/* reexport */ ApiPreconditionRequiredResponse),
+  ApiProcessingResponse: () => (/* reexport */ ApiProcessingResponse),
+  ApiProduces: () => (/* reexport */ ApiProduces),
+  ApiProperty: () => (/* reexport */ ApiProperty),
+  ApiPropertyOptional: () => (/* reexport */ ApiPropertyOptional),
+  ApiProxyAuthenticationRequiredResponse: () => (/* reexport */ ApiProxyAuthenticationRequiredResponse),
+  ApiQuery: () => (/* reexport */ ApiQuery),
+  ApiRequestTimeoutResponse: () => (/* reexport */ ApiRequestTimeoutResponse),
+  ApiRequestedRangeNotSatisfiableResponse: () => (/* reexport */ ApiRequestedRangeNotSatisfiableResponse),
+  ApiResetContentResponse: () => (/* reexport */ ApiResetContentResponse),
+  ApiResponse: () => (/* reexport */ ApiResponse),
+  ApiResponseProperty: () => (/* reexport */ ApiResponseProperty),
+  ApiSchema: () => (/* reexport */ ApiSchema),
+  ApiSecurity: () => (/* reexport */ ApiSecurity),
+  ApiSeeOtherResponse: () => (/* reexport */ ApiSeeOtherResponse),
+  ApiServiceUnavailableResponse: () => (/* reexport */ ApiServiceUnavailableResponse),
+  ApiSwitchingProtocolsResponse: () => (/* reexport */ ApiSwitchingProtocolsResponse),
+  ApiTags: () => (/* reexport */ ApiTags),
+  ApiTemporaryRedirectResponse: () => (/* reexport */ ApiTemporaryRedirectResponse),
+  ApiTooManyRequestsResponse: () => (/* reexport */ ApiTooManyRequestsResponse),
+  ApiUnauthorizedResponse: () => (/* reexport */ ApiUnauthorizedResponse),
+  ApiUnprocessableEntityResponse: () => (/* reexport */ ApiUnprocessableEntityResponse),
+  ApiUnsupportedMediaTypeResponse: () => (/* reexport */ ApiUnsupportedMediaTypeResponse),
+  ApiUriTooLongResponse: () => (/* reexport */ ApiUriTooLongResponse),
+  ApiWebhook: () => (/* reexport */ ApiWebhook),
+  DECORATORS: () => (/* reexport */ DECORATORS),
+  DECORATORS_PREFIX: () => (/* reexport */ DECORATORS_PREFIX),
+  DeepPartialType: () => (/* reexport */ DeepPartialType),
+  DocumentBuilder: () => (/* reexport */ DocumentBuilder),
+  IntersectionType: () => (/* reexport */ intersection_type_helper_IntersectionType),
+  OmitType: () => (/* reexport */ omit_type_helper_OmitType),
+  PartialType: () => (/* reexport */ partial_type_helper_PartialType),
+  PickType: () => (/* reexport */ pick_type_helper_PickType),
+  SwaggerModule: () => (/* reexport */ SwaggerModule),
+  generateSchema: () => (/* reexport */ generateSchema),
+  getSchemaPath: () => (/* reexport */ getSchemaPath),
+  refs: () => (/* reexport */ refs)
+});
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/reflect-metadata@0.2.2/node_modules/reflect-metadata/Reflect.js
+var reflect_metadata_Reflect = __nccwpck_require__(52923);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isString.mjs
+// src/compat/predicate/isString.ts
+/**
+* Checks if a given value is string.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `string`.
+*
+* @param value The value to check if it is string.
+* @returns Returns `true` if `value` is a string, else `false`.
+*
+* @example
+* const value1 = 'abc';
+* const value2 = 123;
+* const value3 = true;
+*
+* console.log(isString(value1)); // true
+* console.log(isString(value2)); // false
+* console.log(isString(value3)); // false
+*/
+function isString(value) {
+	return typeof value === "string" || value instanceof String;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/constants.js
+const DECORATORS_PREFIX = 'swagger';
+const DECORATORS = {
+    API_OPERATION: `${DECORATORS_PREFIX}/apiOperation`,
+    API_RESPONSE: `${DECORATORS_PREFIX}/apiResponse`,
+    API_PRODUCES: `${DECORATORS_PREFIX}/apiProduces`,
+    API_CONSUMES: `${DECORATORS_PREFIX}/apiConsumes`,
+    API_TAGS: `${DECORATORS_PREFIX}/apiUseTags`,
+    API_WEBHOOK: `${DECORATORS_PREFIX}/apiWebhook`,
+    API_CALLBACKS: `${DECORATORS_PREFIX}/apiCallbacks`,
+    API_PARAMETERS: `${DECORATORS_PREFIX}/apiParameters`,
+    API_HEADERS: `${DECORATORS_PREFIX}/apiHeaders`,
+    API_MODEL_PROPERTIES: `${DECORATORS_PREFIX}/apiModelProperties`,
+    API_MODEL_PROPERTIES_ARRAY: `${DECORATORS_PREFIX}/apiModelPropertiesArray`,
+    API_MODEL_PROPERTY_HIDDEN: `${DECORATORS_PREFIX}/apiModelPropertyHidden`,
+    API_MODEL_PROPERTY_EXPLICIT_OPTIONS: `${DECORATORS_PREFIX}/apiModelPropertyExplicitOptions`,
+    API_SECURITY: `${DECORATORS_PREFIX}/apiSecurity`,
+    API_EXCLUDE_ENDPOINT: `${DECORATORS_PREFIX}/apiExcludeEndpoint`,
+    API_INCLUDE_ENDPOINT: `${DECORATORS_PREFIX}/apiIncludeEndpoint`,
+    API_EXCLUDE_CONTROLLER: `${DECORATORS_PREFIX}/apiExcludeController`,
+    API_EXTRA_MODELS: `${DECORATORS_PREFIX}/apiExtraModels`,
+    API_EXTENSION: `${DECORATORS_PREFIX}/apiExtension`,
+    API_SCHEMA: `${DECORATORS_PREFIX}/apiSchema`,
+    API_DEFAULT_GETTER: `${DECORATORS_PREFIX}/apiDefaultGetter`,
+    API_LINK: `${DECORATORS_PREFIX}/apiLink`
+};
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/extend-metadata.util.js
+
+function extendMetadata(metadata, metakey, target) {
+    const existingMetadata = Reflect.getMetadata(metakey, target);
+    if (!existingMetadata) {
+        return metadata;
+    }
+    return existingMetadata.concat(metadata);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-security.decorator.js
+
+
+
+function ApiSecurity(name, requirements = []) {
+    let metadata;
+    if (isString(name)) {
+        metadata = [{ [name]: requirements }];
+    }
+    else {
+        metadata = [name];
+    }
+    return (target, key, descriptor) => {
+        if (descriptor) {
+            Reflect.defineMetadata(DECORATORS.API_SECURITY, extendMetadata(metadata, DECORATORS.API_SECURITY, descriptor.value), descriptor.value);
+            return descriptor;
+        }
+        Reflect.defineMetadata(DECORATORS.API_SECURITY, extendMetadata(metadata, DECORATORS.API_SECURITY, target), target);
+        return target;
+    };
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-basic.decorator.js
+
+function ApiBasicAuth(name = 'basic') {
+    return ApiSecurity(name);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-bearer.decorator.js
+
+function ApiBearerAuth(name = 'bearer') {
+    return ApiSecurity(name);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isPlainObject.mjs
+// src/compat/predicate/isPlainObject.ts
+/**
+* Checks if a given value is a plain object.
+*
+* A plain object is an object created by the `{}` literal, `new Object()`, or
+* `Object.create(null)`.
+*
+* This function also handles objects with custom
+* `Symbol.toStringTag` properties.
+*
+* `Symbol.toStringTag` is a built-in symbol that a constructor can use to customize the
+* default string description of objects.
+*
+* @param [object] - The value to check.
+* @returns True if the value is a plain object, otherwise false.
+*
+* @example
+* console.log(isPlainObject({})); // true
+* console.log(isPlainObject([])); // false
+* console.log(isPlainObject(null)); // false
+* console.log(isPlainObject(Object.create(null))); // true
+* console.log(isPlainObject(new Map())); // false
+*/
+function isPlainObject(object) {
+	if (typeof object !== "object") return false;
+	if (object == null) return false;
+	if (Object.getPrototypeOf(object) === null) return true;
+	if (Object.prototype.toString.call(object) !== "[object Object]") {
+		var _Object$getOwnPropert;
+		const tag = object[Symbol.toStringTag];
+		if (tag == null) return false;
+		if (!((_Object$getOwnPropert = Object.getOwnPropertyDescriptor(object, Symbol.toStringTag)) === null || _Object$getOwnPropert === void 0 ? void 0 : _Object$getOwnPropert.writable)) return false;
+		return object.toString() === `[object ${tag}]`;
+	}
+	let proto = object;
+	while (Object.getPrototypeOf(proto) !== null) proto = Object.getPrototypeOf(proto);
+	return Object.getPrototypeOf(object) === proto;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/isDeepKey.mjs
+// src/compat/_internal/isDeepKey.ts
+/** Matches any deep property path. Examples: `a.b`, `a[0]`, `a["b"]` */
+const regexIsDeepProp = /\.|(\[(?:[^[\]]*|(["'])(?:(?!\2)[^\\]|\\.)*?\2)\])/;
+/**
+* Checks if a given key is a deep key.
+*
+* A deep key is a string that contains a dot (.) or square brackets with a property accessor.
+*
+* @param {PropertyKey} key - The key to check.
+* @returns {boolean} - Returns true if the key is a deep key, otherwise false.
+*
+* Examples:
+*
+* isDeepKey('a.b') // true
+* isDeepKey('a[b]') // true
+* isDeepKey('a') // false
+* isDeepKey(123) // false
+* isDeepKey('a.b.c') // true
+* isDeepKey('a[b][c]') // true
+* isDeepKey('a.') // false
+* isDeepKey('.a') // false
+* isDeepKey('a[b') // false
+* isDeepKey('a]b]') // false
+* isDeepKey('a][b') // false
+* isDeepKey('') // false
+* isDeepKey('a[0]') // true
+*
+*/
+function isDeepKey(key) {
+	switch (typeof key) {
+		case "number":
+		case "symbol": return false;
+		case "string":
+			if (key === "" || key.startsWith(".") || key.endsWith(".")) return false;
+			return regexIsDeepProp.test(key);
+		default: return false;
+	}
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/predicate/isPrimitive.mjs
+// src/predicate/isPrimitive.ts
+/**
+* Checks whether a value is a JavaScript primitive.
+* JavaScript primitives include null, undefined, strings, numbers, booleans, symbols, and bigints.
+*
+* @param value The value to check.
+* @returns Returns true if `value` is a primitive, false otherwise.
+*
+* @example
+* isPrimitive(null); // true
+* isPrimitive(undefined); // true
+* isPrimitive('123'); // true
+* isPrimitive(false); // true
+* isPrimitive(true); // true
+* isPrimitive(Symbol('a')); // true
+* isPrimitive(123n); // true
+* isPrimitive({}); // false
+* isPrimitive(new Date()); // false
+* isPrimitive(new Map()); // false
+* isPrimitive(new Set()); // false
+* isPrimitive([1, 2, 3]); // false
+*/
+function isPrimitive(value) {
+	return value == null || typeof value !== "object" && typeof value !== "function";
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/getSymbols.mjs
+// src/compat/_internal/getSymbols.ts
+function getSymbols(object) {
+	return Object.getOwnPropertySymbols(object).filter((symbol) => Object.prototype.propertyIsEnumerable.call(object, symbol));
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/getTag.mjs
+// src/compat/_internal/getTag.ts
+/**
+* Gets the `toStringTag` of `value`.
+*
+* @private
+* @param {T} value The value to query.
+* @returns {string} Returns the `Object.prototype.toString.call` result.
+*/
+function getTag(value) {
+	if (value == null) return value === void 0 ? "[object Undefined]" : "[object Null]";
+	return Object.prototype.toString.call(value);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/tags.mjs
+// src/compat/_internal/tags.ts
+const regexpTag = "[object RegExp]";
+const stringTag = "[object String]";
+const numberTag = "[object Number]";
+const booleanTag = "[object Boolean]";
+const argumentsTag = "[object Arguments]";
+const symbolTag = "[object Symbol]";
+const dateTag = "[object Date]";
+const mapTag = "[object Map]";
+const setTag = "[object Set]";
+const arrayTag = "[object Array]";
+const functionTag = "[object Function]";
+const arrayBufferTag = "[object ArrayBuffer]";
+const objectTag = "[object Object]";
+const errorTag = "[object Error]";
+const dataViewTag = "[object DataView]";
+const uint8ArrayTag = "[object Uint8Array]";
+const uint8ClampedArrayTag = "[object Uint8ClampedArray]";
+const uint16ArrayTag = "[object Uint16Array]";
+const uint32ArrayTag = "[object Uint32Array]";
+const bigUint64ArrayTag = "[object BigUint64Array]";
+const int8ArrayTag = "[object Int8Array]";
+const int16ArrayTag = "[object Int16Array]";
+const int32ArrayTag = "[object Int32Array]";
+const bigInt64ArrayTag = "[object BigInt64Array]";
+const float32ArrayTag = "[object Float32Array]";
+const float64ArrayTag = "[object Float64Array]";
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/hasOwn.mjs
+// src/compat/_internal/hasOwn.ts
+const hasOwn_hasOwnProperty = Object.prototype.hasOwnProperty;
+/**
+* Checks if `key` is an own property of `object`, like `Object.hasOwn`, which is not available on ES2015 engines.
+*
+* @param object - The object to inspect.
+* @param key - The key to check.
+* @returns `true` if `key` is an own property of `object`, otherwise `false`.
+*/
+function hasOwn(object, key) {
+	return hasOwn_hasOwnProperty.call(object, key);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/_internal/globalThis.mjs
+// src/_internal/globalThis.ts
+const globalThis_ = typeof globalThis === "object" && globalThis || typeof window === "object" && window || typeof self === "object" && self || typeof global === "object" && global || (function() {
+	return this;
+})();
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/predicate/isBuffer.mjs
+
+// src/predicate/isBuffer.ts
+/**
+* Checks if the given value is a Buffer instance.
+*
+* This function tests whether the provided value is an instance of Buffer.
+* It returns `true` if the value is a Buffer, and `false` otherwise.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `Buffer`.
+*
+* @param x - The value to check if it is a Buffer.
+* @returns Returns `true` if `x` is a Buffer, else `false`.
+*
+* @example
+* const buffer = Buffer.from("test");
+* console.log(isBuffer(buffer)); // true
+*
+* const notBuffer = "not a buffer";
+* console.log(isBuffer(notBuffer)); // false
+*/
+function isBuffer(x) {
+	return typeof globalThis_.Buffer !== "undefined" && globalThis_.Buffer.isBuffer(x);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isBuffer.mjs
+
+// src/compat/predicate/isBuffer.ts
+/**
+* Checks if the given value is a Buffer instance.
+*
+* This function tests whether the provided value is an instance of Buffer.
+* It returns `true` if the value is a Buffer, and `false` otherwise.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `Buffer`.
+*
+* @param x - The value to check if it is a Buffer.
+* @returns Returns `true` if `x` is a Buffer, else `false`.
+*
+* @example
+* const buffer = Buffer.from("test");
+* console.log(isBuffer(buffer)); // true
+*
+* const notBuffer = "not a buffer";
+* console.log(isBuffer(notBuffer)); // false
+*/
+function isBuffer_isBuffer(x) {
+	return isBuffer(x);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/predicate/isTypedArray.mjs
+// src/predicate/isTypedArray.ts
+/**
+* Checks if a value is a TypedArray.
+* @param x The value to check.
+* @returns Returns true if `x` is a TypedArray, false otherwise.
+*
+* @example
+* const arr = new Uint8Array([1, 2, 3]);
+* isTypedArray(arr); // true
+*
+* const regularArray = [1, 2, 3];
+* isTypedArray(regularArray); // false
+*
+* const buffer = new ArrayBuffer(16);
+* isTypedArray(buffer); // false
+*/
+function isTypedArray(x) {
+	return ArrayBuffer.isView(x) && !(x instanceof DataView);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isTypedArray.mjs
+
+// src/compat/predicate/isTypedArray.ts
+/**
+* Checks if a value is a TypedArray.
+* @param x The value to check.
+* @returns Returns true if `x` is a TypedArray, false otherwise.
+*
+* @example
+* const arr = new Uint8Array([1, 2, 3]);
+* isTypedArray(arr); // true
+*
+* const regularArray = [1, 2, 3];
+* isTypedArray(regularArray); // false
+*
+* const buffer = new ArrayBuffer(16);
+* isTypedArray(buffer); // false
+*/
+function isTypedArray_isTypedArray(x) {
+	return isTypedArray(x);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/cloneDeepWith.mjs
+
+
+
+
+
+
+
+// src/compat/object/cloneDeepWith.ts
+/**
+* Creates a deep clone of the given object using a customizer function.
+*
+* @template T - The type of the object.
+* @param obj - The object to clone.
+* @param [cloneValue] - A function to customize the cloning process.
+* @returns A deep clone of the given object.
+*
+* @example
+* // Clone a primitive value
+* const num = 29;
+* const clonedNum = cloneDeepWith(num);
+* console.log(clonedNum); // 29
+* console.log(clonedNum === num); // true
+*
+* @example
+* // Clone an object with a customizer
+* const obj = { a: 1, b: 2 };
+* const clonedObj = cloneDeepWith(obj, (value) => {
+*   if (typeof value === 'number') {
+*     return value * 2; // Double the number
+*   }
+* });
+* console.log(clonedObj); // { a: 2, b: 4 }
+* console.log(clonedObj === obj); // false
+*
+* @example
+* // Clone an array with a customizer
+* const arr = [1, 2, 3];
+* const clonedArr = cloneDeepWith(arr, (value) => {
+*   if (typeof value === 'number') {
+*     return value + 1; // Increment each number
+*   }
+* });
+* console.log(clonedArr); // [2, 3, 4]
+* console.log(clonedArr === arr); // false
+*/
+function cloneDeepWith(obj, customizer) {
+	return cloneDeepWithImpl(obj, void 0, obj, /* @__PURE__ */ new Map(), customizer);
+}
+function cloneDeepWithImpl(valueToClone, keyToClone, objectToClone, stack, customizer) {
+	if (customizer != null) {
+		const cloned = customizer(valueToClone, keyToClone, objectToClone, stack);
+		if (cloned !== void 0) return cloned;
+	}
+	if (isPrimitive(valueToClone)) return valueToClone;
+	if (stack.has(valueToClone)) return stack.get(valueToClone);
+	if (Array.isArray(valueToClone)) {
+		const result = new Array(valueToClone.length);
+		stack.set(valueToClone, result);
+		for (let i = 0; i < valueToClone.length; i++) result[i] = cloneDeepWithImpl(valueToClone[i], i, objectToClone, stack, customizer);
+		if (hasOwn(valueToClone, "index")) result.index = valueToClone.index;
+		if (hasOwn(valueToClone, "input")) result.input = valueToClone.input;
+		return result;
+	}
+	if (valueToClone instanceof Date) return new Date(valueToClone.getTime());
+	if (valueToClone instanceof RegExp) {
+		const result = new RegExp(valueToClone.source, valueToClone.flags);
+		result.lastIndex = valueToClone.lastIndex;
+		return result;
+	}
+	if (valueToClone instanceof Map) {
+		const result = /* @__PURE__ */ new Map();
+		stack.set(valueToClone, result);
+		valueToClone.forEach((value, key) => {
+			result.set(key, cloneDeepWithImpl(value, key, objectToClone, stack, customizer));
+		});
+		return result;
+	}
+	if (valueToClone instanceof Set) {
+		const result = /* @__PURE__ */ new Set();
+		stack.set(valueToClone, result);
+		valueToClone.forEach((value) => {
+			result.add(cloneDeepWithImpl(value, void 0, objectToClone, stack, customizer));
+		});
+		return result;
+	}
+	if (isBuffer_isBuffer(valueToClone)) return valueToClone.subarray();
+	if (isTypedArray_isTypedArray(valueToClone)) {
+		const result = new (Object.getPrototypeOf(valueToClone)).constructor(valueToClone.length);
+		stack.set(valueToClone, result);
+		for (let i = 0; i < valueToClone.length; i++) result[i] = cloneDeepWithImpl(valueToClone[i], i, objectToClone, stack, customizer);
+		return result;
+	}
+	if (valueToClone instanceof ArrayBuffer || typeof SharedArrayBuffer !== "undefined" && valueToClone instanceof SharedArrayBuffer) return valueToClone.slice(0);
+	if (valueToClone instanceof DataView) {
+		const result = new DataView(valueToClone.buffer.slice(0), valueToClone.byteOffset, valueToClone.byteLength);
+		stack.set(valueToClone, result);
+		copyProperties(result, valueToClone, objectToClone, stack, customizer);
+		return result;
+	}
+	if (typeof File !== "undefined" && valueToClone instanceof File) {
+		const result = new File([valueToClone], valueToClone.name, { type: valueToClone.type });
+		stack.set(valueToClone, result);
+		copyProperties(result, valueToClone, objectToClone, stack, customizer);
+		return result;
+	}
+	if (typeof Blob !== "undefined" && valueToClone instanceof Blob) {
+		const result = new Blob([valueToClone], { type: valueToClone.type });
+		stack.set(valueToClone, result);
+		copyProperties(result, valueToClone, objectToClone, stack, customizer);
+		return result;
+	}
+	const tag = getTag(valueToClone);
+	if (tag === "[object Error]") {
+		if (valueToClone === objectToClone) return {};
+		return valueToClone;
+	}
+	switch (tag) {
+		case numberTag:
+		case stringTag:
+		case booleanTag: {
+			const result = new valueToClone.constructor(valueToClone.valueOf());
+			stack.set(valueToClone, result);
+			copyProperties(result, valueToClone, objectToClone, stack, customizer);
+			return result;
+		}
+		case argumentsTag: {
+			const result = {};
+			stack.set(valueToClone, result);
+			copyProperties(result, valueToClone, objectToClone, stack, customizer);
+			result.length = valueToClone.length;
+			result[Symbol.iterator] = valueToClone[Symbol.iterator];
+			return result;
+		}
+	}
+	if (typeof valueToClone === "object" && isCloneableObject(tag)) {
+		const result = tag === "[object Object]" && typeof valueToClone.constructor !== "function" ? {} : Object.create(Object.getPrototypeOf(valueToClone));
+		stack.set(valueToClone, result);
+		copyProperties(result, valueToClone, objectToClone, stack, customizer);
+		return result;
+	}
+	return valueToClone;
+}
+function copyProperties(target, source, objectToClone, stack, customizer) {
+	const keys = [...Object.keys(source), ...getSymbols(source)];
+	for (let i = 0; i < keys.length; i++) {
+		const key = keys[i];
+		const descriptor = Object.getOwnPropertyDescriptor(target, key);
+		if (descriptor == null || descriptor.writable) target[key] = cloneDeepWithImpl(source[key], key, objectToClone, stack, customizer);
+	}
+}
+function isCloneableObject(tag) {
+	switch (tag) {
+		case argumentsTag:
+		case arrayTag:
+		case arrayBufferTag:
+		case dataViewTag:
+		case booleanTag:
+		case dateTag:
+		case float32ArrayTag:
+		case float64ArrayTag:
+		case int8ArrayTag:
+		case int16ArrayTag:
+		case int32ArrayTag:
+		case mapTag:
+		case numberTag:
+		case objectTag:
+		case regexpTag:
+		case setTag:
+		case stringTag:
+		case symbolTag:
+		case uint8ArrayTag:
+		case uint8ClampedArrayTag:
+		case uint16ArrayTag:
+		case uint32ArrayTag: return true;
+		default: return false;
+	}
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isArray.mjs
+// src/compat/predicate/isArray.ts
+/**
+* Checks if the given value is an array.
+*
+* This function tests whether the provided value is an array or not.
+* It returns `true` if the value is an array, and `false` otherwise.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to an array.
+*
+* @param value - The value to test if it is an array.
+* @returns `true` if the value is an array, `false` otherwise.
+*
+* @example
+* const value1 = [1, 2, 3];
+* const value2 = 'abc';
+* const value3 = () => {};
+*
+* console.log(isArray(value1)); // true
+* console.log(isArray(value2)); // false
+* console.log(isArray(value3)); // false
+*/
+function isArray(value) {
+	return Array.isArray(value);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/predicate/isLength.mjs
+// src/predicate/isLength.ts
+/**
+* Checks if a given value is a valid length.
+*
+* A valid length is of type `number`, is a non-negative integer, and is less than or equal to
+* JavaScript's maximum safe integer (`Number.MAX_SAFE_INTEGER`).
+* It returns `true` if the value is a valid length, and `false` otherwise.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the
+* argument to a valid length (`number`).
+*
+* @param value The value to check.
+* @returns Returns `true` if `value` is a valid length, else `false`.
+*
+* @example
+* isLength(0); // true
+* isLength(42); // true
+* isLength(-1); // false
+* isLength(1.5); // false
+* isLength(Number.MAX_SAFE_INTEGER); // true
+* isLength(Number.MAX_SAFE_INTEGER + 1); // false
+*/
+function isLength(value) {
+	return Number.isSafeInteger(value) && value >= 0;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isArrayLike.mjs
+
+// src/compat/predicate/isArrayLike.ts
+/**
+* Checks if `value` is array-like.
+*
+* @param value The value to check.
+* @returns Returns `true` if `value` is array-like, else `false`.
+*
+* @example
+* isArrayLike([1, 2, 3]); // true
+* isArrayLike('abc'); // true
+* isArrayLike({ 0: 'a', length: 1 }); // true
+* isArrayLike({}); // false
+* isArrayLike(null); // false
+* isArrayLike(undefined); // false
+*/
+function isArrayLike(value) {
+	return value != null && typeof value !== "function" && isLength(value.length);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isArguments.mjs
+
+// src/compat/predicate/isArguments.ts
+/**
+* Checks if the given value is an arguments object.
+*
+* This function tests whether the provided value is an arguments object or not.
+* It returns `true` if the value is an arguments object, and `false` otherwise.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to an arguments object.
+*
+* @param value - The value to test if it is an arguments object.
+* @returns `true` if the value is an arguments, `false` otherwise.
+*
+* @example
+* const args = (function() { return arguments; })();
+* const strictArgs = (function() { 'use strict'; return arguments; })();
+* const value = [1, 2, 3];
+*
+* console.log(isArguments(args)); // true
+* console.log(isArguments(strictArgs)); // true
+* console.log(isArguments(value)); // false
+*/
+function isArguments(value) {
+	return value !== null && typeof value === "object" && getTag(value) === "[object Arguments]";
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/flattenDepth.mjs
+
+
+
+// src/compat/array/flattenDepth.ts
+/**
+* Recursively flattens array up to depth times.
+*
+* @template T
+* @param array - The array to flatten.
+* @param [depth=1] - The maximum recursion depth.
+* @returns Returns the new flattened array.
+*
+* @example
+* const array = [1, [2, [3, [4]], 5]];
+*
+* flattenDepth(array, 1);
+* // => [1, 2, [3, [4]], 5]
+*
+* flattenDepth(array, 2);
+* // => [1, 2, 3, [4], 5]
+*/
+function flattenDepth(array, depth = 1) {
+	if (!isArrayLike(array)) return [];
+	const result = [];
+	const flooredDepth = Math.floor(depth);
+	const recursive = (arr, currentDepth) => {
+		for (let i = 0; i < arr.length; i++) {
+			const item = arr[i];
+			if (isFlattenable(item) && currentDepth < flooredDepth) recursive(item, currentDepth + 1);
+			else result.push(item);
+		}
+	};
+	recursive(Array.from(array), 0);
+	return result;
+}
+function isFlattenable(value) {
+	return isArray(value) || isArguments(value) || Boolean(value && value[Symbol.isConcatSpreadable]);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/flatten.mjs
+
+// src/compat/array/flatten.ts
+/**
+* Flattens array up to depth times.
+*
+* @template T
+* @param array - The array to flatten.
+* @returns Returns the new flattened array.
+*
+* @example
+* flatten([1, [2, [3, [4]], 5]]);
+* // => [1, 2, [3, [4]], 5]
+*/
+function flatten(array) {
+	return flattenDepth(array, 1);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/_internal/isUnsafeProperty.mjs
+// src/_internal/isUnsafeProperty.ts
+/**
+* Checks if a property key is unsafe to access or copy directly.
+*
+* This function is used in functions like `get` and `merge` to prevent
+* prototype pollution attacks by identifying `__proto__`, which modifies the object's
+* prototype chain. `constructor` and `prototype` stay accessible here because lodash
+* keeps reads of them unrestricted; write paths use `isUnsafeToWriteProperty` instead,
+* which also blocks those keys.
+*
+* @param key - The property key to check
+* @returns `true` if the property is unsafe to access directly, `false` otherwise
+* @internal
+*/
+function isUnsafeProperty(key) {
+	return key === "__proto__";
+}
+
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/toKey.mjs
+var toKey = __nccwpck_require__(89530);
+// EXTERNAL MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/toPath.mjs + 2 modules
+var toPath = __nccwpck_require__(25326);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/get.mjs
+
+
+
+
+
+// src/compat/object/get.ts
+/**
+* Retrieves the value at a given path from an object. If the resolved value is undefined, the defaultValue is returned instead.
+*
+* @param object - The object to query.
+* @param path - The path of the property to get.
+* @param [defaultValue] - The value returned if the resolved value is undefined.
+* @returns Returns the resolved value.
+*
+* @example
+* const object = { a: { b: { c: 1 } } };
+* get(object, 'a.b.c');
+* // => 1
+*
+* get(object, ['a', 'b', 'c']);
+* // => 1
+*
+* get(object, 'a.b.d', 'default');
+* // => 'default'
+*/
+function get(object, path, defaultValue) {
+	if (object == null) return defaultValue;
+	switch (typeof path) {
+		case "string": {
+			if (isUnsafeProperty(path)) return defaultValue;
+			const result = object[path];
+			if (result === void 0) {
+				if (isDeepKey(path) && !hasOwn(object, path)) return get(object, (0,toPath/* toPath */.b)(path), defaultValue);
+				else return defaultValue;
+			}
+			return result;
+		}
+		case "number":
+		case "symbol": {
+			if (typeof path === "number") path = (0,toKey/* toKey */.f)(path);
+			const result = object[path];
+			if (result === void 0) return defaultValue;
+			return result;
+		}
+		default: {
+			if (Array.isArray(path)) return getWithPath(object, path, defaultValue);
+			if (Object.is(path === null || path === void 0 ? void 0 : path.valueOf(), -0)) path = "-0";
+			else path = String(path);
+			if (isUnsafeProperty(path)) return defaultValue;
+			const result = object[path];
+			if (result === void 0) return defaultValue;
+			return result;
+		}
+	}
+}
+function getWithPath(object, path, defaultValue) {
+	if (path.length === 0) return defaultValue;
+	let current = object;
+	for (let index = 0; index < path.length; index++) {
+		if (current == null) return defaultValue;
+		if (isUnsafeProperty(path[index])) return defaultValue;
+		current = current[path[index]];
+	}
+	if (current === void 0) return defaultValue;
+	return current;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/_internal/isUnsafeToWriteProperty.mjs
+// src/_internal/isUnsafeToWriteProperty.ts
+/**
+* Checks if a property key is unsafe to write to.
+*
+* Writing through `__proto__`, `constructor`, or `prototype` can reach
+* `Object.prototype` and pollute every object, so write paths like `set`,
+* `update`, and `zipObjectDeep` abort when a path segment matches one of
+* these keys, matching lodash's behavior.
+*
+* Read paths like `get` use `isUnsafeProperty` instead, which only blocks
+* `__proto__`; lodash keeps reads of `constructor` and `prototype`
+* unrestricted. `unset` applies this check to every key but the last one.
+*
+* @param key - The property key to check
+* @returns `true` if the property is unsafe to write to, `false` otherwise
+* @internal
+*/
+function isUnsafeToWriteProperty(key) {
+	return key === "__proto__" || key === "constructor" || key === "prototype";
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/unset.mjs
+
+
+
+
+
+
+
+// src/compat/object/unset.ts
+/**
+* Removes the property at the given path of the object.
+*
+* @param obj - The object to modify.
+* @param path - The path of the property to unset.
+* @returns Returns true if the property is deleted, else false.
+*
+* @example
+* const obj = { a: { b: { c: 42 } } };
+* unset(obj, 'a.b.c'); // true
+* console.log(obj); // { a: { b: {} } }
+*
+* @example
+* const obj = { a: { b: { c: 42 } } };
+* unset(obj, ['a', 'b', 'c']); // true
+* console.log(obj); // { a: { b: {} } }
+*/
+function unset(obj, path) {
+	if (obj == null) return true;
+	switch (typeof path) {
+		case "symbol":
+		case "number":
+		case "object":
+			if (Array.isArray(path)) return unsetWithPath(obj, path);
+			if (typeof path === "number") path = (0,toKey/* toKey */.f)(path);
+			else if (typeof path === "object") {
+				if (Object.is(path === null || path === void 0 ? void 0 : path.valueOf(), -0)) path = "-0";
+				else path = String(path);
+			}
+			if (isUnsafeProperty(path)) return false;
+			if ((obj === null || obj === void 0 ? void 0 : obj[path]) === void 0) return true;
+			try {
+				delete obj[path];
+				return true;
+			} catch (e) {
+				return false;
+			}
+		case "string":
+			if ((obj === null || obj === void 0 ? void 0 : obj[path]) === void 0 && isDeepKey(path) && !hasOwn(obj, path)) return unsetWithPath(obj, (0,toPath/* toPath */.b)(path));
+			if (isUnsafeProperty(path)) return false;
+			try {
+				delete obj[path];
+				return true;
+			} catch (e) {
+				return false;
+			}
+	}
+}
+function unsetWithPath(obj, path) {
+	const keys = path.map((key) => (0,toKey/* toKey */.f)(key));
+	const parentKeys = keys.slice(0, -1);
+	const lastKey = keys[keys.length - 1];
+	if (parentKeys.some((key) => isUnsafeToWriteProperty(key))) return false;
+	const parent = keys.length === 1 ? obj : get(obj, parentKeys);
+	if ((parent === null || parent === void 0 ? void 0 : parent[lastKey]) === void 0) return true;
+	if (isUnsafeProperty(lastKey)) return false;
+	try {
+		delete parent[lastKey];
+		return true;
+	} catch (e) {
+		return false;
+	}
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/isPrototype.mjs
+// src/compat/_internal/isPrototype.ts
+function isPrototype(value) {
+	const constructor = value === null || value === void 0 ? void 0 : value.constructor;
+	return value === (typeof constructor === "function" ? constructor.prototype : Object.prototype);
+}
+
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isSymbol.mjs
+var isSymbol = __nccwpck_require__(53243);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/toNumber.mjs
+
+// src/compat/util/toNumber.ts
+/**
+* Converts `value` to a number.
+*
+* Unlike `Number()`, this function returns `NaN` for symbols.
+*
+* @param value - The value to convert.
+* @returns Returns the number.
+*
+* @example
+* toNumber(3.2); // => 3.2
+* toNumber(Number.MIN_VALUE); // => 5e-324
+* toNumber(Infinity); // => Infinity
+* toNumber('3.2'); // => 3.2
+* toNumber(Symbol.iterator); // => NaN
+* toNumber(NaN); // => NaN
+*/
+function toNumber(value) {
+	if ((0,isSymbol/* isSymbol */.B)(value)) return NaN;
+	return Number(value);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/toFinite.mjs
+
+// src/compat/util/toFinite.ts
+/**
+* Converts `value` to a finite number.
+*
+* @param value - The value to convert.
+* @returns Returns the number.
+*
+* @example
+* toFinite(3.2); // => 3.2
+* toFinite(Number.MIN_VALUE); // => 5e-324
+* toFinite(Infinity); // => 1.7976931348623157e+308
+* toFinite('3.2'); // => 3.2
+* toFinite(Symbol.iterator); // => 0
+* toFinite(NaN); // => 0
+*/
+function toFinite(value) {
+	if (!value) return value === 0 ? value : 0;
+	value = toNumber(value);
+	if (value === Infinity || value === -Infinity) return (value < 0 ? -1 : 1) * Number.MAX_VALUE;
+	return value === value ? value : 0;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/toInteger.mjs
+
+// src/compat/util/toInteger.ts
+/**
+* Converts `value` to an integer.
+*
+* This function first converts `value` to a finite number. If the result has any decimal places,
+* they are removed by rounding down to the nearest whole number.
+*
+* @param value - The value to convert.
+* @returns Returns the number.
+*
+* @example
+* toInteger(3.2); // => 3
+* toInteger(Number.MIN_VALUE); // => 0
+* toInteger(Infinity); // => 1.7976931348623157e+308
+* toInteger('3.2'); // => 3
+* toInteger(Symbol.iterator); // => 0
+* toInteger(NaN); // => 0
+*/
+function toInteger(value) {
+	const finite = toFinite(value);
+	const remainder = finite % 1;
+	return remainder ? finite - remainder : finite;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/times.mjs
+
+// src/compat/util/times.ts
+/**
+* Invokes the getValue function n times, returning an array of the results.
+*
+* @template R The return type of the getValue function.
+* @param n - The number of times to invoke getValue.
+* @param getValue - The function to invoke for each index.
+* @returns An array containing the results of invoking getValue n times.
+* @example
+* times(3, (i) => i * 2); // => [0, 2, 4]
+* times(2, () => 'es-toolkit'); // => ['es-toolkit', 'es-toolkit']
+*/
+function times(n, getValue) {
+	n = toInteger(n);
+	if (n < 1 || !Number.isSafeInteger(n)) return [];
+	const result = new Array(n);
+	for (let i = 0; i < n; i++) result[i] = typeof getValue === "function" ? getValue(i) : i;
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/keysIn.mjs
+
+
+
+
+
+
+// src/compat/object/keysIn.ts
+/**
+* This function retrieves the names of string-keyed properties from an object, including those inherited from its prototype.
+*
+* - If the value is not an object, it is converted to an object.
+* - Array-like objects are treated like arrays.
+* - Sparse arrays with some missing indices are treated like dense arrays.
+* - If the value is `null` or `undefined`, an empty array is returned.
+* - When handling prototype objects, the `constructor` property is excluded from the results.
+*
+* @param [object] - The object to inspect for keys.
+* @returns An array of string keys from the object.
+*
+* @example
+* const obj = { a: 1, b: 2 };
+* console.log(keysIn(obj)); // ['a', 'b']
+*
+* const arr = [1, 2, 3];
+* console.log(keysIn(arr)); // ['0', '1', '2']
+*
+* function Foo() {}
+* Foo.prototype.a = 1;
+* console.log(keysIn(new Foo())); // ['a']
+*/
+function keysIn(object) {
+	if (object == null) return [];
+	switch (typeof object) {
+		case "object":
+		case "function":
+			if (isArrayLike(object)) return arrayLikeKeysIn(object);
+			if (isPrototype(object)) return prototypeKeysIn(object);
+			return keysInImpl(object);
+		default: return keysInImpl(Object(object));
+	}
+}
+function keysInImpl(object) {
+	const result = [];
+	for (const key in object) result.push(key);
+	return result;
+}
+function prototypeKeysIn(object) {
+	return keysInImpl(object).filter((key) => key !== "constructor");
+}
+function arrayLikeKeysIn(object) {
+	const indices = times(object.length, (index) => `${index}`);
+	const filteredKeys = new Set(indices);
+	if (isBuffer(object)) {
+		filteredKeys.add("offset");
+		filteredKeys.add("parent");
+	}
+	if (isTypedArray_isTypedArray(object)) {
+		filteredKeys.add("buffer");
+		filteredKeys.add("byteLength");
+		filteredKeys.add("byteOffset");
+	}
+	const inheritedKeys = keysInImpl(object).filter((key) => !filteredKeys.has(key));
+	if (Array.isArray(object)) return [...indices, ...inheritedKeys];
+	return [...indices.filter((index) => hasOwn(object, index)), ...inheritedKeys];
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/getSymbolsIn.mjs
+
+// src/compat/_internal/getSymbolsIn.ts
+function getSymbolsIn(object) {
+	const result = [];
+	while (object) {
+		result.push(...getSymbols(object));
+		object = Object.getPrototypeOf(object);
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/omit.mjs
+
+
+
+
+
+
+
+// src/compat/object/omit.ts
+/**
+* Creates a new object with specified keys omitted.
+*
+* This function takes an object and a variable number of keys, and returns a new object that
+* excludes the properties corresponding to the specified keys. Note that keys can be deep.
+*
+* Deep keys can be specified for keys.
+*
+* @template T - The type of object.
+* @param obj - The object to omit keys from.
+* @param keysArr - A variable number of keys to be omitted from the object.
+* @returns A new object with the specified keys omitted.
+*
+* @example
+* omit({ a: 1, b: 2, c: 3 }, 'a', 'b');
+* // => { c: 3 }
+*
+* omit({ a: { b: 1, c: 2 }, d: 3 }, 'a.b', 'd');
+* // => { a: { c: 2 } }
+*/
+function omit(obj, ...keysArr) {
+	if (obj == null) return {};
+	keysArr = flatten(keysArr);
+	const result = cloneInOmit(obj, keysArr);
+	for (let i = 0; i < keysArr.length; i++) {
+		const keys = keysArr[i];
+		switch (typeof keys) {
+			case "object":
+				if (Array.isArray(keys)) unset(result, keys);
+				else {
+					const arrayLikeKeys = Array.from(keys);
+					for (let j = 0; j < arrayLikeKeys.length; j++) unset(result, arrayLikeKeys[j]);
+				}
+				break;
+			case "string":
+			case "symbol":
+			case "number": unset(result, keys);
+		}
+	}
+	return result;
+}
+function cloneInOmit(obj, keys) {
+	if (keys.some((key) => Array.isArray(key) || isDeepKey(key))) return deepCloneInOmit(obj);
+	return shallowCloneInOmit(obj);
+}
+function shallowCloneInOmit(obj) {
+	const result = {};
+	const keysToCopy = [...keysIn(obj), ...getSymbolsIn(obj)];
+	for (let i = 0; i < keysToCopy.length; i++) {
+		const key = keysToCopy[i];
+		result[key] = obj[key];
+	}
+	return result;
+}
+function deepCloneInOmit(obj) {
+	const result = {};
+	const keysToCopy = [...keysIn(obj), ...getSymbolsIn(obj)];
+	for (let i = 0; i < keysToCopy.length; i++) {
+		const key = keysToCopy[i];
+		result[key] = cloneDeepWith(obj[key], (valueToClone) => {
+			if (isPlainObject(valueToClone)) return;
+			return valueToClone;
+		});
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/enum.utils.js
+
+function getEnumValues(enumType) {
+    if (typeof enumType === 'function') {
+        return getEnumValues(enumType());
+    }
+    if (Array.isArray(enumType)) {
+        return enumType;
+    }
+    if (typeof enumType !== 'object') {
+        return [];
+    }
+    const numericValues = Object.values(enumType)
+        .filter((value) => typeof value === 'number')
+        .map((value) => value.toString());
+    return Object.keys(enumType)
+        .filter((key) => !numericValues.includes(key))
+        .map((key) => enumType[key]);
+}
+const lazyEnums = new WeakSet();
+const lazyEnumsWithInferredType = new WeakSet();
+function createLazyEnum(enumFn, inferType) {
+    if (lazyEnums.has(enumFn)) {
+        return enumFn;
+    }
+    const lazyEnum = () => enumFn();
+    lazyEnums.add(lazyEnum);
+    if (inferType) {
+        lazyEnumsWithInferredType.add(lazyEnum);
+    }
+    return lazyEnum;
+}
+function isLazyEnumTypeInferred(lazyEnum) {
+    return lazyEnumsWithInferredType.has(lazyEnum);
+}
+function getEnumType(values) {
+    const hasString = values.filter(isString).length > 0;
+    if (hasString) {
+        return 'string';
+    }
+    const hasBoolean = values.filter((v) => typeof v === 'boolean').length > 0;
+    return hasBoolean ? 'boolean' : 'number';
+}
+function addEnumArraySchema(paramDefinition, decoratorOptions) {
+    const paramSchema = paramDefinition.schema || {};
+    paramDefinition.schema = paramSchema;
+    paramSchema.type = 'array';
+    delete paramDefinition.isArray;
+    const enumValues = getEnumValues(decoratorOptions.enum);
+    paramSchema.items = {
+        type: getEnumType(enumValues),
+        enum: enumValues
+    };
+    if (decoratorOptions.enumName) {
+        paramDefinition.enumName = decoratorOptions.enumName;
+    }
+    if (decoratorOptions.enumSchema) {
+        paramDefinition.enumSchema = decoratorOptions.enumSchema;
+    }
+}
+function addEnumSchema(paramDefinition, decoratorOptions) {
+    const paramSchema = paramDefinition.schema || {};
+    const enumValues = getEnumValues(decoratorOptions.enum);
+    paramDefinition.schema = paramSchema;
+    paramSchema.enum = enumValues;
+    paramSchema.type = getEnumType(enumValues);
+    if (decoratorOptions.enumName) {
+        paramDefinition.enumName = decoratorOptions.enumName;
+    }
+    if (decoratorOptions.enumSchema) {
+        paramDefinition.enumSchema = decoratorOptions.enumSchema;
+    }
+}
+const isEnumArray = (obj) => obj.isArray && obj.enum;
+const isEnumDefined = (obj) => obj.enum;
+const isEnumMetadata = (metadata) => metadata.enum || (metadata.isArray && metadata.items?.['enum']);
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/constants.js
+var constants = __nccwpck_require__(26336);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/utils/shared.utils.js
+var shared_utils = __nccwpck_require__(60701);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/predicate/isUndefined.mjs
+// src/predicate/isUndefined.ts
+/**
+* Checks if the given value is undefined.
+*
+* This function tests whether the provided value is strictly equal to `undefined`.
+* It returns `true` if the value is `undefined`, and `false` otherwise.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `undefined`.
+*
+* @param x - The value to test if it is undefined.
+* @returns true if the value is undefined, false otherwise.
+*
+* @example
+* const value1 = undefined;
+* const value2 = null;
+* const value3 = 42;
+*
+* console.log(isUndefined(value1)); // true
+* console.log(isUndefined(value2)); // false
+* console.log(isUndefined(value3)); // false
+*/
+function isUndefined(x) {
+	return x === void 0;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/function/negate.mjs
+// src/compat/function/negate.ts
+/**
+* Creates a function that negates the result of the predicate function.
+*
+* @template F - The type of the function to negate.
+* @param func - The function to negate.
+* @returns The new negated function, which negates the boolean result of `func`.
+*
+* @example
+* const array = [1, 2, 3, 4, 5, 6];
+* const isEven = (n: number) => n % 2 === 0;
+* const result = array.filter(negate(isEven));
+* // result will be [1, 3, 5]
+*/
+function negate(func) {
+	if (typeof func !== "function") throw new TypeError("Expected a function");
+	return function(...args) {
+		return !func.apply(this, args);
+	};
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/function/identity.mjs
+// src/function/identity.ts
+/**
+* Returns the input value unchanged.
+*
+* @template T - The type of the input value.
+* @param x - The value to be returned.
+* @returns The input value.
+*
+* @example
+* // Returns 5
+* identity(5);
+*
+* @example
+* // Returns 'hello'
+* identity('hello');
+*
+* @example
+* // Returns { key: 'value' }
+* identity({ key: 'value' });
+*/
+function identity(x) {
+	return x;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/property.mjs
+
+// src/compat/object/property.ts
+/**
+* Creates a function that returns the value at a given path of an object.
+*
+* @template T - The type of object.
+* @template R - The type of the value to return.
+* @param path - The path of the property to get.
+* @returns Returns a new function that takes an object and returns the value at the specified path.
+*
+* @example
+* const getObjectValue = property('a.b.c');
+* const result = getObjectValue({ a: { b: { c: 3 } } });
+* console.log(result); // => 3
+*
+* @example
+* const getObjectValue = property(['a', 'b', 'c']);
+* const result = getObjectValue({ a: { b: { c: 3 } } });
+* console.log(result); // => 3
+*/
+function property(path) {
+	return function(object) {
+		return get(object, path);
+	};
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/eq.mjs
+// src/compat/util/eq.ts
+/**
+* Performs a `SameValueZero` comparison between two values to determine if they are equivalent.
+*
+* @param value The value to compare.
+* @param other The other value to compare.
+* @returns Returns `true` if the values are equivalent, else `false`.
+*
+* @example
+* eq(1, 1); // true
+* eq(0, -0); // true
+* eq(NaN, NaN); // true
+* eq('a', Object('a')); // false
+*/
+function eq(value, other) {
+	return value === other || Number.isNaN(value) && Number.isNaN(other);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isObject.mjs
+// src/compat/predicate/isObject.ts
+/**
+* Checks if the given value is an object. An object is a value that is
+* not a primitive type (string, number, boolean, symbol, null, or undefined).
+*
+* This function tests whether the provided value is an object or not.
+* It returns `true` if the value is an object, and `false` otherwise.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to an object value.
+*
+* @param value - The value to check if it is an object.
+* @returns `true` if the value is an object, `false` otherwise.
+*
+* @example
+* const value1 = {};
+* const value2 = [1, 2, 3];
+* const value3 = () => {};
+* const value4 = null;
+*
+* console.log(isObject(value1)); // true
+* console.log(isObject(value2)); // true
+* console.log(isObject(value3)); // true
+* console.log(isObject(value4)); // false
+*/
+function isObject(value) {
+	return value !== null && (typeof value === "object" || typeof value === "function");
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isMatchWith.mjs
+
+
+
+
+
+// src/compat/predicate/isMatchWith.ts
+/**
+* Performs a deep comparison between a target value and a source pattern to determine if they match,
+* using a custom comparison function for fine-grained control over the matching logic.
+*
+* This function recursively traverses both values, calling the custom compare function for each
+* property/element pair. If the compare function returns a boolean, that result is used directly.
+* If it returns undefined, the default matching behavior continues recursively.
+*
+* The matching behavior varies by data type:
+* - **Objects**: Matches if all properties in the source exist in the target and match
+* - **Arrays**: Matches if all elements in the source array can be found in the target array (order-independent)
+* - **Maps**: Matches if all key-value pairs in the source Map exist and match in the target Map
+* - **Sets**: Matches if all elements in the source Set can be found in the target Set
+* - **Functions**: Matches using strict equality, or object comparison if the function has properties
+* - **Primitives**: Matches using strict equality
+*
+* Special cases:
+* - Empty arrays, Maps, and Sets always match any target
+* - An empty object matches any target at the top level, but at nested levels it only matches object targets
+* - `null` and `undefined` source values have specific matching rules
+* - Circular references are handled using an internal stack to prevent infinite recursion
+*
+* @param target - The value to be tested for matching
+* @param source - The pattern/template to match against
+* @param [compare] - Optional custom comparison function that receives:
+*   - `objValue` - The value from the target at the current path
+*   - `srcValue` - The value from the source at the current path
+*   - `key` - The property key or array index being compared
+*   - `object` - The parent object/array from the target
+*   - `source` - The parent object/array from the source
+*   - `stack` - Internal Map used for circular reference detection
+*   Should return `true` for a match, `false` for no match, or `undefined` to continue with default behavior
+*
+* @returns `true` if the target matches the source pattern, `false` otherwise
+*
+* @example
+* // Basic matching without custom comparator
+* isMatchWith({ a: 1, b: 2 }, { a: 1 }); // true
+* isMatchWith([1, 2, 3], [1, 3]); // true
+*
+* @example
+* // Custom comparison for case-insensitive string matching
+* const caseInsensitiveCompare = (objVal, srcVal) => {
+*   if (typeof objVal === 'string' && typeof srcVal === 'string') {
+*     return objVal.toLowerCase() === srcVal.toLowerCase();
+*   }
+*   return undefined; // Use default behavior for non-strings
+* };
+*
+* isMatchWith(
+*   { name: 'JOHN', age: 30 },
+*   { name: 'john' },
+*   caseInsensitiveCompare
+* ); // true
+*
+* @example
+* // Custom comparison for range matching
+* const rangeCompare = (objVal, srcVal, key) => {
+*   if (key === 'age' && typeof srcVal === 'object' && srcVal.min !== undefined) {
+*     return objVal >= srcVal.min && objVal <= srcVal.max;
+*   }
+*   return undefined;
+* };
+*
+* isMatchWith(
+*   { name: 'John', age: 25 },
+*   { age: { min: 18, max: 30 } },
+*   rangeCompare
+* ); // true
+*/
+function isMatchWith(target, source, compare) {
+	if (typeof compare !== "function") return isMatchWith(target, source, () => void 0);
+	return isMatchWithInternal(target, source, function doesMatch(objValue, srcValue, key, object, source, stack) {
+		const isEqual = compare(objValue, srcValue, key, object, source, stack);
+		if (isEqual !== void 0) return Boolean(isEqual);
+		return isMatchWithInternal(objValue, srcValue, doesMatch, stack, false);
+	}, /* @__PURE__ */ new Map(), true);
+}
+function isMatchWithInternal(target, source, compare, stack, isRoot = false) {
+	if (source === target) return true;
+	switch (typeof source) {
+		case "object": return isObjectMatch(target, source, compare, stack, isRoot);
+		case "function":
+			if (Object.keys(source).length > 0) return isMatchWithInternal(target, Object.assign({}, source), compare, stack, isRoot);
+			return eq(target, source);
+		default:
+			if (!isObject(target)) return eq(target, source);
+			if (isRoot) {
+				if (typeof source === "string") return source === "";
+				return true;
+			}
+			return eq(target, source);
+	}
+}
+function isObjectMatch(target, source, compare, stack, isRoot = false) {
+	if (source == null) return true;
+	if (Array.isArray(source)) return isArrayMatch(target, source, compare, stack);
+	if (source instanceof Map) return isMapMatch(target, source, compare, stack);
+	if (source instanceof Set) return isSetMatch(target, source, compare, stack);
+	const keys = Object.keys(source);
+	if (target == null) return isRoot && keys.length === 0;
+	if (isRoot) {
+		if (isPrimitive(target)) target = Object(target);
+	} else {
+		if (getTag(source) === "[object Error]") return getTag(target) === "[object Error]" && target.name === source.name && target.message === source.message;
+		const tag = getTag(target);
+		if (tag !== "[object Object]" && tag !== "[object Arguments]") return false;
+	}
+	if (keys.length === 0) return true;
+	if (stack === null || stack === void 0 ? void 0 : stack.has(source)) return stack.get(source) === target;
+	stack === null || stack === void 0 || stack.set(source, target);
+	try {
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i];
+			if (!(key in target)) return false;
+			if (source[key] === void 0 && target[key] !== void 0) return false;
+			if (source[key] === null && target[key] !== null) return false;
+			if (!compare(target[key], source[key], key, target, source, stack)) return false;
+		}
+		return true;
+	} finally {
+		stack === null || stack === void 0 || stack.delete(source);
+	}
+}
+function isMapMatch(target, source, compare, stack) {
+	if (source.size === 0) return true;
+	if (!(target instanceof Map)) return false;
+	for (const [key, sourceValue] of source.entries()) if (compare(target.get(key), sourceValue, key, target, source, stack) === false) return false;
+	return true;
+}
+function isArrayMatch(target, source, compare, stack) {
+	if (source.length === 0) return true;
+	if (!Array.isArray(target)) return false;
+	const countedIndex = /* @__PURE__ */ new Set();
+	for (let i = 0; i < source.length; i++) {
+		const sourceItem = source[i];
+		let found = false;
+		for (let j = 0; j < target.length; j++) {
+			if (countedIndex.has(j)) continue;
+			const targetItem = target[j];
+			let matches = false;
+			if (compare(targetItem, sourceItem, i, target, source, stack)) matches = true;
+			if (matches) {
+				countedIndex.add(j);
+				found = true;
+				break;
+			}
+		}
+		if (!found) return false;
+	}
+	return true;
+}
+function isSetMatch(target, source, compare, stack) {
+	if (source.size === 0) return true;
+	if (!(target instanceof Set)) return false;
+	return isArrayMatch([...target], [...source], compare, stack);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isMatch.mjs
+
+// src/compat/predicate/isMatch.ts
+/**
+* Checks if the target matches the source by comparing their structures and values.
+* This function supports deep comparison for objects, arrays, maps, and sets.
+*
+* @param target - The target value to match against.
+* @param source - The source value to match with.
+* @returns Returns `true` if the target matches the source, otherwise `false`.
+*
+* @example
+* // Basic usage
+* isMatch({ a: 1, b: 2 }, { a: 1 }); // true
+*
+* @example
+* // Matching arrays
+* isMatch([1, 2, 3], [1, 2, 3]); // true
+*
+* @example
+* // Matching maps
+* const targetMap = new Map([['key1', 'value1'], ['key2', 'value2']]);
+* const sourceMap = new Map([['key1', 'value1']]);
+* isMatch(targetMap, sourceMap); // true
+*
+* @example
+* // Matching sets
+* const targetSet = new Set([1, 2, 3]);
+* const sourceSet = new Set([1, 2]);
+* isMatch(targetSet, sourceSet); // true
+*/
+function isMatch(target, source) {
+	return isMatchWith(target, source, () => void 0);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/cloneDeep.mjs
+
+// src/compat/object/cloneDeep.ts
+/**
+* Creates a deep clone of the given object.
+*
+* @template T - The type of the object.
+* @param obj - The object to clone.
+* @returns A deep clone of the given object.
+*
+* @example
+* // Clone a primitive value
+* const num = 29;
+* const clonedNum = clone(num);
+* console.log(clonedNum); // 29
+* console.log(clonedNum === num); // true
+*
+* @example
+* // Clone an array
+* const arr = [1, 2, 3];
+* const clonedArr = cloneDeep(arr);
+* console.log(clonedArr); // [1, 2, 3]
+* console.log(clonedArr === arr); // false
+*
+* @example
+* // Clone an array with nested objects
+* const arr = [1, { a: 1 }, [1, 2, 3]];
+* const clonedArr = cloneDeep(arr);
+* arr[1].a = 2;
+* console.log(arr); // [1, { a: 2 }, [1, 2, 3]]
+* console.log(clonedArr); // [1, { a: 1 }, [1, 2, 3]]
+* console.log(clonedArr === arr); // false
+*
+* @example
+* // Clone an object
+* const obj = { a: 1, b: 'es-toolkit', c: [1, 2, 3] };
+* const clonedObj = cloneDeep(obj);
+* console.log(clonedObj); // { a: 1, b: 'es-toolkit', c: [1, 2, 3] }
+* console.log(clonedObj === obj); // false
+*
+* @example
+* // Clone an object with nested objects
+* const obj = { a: 1, b: { c: 1 } };
+* const clonedObj = cloneDeep(obj);
+* obj.b.c = 2;
+* console.log(obj); // { a: 1, b: { c: 2 } }
+* console.log(clonedObj); // { a: 1, b: { c: 1 } }
+* console.log(clonedObj === obj); // false
+*/
+function cloneDeep(obj) {
+	return cloneDeepWith(obj);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/matches.mjs
+
+
+// src/compat/predicate/matches.ts
+/**
+* Creates a function that performs a deep comparison between a given target and the source object.
+*
+* @template T
+* @template V
+* @param source - The source object to create the matcher from.
+* @returns Returns a function that takes a target object and returns `true` if the target matches the source, otherwise `false`.
+*
+* @example
+* // Basic usage
+* const matcher = matches({ a: 1, b: 2 });
+* matcher({ a: 1, b: 2, c: 3 }); // true
+* matcher({ a: 1, c: 3 }); // false
+*
+* @example
+* // Matching arrays
+* const arrayMatcher = matches([1, 2, 3]);
+* arrayMatcher([1, 2, 3, 4]); // true
+* arrayMatcher([4, 5, 6]); // false
+*
+* @example
+* // Matching objects with nested structures
+* const nestedMatcher = matches({ a: { b: 2 } });
+* nestedMatcher({ a: { b: 2, c: 3 } }); // true
+* nestedMatcher({ a: { c: 3 } }); // false
+*/
+function matches(source) {
+	source = cloneDeep(source);
+	return (target) => {
+		return isMatch(target, source);
+	};
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/isIndex.mjs
+// src/compat/_internal/isIndex.ts
+const IS_UNSIGNED_INTEGER = /^(?:0|[1-9]\d*)$/;
+function isIndex(value, length = Number.MAX_SAFE_INTEGER) {
+	switch (typeof value) {
+		case "number": return Number.isInteger(value) && value >= 0 && value < length;
+		case "symbol": return false;
+		case "string": return IS_UNSIGNED_INTEGER.test(value);
+	}
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/has.mjs
+
+
+
+
+
+
+// src/compat/object/has.ts
+/**
+* Checks if a given path exists within an object.
+*
+* You can provide the path as a single property key, an array of property keys,
+* or a string representing a deep path.
+*
+* If the path is an index and the object is an array or an arguments object, the function will verify
+* if the index is valid and within the bounds of the array or arguments object, even if the array or
+* arguments object is sparse (i.e., not all indexes are defined).
+*
+* @param object - The object to query.
+* @param path - The path to check. This can be a single property key,
+*        an array of property keys, or a string representing a deep path.
+* @returns Returns `true` if the path exists in the object, `false` otherwise.
+*
+* @example
+*
+* const obj = { a: { b: { c: 3 } } };
+*
+* has(obj, 'a'); // true
+* has(obj, ['a', 'b']); // true
+* has(obj, ['a', 'b', 'c']); // true
+* has(obj, 'a.b.c'); // true
+* has(obj, 'a.b.d'); // false
+* has(obj, ['a', 'b', 'c', 'd']); // false
+* has([], 0); // false
+* has([1, 2, 3], 2); // true
+* has([1, 2, 3], 5); // false
+*/
+function has(object, path) {
+	let resolvedPath;
+	if (Array.isArray(path)) resolvedPath = path;
+	else if (typeof path === "string" && isDeepKey(path) && !(path in Object(object))) resolvedPath = (0,toPath/* toPath */.b)(path);
+	else resolvedPath = [path];
+	if (resolvedPath.length === 0) return false;
+	let current = object;
+	for (let i = 0; i < resolvedPath.length; i++) {
+		const key = (0,toKey/* toKey */.f)(resolvedPath[i]);
+		if (current == null || !hasOwn(current, key)) {
+			if (!((Array.isArray(current) || isArguments(current)) && isIndex(key) && Number(key) < current.length)) return false;
+		}
+		current = current[key];
+	}
+	return true;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/matchesProperty.mjs
+
+
+
+
+
+// src/compat/predicate/matchesProperty.ts
+/**
+* Creates a function that checks if a given target object matches a specific property value.
+*
+* The returned function takes a target object and determines if the property at the
+* specified path within the target object is equal to the given value.
+*
+* @param property - The property path to check within the target object.
+*     This can be a single property key or an array of property keys.
+* @param source - The value to compare against the property value in the target object.
+*
+* @returns A function that takes a target object and returns
+*     `true` if the property value at the given path in the target object matches the provided value,
+*     otherwise returns `false`.
+*
+* @example
+* // Using a single property key
+* const checkName = matchesProperty('name', 'Alice');
+* console.log(checkName({ name: 'Alice' })); // true
+* console.log(checkName({ name: 'Bob' })); // false
+*
+* // Using an array of property keys
+* const checkNested = matchesProperty(['address', 'city'], 'New York');
+* console.log(checkNested({ address: { city: 'New York' } })); // true
+* console.log(checkNested({ address: { city: 'Los Angeles' } })); // false
+*/
+function matchesProperty(property, source) {
+	switch (typeof property) {
+		case "object":
+			if (Object.is(property === null || property === void 0 ? void 0 : property.valueOf(), -0)) property = "-0";
+			break;
+		case "number": property = (0,toKey/* toKey */.f)(property);
+	}
+	source = cloneDeep(source);
+	return function(target) {
+		const result = get(target, property);
+		if (result === void 0) return has(target, property);
+		if (source === void 0) return result === void 0;
+		return isMatch(result, source);
+	};
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/iteratee.mjs
+
+
+
+
+// src/compat/util/iteratee.ts
+/**
+* Creates a function that returns a value from an element in a collection.
+*
+* You can call `iteratee` with the following types of arguments:
+*
+* - **Function**: Returns the function as-is, which will be called with the element from the collection.
+* - **Property name**: Returns the value of the specified property from the element.
+* - **Property-value pair**: Returns a boolean indicating whether the element's property matches the given value.
+* - **Partial object**: Returns a boolean indicating whether the element matches the properties of the partial object.
+*
+* If you don't provide any arguments or pass `null`, this function will return a function that simply returns its input unchanged.
+*
+* @param value - The value to convert to an iteratee.
+* @returns Returns the new iteratee function.
+* @example
+* const func = iteratee();
+* [{ a: 1 }, { a: 2 }, { a: 3 }].map(func) // => [{ a: 1 }, { a: 2 }, { a: 3 }]
+*
+* const func = iteratee((object) => object.a);
+* [{ a: 1 }, { a: 2 }, { a: 3 }].map(func) // => [1, 2, 3]
+*
+* const func = iteratee('a');
+* [{ a: 1 }, { a: 2 }, { a: 3 }].map(func) // => [1, 2, 3]
+*
+* const func = iteratee({ a: 1 });
+* [{ a: 1 }, { a: 2 }, { a: 3 }].find(func) // => { a: 1 }
+*
+* const func = iteratee(['a', 1]);
+* [{ a: 1 }, { a: 2 }, { a: 3 }].find(func) // => { a: 1 }
+*/
+function iteratee(value) {
+	if (value == null) return identity;
+	switch (typeof value) {
+		case "function": return value;
+		case "object":
+			if (Array.isArray(value) && value.length === 2) return matchesProperty(value[0], value[1]);
+			return matches(value);
+		default: return property(value);
+	}
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/function/identity.mjs
+// src/compat/function/identity.ts
+function identity_identity(x) {
+	return x;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/pickBy.mjs
+
+
+
+
+
+// src/compat/object/pickBy.ts
+/**
+* Creates a new object composed of the properties that satisfy the predicate function.
+*
+* This function takes an object and a predicate function, and returns a new object that
+* includes only the properties for which the predicate function returns true.
+*
+* @template T - The type of object.
+* @param obj - The object to pick properties from.
+* @param [shouldPick] - A predicate function that determines
+* whether a property should be picked. It takes the property's key and value as arguments and returns `true`
+* if the property should be picked, and `false` otherwise.
+* @returns A new object with the properties that satisfy the predicate function.
+*
+* @example
+* const obj = { a: 1, b: 'pick', c: 3 };
+* const shouldPick = (value) => typeof value === 'string';
+* const result = pickBy(obj, shouldPick);
+* // result will be { b: 'pick' }
+*/
+function pickBy(obj, shouldPick) {
+	if (obj == null) return {};
+	const predicate = iteratee(shouldPick !== null && shouldPick !== void 0 ? shouldPick : identity_identity);
+	const result = {};
+	const keys = [...keysIn(obj), ...getSymbolsIn(obj)];
+	for (let i = 0; i < keys.length; i++) {
+		const key = (0,isSymbol/* isSymbol */.B)(keys[i]) ? keys[i] : keys[i].toString();
+		const value = obj[key];
+		if (predicate(value, key, obj)) result[key] = value;
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/plugin/plugin-constants.js
+const OPENAPI_NAMESPACE = 'openapi';
+const OPENAPI_PACKAGE_NAME = '@nestjs/swagger';
+const METADATA_FACTORY_NAME = '_OPENAPI_METADATA_FACTORY';
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/predicate/isFunction.mjs
+// src/predicate/isFunction.ts
+/**
+* Checks if `value` is a function.
+*
+* @param value The value to check.
+* @returns Returns `true` if `value` is a function, else `false`.
+*
+* @example
+* isFunction(Array.prototype.slice); // true
+* isFunction(async function () {}); // true
+* isFunction(function* () {}); // true
+* isFunction(Proxy); // true
+* isFunction(Int8Array); // true
+*/
+function isFunction(value) {
+	return typeof value === "function";
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/constants.js
+const BUILT_IN_TYPES = [String, Boolean, Number, Object, Array];
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/is-built-in-type.util.js
+
+
+function isBuiltInType(type) {
+    return isFunction(type) && BUILT_IN_TYPES.some((item) => item === type);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/helpers.js
+
+
+
+
+
+
+
+
+
+
+
+function createMethodDecorator(metakey, metadata, { overrideExisting } = { overrideExisting: true }) {
+    return (target, key, descriptor) => {
+        if (typeof metadata === 'object') {
+            const prevValue = Reflect.getMetadata(metakey, descriptor.value);
+            if (prevValue && !overrideExisting) {
+                return descriptor;
+            }
+            Reflect.defineMetadata(metakey, { ...prevValue, ...metadata }, descriptor.value);
+            return descriptor;
+        }
+        Reflect.defineMetadata(metakey, metadata, descriptor.value);
+        return descriptor;
+    };
+}
+function createClassDecorator(metakey, metadata = []) {
+    return (target) => {
+        const prevValue = Reflect.getMetadata(metakey, target) || [];
+        Reflect.defineMetadata(metakey, [...prevValue, ...metadata], target);
+        return target;
+    };
+}
+function createPropertyDecorator(metakey, metadata, overrideExisting = true) {
+    return (target, propertyKey) => {
+        const properties = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES_ARRAY, target) || [];
+        const key = `:${String(propertyKey)}`;
+        if (!properties.includes(key)) {
+            Reflect.defineMetadata(DECORATORS.API_MODEL_PROPERTIES_ARRAY, [...properties, `:${String(propertyKey)}`], target);
+        }
+        const existingMetadata = Reflect.getMetadata(metakey, target, propertyKey);
+        if (existingMetadata) {
+            const newMetadata = pickBy(metadata, negate(isUndefined));
+            const ownExistingMetadata = Reflect.getOwnMetadata(metakey, target, propertyKey);
+            if (!ownExistingMetadata && newMetadata.type === undefined) {
+                const designType = target?.constructor?.[METADATA_FACTORY_NAME]?.()[propertyKey]?.type ??
+                    Reflect.getMetadata('design:type', target, propertyKey);
+                if (replacesInheritedType(existingMetadata, designType)) {
+                    newMetadata.type = designType;
+                }
+            }
+            const metadataToSave = overrideExisting
+                ? {
+                    ...(ownExistingMetadata
+                        ? existingMetadata
+                        : omit(existingMetadata, 'required')),
+                    ...newMetadata
+                }
+                : {
+                    ...newMetadata,
+                    ...existingMetadata
+                };
+            Reflect.defineMetadata(metakey, metadataToSave, target, propertyKey);
+        }
+        else {
+            const type = target?.constructor?.[METADATA_FACTORY_NAME]?.()[propertyKey]?.type ??
+                Reflect.getMetadata('design:type', target, propertyKey);
+            Reflect.defineMetadata(metakey, {
+                type,
+                ...pickBy(metadata, negate(isUndefined))
+            }, target, propertyKey);
+        }
+    };
+}
+function replacesInheritedType(inherited, type) {
+    if (!type || inherited.isArray || isString(inherited.type)) {
+        return false;
+    }
+    return !isBuiltInType(type) || isBuiltInType(inherited.type);
+}
+function createMixedDecorator(metakey, metadata) {
+    return (target, key, descriptor) => {
+        if (descriptor) {
+            let metadatas;
+            if (Array.isArray(metadata)) {
+                const previousMetadata = Reflect.getMetadata(metakey, descriptor.value) || [];
+                metadatas = [...previousMetadata, ...metadata];
+            }
+            else {
+                const previousMetadata = Reflect.getMetadata(metakey, descriptor.value) || {};
+                metadatas = { ...previousMetadata, ...metadata };
+            }
+            Reflect.defineMetadata(metakey, metadatas, descriptor.value);
+            return descriptor;
+        }
+        let metadatas;
+        if (Array.isArray(metadata)) {
+            const previousMetadata = Reflect.getMetadata(metakey, target) || [];
+            metadatas = [...previousMetadata, ...metadata];
+        }
+        else {
+            const previousMetadata = Reflect.getMetadata(metakey, target) || {};
+            metadatas = Object.assign(Object.assign({}, previousMetadata), metadata);
+        }
+        Reflect.defineMetadata(metakey, metadatas, target);
+        return target;
+    };
+}
+function createParamDecorator(metadata, initial) {
+    return (target, key, descriptor) => {
+        const paramOptions = {
+            ...initial,
+            ...pickBy(metadata, negate(isUndefined))
+        };
+        if (descriptor) {
+            const parameters = Reflect.getMetadata(DECORATORS.API_PARAMETERS, descriptor.value) || [];
+            Reflect.defineMetadata(DECORATORS.API_PARAMETERS, [...parameters, paramOptions], descriptor.value);
+            return descriptor;
+        }
+        if (typeof target === 'object') {
+            return target;
+        }
+        createClassDecorator(DECORATORS.API_PARAMETERS, [paramOptions])(target);
+        const propertyKeys = Object.getOwnPropertyNames(target.prototype);
+        for (const propertyKey of propertyKeys) {
+            if ((0,shared_utils/* isConstructor */.rI)(propertyKey)) {
+                continue;
+            }
+            const methodDescriptor = Object.getOwnPropertyDescriptor(target.prototype, propertyKey);
+            if (!methodDescriptor) {
+                continue;
+            }
+            if (!methodDescriptor.value) {
+                continue;
+            }
+            const isApiMethod = Reflect.hasMetadata(constants/* METHOD_METADATA */.E$, methodDescriptor.value);
+            if (!isApiMethod) {
+                continue;
+            }
+            const parameters = Reflect.getMetadata(DECORATORS.API_PARAMETERS, methodDescriptor.value) || [];
+            Reflect.defineMetadata(DECORATORS.API_PARAMETERS, [...parameters, paramOptions], methodDescriptor.value);
+        }
+    };
+}
+function getTypeIsArrayTuple(input, isArrayFlag) {
+    if (!input) {
+        return [input, isArrayFlag];
+    }
+    if (isArrayFlag) {
+        return [input, isArrayFlag];
+    }
+    const isInputArray = isArray(input);
+    const type = isInputArray ? input[0] : input;
+    return [type, isInputArray];
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-body.decorator.js
+
+
+
+const defaultBodyMetadata = {
+    type: String,
+    required: true
+};
+function ApiBody(options) {
+    const [type, isArray] = getTypeIsArrayTuple(options.type, options.isArray);
+    const param = {
+        in: 'body',
+        ...omit(options, 'enum'),
+        type,
+        isArray
+    };
+    if (isEnumArray(options)) {
+        addEnumArraySchema(param, options);
+    }
+    else if (isEnumDefined(options)) {
+        addEnumSchema(param, options);
+    }
+    return createParamDecorator(param, defaultBodyMetadata);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-callbacks.decorator.js
+
+
+function ApiCallbacks(...callbackObject) {
+    return createMixedDecorator(DECORATORS.API_CALLBACKS, callbackObject);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-consumes.decorator.js
+
+
+function ApiConsumes(...mimeTypes) {
+    return createMixedDecorator(DECORATORS.API_CONSUMES, mimeTypes);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-cookie.decorator.js
+
+function ApiCookieAuth(name = 'cookie') {
+    return ApiSecurity(name);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-default-getter.decorator.js
+
+function ApiDefaultGetter(type, parameter) {
+    return (prototype, key, descriptor) => {
+        if (type.prototype) {
+            Reflect.defineMetadata(DECORATORS.API_DEFAULT_GETTER, { getter: descriptor.value, parameter, prototype }, type.prototype);
+        }
+        return descriptor;
+    };
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-exclude-controller.decorator.js
+
+function ApiExcludeController(disable = true) {
+    return (target) => {
+        Reflect.defineMetadata(DECORATORS.API_EXCLUDE_CONTROLLER, [disable], target);
+        return target;
+    };
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-exclude-endpoint.decorator.js
+
+
+function ApiExcludeEndpoint(disable = true) {
+    return createMethodDecorator(DECORATORS.API_EXCLUDE_ENDPOINT, {
+        disable
+    });
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/clone.mjs
+
+
+
+
+
+
+// src/compat/object/clone.ts
+/**
+* Creates a shallow clone of the given object.
+*
+* @template T - The type of the object.
+* @param obj - The object to clone.
+* @returns A shallow clone of the given object.
+*
+* @example
+* // Clone a primitive object
+* const num = 29;
+* const clonedNum = clone(num);
+* console.log(clonedNum); // 29
+* console.log(clonedNum === num); // true
+*
+* @example
+* // Clone an array
+* const arr = [1, 2, 3];
+* const clonedArr = clone(arr);
+* console.log(clonedArr); // [1, 2, 3]
+* console.log(clonedArr === arr); // false
+*
+* @example
+* // Clone an object
+* const obj = { a: 1, b: 'es-toolkit', c: [1, 2, 3] };
+* const clonedObj = clone(obj);
+* console.log(clonedObj); // { a: 1, b: 'es-toolkit', c: [1, 2, 3] }
+* console.log(clonedObj === obj); // false
+*/
+function clone(obj) {
+	if (isPrimitive(obj)) return obj;
+	const tag = getTag(obj);
+	if (!clone_isCloneableObject(obj)) return {};
+	if (isArray(obj)) {
+		const result = Array.from(obj);
+		if (obj.length > 0 && typeof obj[0] === "string" && hasOwn(obj, "index")) {
+			result.index = obj.index;
+			result.input = obj.input;
+		}
+		return result;
+	}
+	if (isTypedArray_isTypedArray(obj)) {
+		const typedArray = obj;
+		const Ctor = typedArray.constructor;
+		return new Ctor(typedArray.buffer, typedArray.byteOffset, typedArray.length);
+	}
+	if (tag === "[object ArrayBuffer]") return new ArrayBuffer(obj.byteLength);
+	if (tag === "[object DataView]") {
+		const dataView = obj;
+		const buffer = dataView.buffer;
+		const byteOffset = dataView.byteOffset;
+		const byteLength = dataView.byteLength;
+		const clonedBuffer = new ArrayBuffer(byteLength);
+		const srcView = new Uint8Array(buffer, byteOffset, byteLength);
+		new Uint8Array(clonedBuffer).set(srcView);
+		return new DataView(clonedBuffer);
+	}
+	if (tag === "[object Boolean]" || tag === "[object Number]" || tag === "[object String]") {
+		const Ctor = obj.constructor;
+		const clone = new Ctor(obj.valueOf());
+		if (tag === "[object String]") cloneStringObjectProperties(clone, obj);
+		else copyOwnProperties(clone, obj);
+		return clone;
+	}
+	if (tag === "[object Date]") return new Date(Number(obj));
+	if (tag === "[object RegExp]") {
+		const regExp = obj;
+		const clone = new RegExp(regExp.source, regExp.flags);
+		clone.lastIndex = regExp.lastIndex;
+		return clone;
+	}
+	if (tag === "[object Symbol]") return Object(Symbol.prototype.valueOf.call(obj));
+	if (tag === "[object Map]") {
+		const map = obj;
+		const result = /* @__PURE__ */ new Map();
+		map.forEach((obj, key) => {
+			result.set(key, obj);
+		});
+		return result;
+	}
+	if (tag === "[object Set]") {
+		const set = obj;
+		const result = /* @__PURE__ */ new Set();
+		set.forEach((obj) => {
+			result.add(obj);
+		});
+		return result;
+	}
+	if (tag === "[object Arguments]") {
+		const args = obj;
+		const result = {};
+		copyOwnProperties(result, args);
+		result.length = args.length;
+		result[Symbol.iterator] = args[Symbol.iterator];
+		return result;
+	}
+	const result = {};
+	copyPrototype(result, obj);
+	copyOwnProperties(result, obj);
+	copySymbolProperties(result, obj);
+	return result;
+}
+function clone_isCloneableObject(object) {
+	switch (getTag(object)) {
+		case argumentsTag:
+		case arrayTag:
+		case arrayBufferTag:
+		case dataViewTag:
+		case booleanTag:
+		case dateTag:
+		case float32ArrayTag:
+		case float64ArrayTag:
+		case int8ArrayTag:
+		case int16ArrayTag:
+		case int32ArrayTag:
+		case mapTag:
+		case numberTag:
+		case objectTag:
+		case regexpTag:
+		case setTag:
+		case stringTag:
+		case symbolTag:
+		case uint8ArrayTag:
+		case uint8ClampedArrayTag:
+		case uint16ArrayTag:
+		case uint32ArrayTag: return true;
+		default: return false;
+	}
+}
+function copyOwnProperties(target, source) {
+	for (const key in source) if (hasOwn(source, key)) target[key] = source[key];
+}
+function copySymbolProperties(target, source) {
+	const symbols = Object.getOwnPropertySymbols(source);
+	for (let i = 0; i < symbols.length; i++) {
+		const symbol = symbols[i];
+		if (Object.prototype.propertyIsEnumerable.call(source, symbol)) target[symbol] = source[symbol];
+	}
+}
+function cloneStringObjectProperties(target, source) {
+	const stringLength = source.valueOf().length;
+	for (const key in source) if (hasOwn(source, key) && (Number.isNaN(Number(key)) || Number(key) >= stringLength)) target[key] = source[key];
+}
+function copyPrototype(target, source) {
+	const proto = Object.getPrototypeOf(source);
+	if (proto !== null) {
+		if (typeof source.constructor === "function") Object.setPrototypeOf(target, proto);
+	}
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-extension.decorator.js
+
+
+
+
+function applyExtension(target, key, value) {
+    const extensions = Reflect.getMetadata(DECORATORS.API_EXTENSION, target) || {};
+    Reflect.defineMetadata(DECORATORS.API_EXTENSION, { [key]: value, ...extensions }, target);
+}
+function ApiExtension(extensionKey, extensionProperties) {
+    if (!extensionKey.startsWith('x-')) {
+        throw new Error('Extension key is not prefixed. Please ensure you prefix it with `x-`.');
+    }
+    return (target, key, descriptor) => {
+        const extensionValue = clone(extensionProperties);
+        if (descriptor) {
+            applyExtension(descriptor.value, extensionKey, extensionValue);
+            return descriptor;
+        }
+        if (typeof target === 'object') {
+            return target;
+        }
+        const apiMethods = Object.getOwnPropertyNames(target.prototype)
+            .filter((propertyKey) => !(0,shared_utils/* isConstructor */.rI)(propertyKey))
+            .map((propertyKey) => Object.getOwnPropertyDescriptor(target.prototype, propertyKey)?.value)
+            .filter((methodDescriptor) => methodDescriptor !== undefined &&
+            Reflect.hasMetadata(constants/* METHOD_METADATA */.E$, methodDescriptor));
+        if (apiMethods.length > 0) {
+            apiMethods.forEach((method) => applyExtension(method, extensionKey, extensionValue));
+        }
+        else {
+            applyExtension(target, extensionKey, extensionValue);
+        }
+        return target;
+    };
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-extra-models.decorator.js
+
+function ApiExtraModels(...models) {
+    return (target, key, descriptor) => {
+        if (descriptor) {
+            const extraModels = Reflect.getMetadata(DECORATORS.API_EXTRA_MODELS, descriptor.value) ||
+                [];
+            Reflect.defineMetadata(DECORATORS.API_EXTRA_MODELS, [...extraModels, ...models], descriptor.value);
+            return descriptor;
+        }
+        const extraModels = Reflect.getMetadata(DECORATORS.API_EXTRA_MODELS, target) || [];
+        Reflect.defineMetadata(DECORATORS.API_EXTRA_MODELS, [...extraModels, ...models], target);
+        return target;
+    };
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isNil.mjs
+// src/compat/predicate/isNil.ts
+/**
+* Checks if a given value is null or undefined.
+*
+* This function tests whether the provided value is either `null` or `undefined`.
+* It returns `true` if the value is `null` or `undefined`, and `false` otherwise.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `null` or `undefined`.
+*
+* @param x - The value to test for null or undefined.
+* @returns `true` if the value is null or undefined, `false` otherwise.
+*
+* @example
+* const value1 = null;
+* const value2 = undefined;
+* const value3 = 42;
+* const result1 = isNil(value1); // true
+* const result2 = isNil(value2); // true
+* const result3 = isNil(value3); // false
+*/
+function isNil(x) {
+	return x == null;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-header.decorator.js
+
+
+
+
+
+
+
+
+const defaultHeaderOptions = {
+    name: ''
+};
+function ApiHeader(options) {
+    const paramSchema = options.content
+        ? undefined
+        : {
+            type: 'string',
+            ...(options.example !== undefined ? { example: options.example } : {}),
+            ...(options.schema || {})
+        };
+    const param = pickBy({
+        name: isNil(options.name) ? defaultHeaderOptions.name : options.name,
+        in: 'header',
+        description: options.description,
+        required: options.required,
+        deprecated: options.deprecated,
+        allowEmptyValue: options.allowEmptyValue,
+        style: options.style,
+        explode: options.explode,
+        allowReserved: options.allowReserved,
+        content: options.content,
+        examples: options.examples,
+        schema: paramSchema
+    }, negate(isUndefined));
+    if (options.enum) {
+        const enumValues = getEnumValues(options.enum);
+        param.schema = {
+            ...param.schema,
+            enum: enumValues,
+            type: getEnumType(enumValues)
+        };
+    }
+    const extensions = options.extensions;
+    if (extensions && typeof extensions === 'object') {
+        const cloned = clone(extensions);
+        for (const [key, value] of Object.entries(cloned)) {
+            const extKey = key.startsWith('x-') ? key : `x-${key}`;
+            param[extKey] = value;
+        }
+    }
+    return (target, key, descriptor) => {
+        if (descriptor) {
+            return createParamDecorator(param, defaultHeaderOptions)(target, key, descriptor);
+        }
+        return createClassDecorator(DECORATORS.API_HEADERS, [param])(target);
+    };
+}
+const ApiHeaders = (headers) => {
+    return (target, key, descriptor) => {
+        headers.forEach((options) => ApiHeader(options)(target, key, descriptor));
+    };
+};
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-hide-property.decorator.js
+
+function ApiHideProperty() {
+    return (target, propertyKey) => {
+        Reflect.defineMetadata(DECORATORS.API_MODEL_PROPERTY_HIDDEN, true, target, propertyKey);
+    };
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-include-endpoint.decorator.js
+
+
+function ApiIncludeEndpoint(disable = true) {
+    return createMethodDecorator(DECORATORS.API_INCLUDE_ENDPOINT, {
+        disable
+    });
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-link.decorator.js
+
+function ApiLink({ from, fromField = 'id', routeParam }) {
+    return (controllerPrototype, key, descriptor) => {
+        const { prototype } = from;
+        if (prototype) {
+            const links = [
+                ...(Reflect.getMetadata(DECORATORS.API_LINK, prototype) ?? [])
+            ];
+            links.push({
+                method: descriptor.value,
+                prototype: controllerPrototype,
+                field: fromField,
+                parameter: routeParam
+            });
+            Reflect.defineMetadata(DECORATORS.API_LINK, links, prototype);
+        }
+        return descriptor;
+    };
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-oauth2.decorator.js
+
+function ApiOAuth2(scopes, name = 'oauth2') {
+    return ApiSecurity(name, scopes);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-operation.decorator.js
+
+
+
+
+
+const defaultOperationOptions = {
+    summary: ''
+};
+function ApiOperation(options, { overrideExisting } = { overrideExisting: true }) {
+    return createMethodDecorator(DECORATORS.API_OPERATION, pickBy({
+        ...defaultOperationOptions,
+        ...options
+    }, negate(isUndefined)), { overrideExisting });
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-param.decorator.js
+
+
+
+
+
+const defaultParamOptions = {
+    name: '',
+    required: true
+};
+function ApiParam(options) {
+    const param = {
+        name: isNil(options.name) ? defaultParamOptions.name : options.name,
+        in: 'path',
+        ...omit(options, ['enum', 'extensions'])
+    };
+    const [type, isArray] = getTypeIsArrayTuple(options.type, undefined);
+    if (isArray) {
+        param.type = type;
+        param.isArray = isArray;
+    }
+    if (isEnumDefined(options)) {
+        addEnumSchema(param, options);
+    }
+    const extensions = options.extensions;
+    if (extensions && typeof extensions === 'object') {
+        const cloned = clone(extensions);
+        for (const [key, value] of Object.entries(cloned)) {
+            const extKey = key.startsWith('x-') ? key : `x-${key}`;
+            param[extKey] = value;
+        }
+    }
+    return createParamDecorator(param, defaultParamOptions);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-produces.decorator.js
+
+
+function ApiProduces(...mimeTypes) {
+    return createMixedDecorator(DECORATORS.API_PRODUCES, mimeTypes);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-property.decorator.js
+
+
+
+const api_property_decorator_isEnumArray = (opts) => opts.isArray && 'enum' in opts && opts.enum !== undefined;
+function ApiProperty(options = {}) {
+    return createApiPropertyDecorator(options);
+}
+function createApiPropertyDecorator(options = {}, overrideExisting = true) {
+    const [type, isArray] = getTypeIsArrayTuple(options.type, options.isArray);
+    options = {
+        ...options,
+        type,
+        isArray
+    };
+    if (typeof options.enum === 'function') {
+        options.enum = createLazyEnum(options.enum, !options.type);
+    }
+    else if (api_property_decorator_isEnumArray(options)) {
+        options.type = 'array';
+        const enumValues = getEnumValues(options.enum);
+        options.items = {
+            type: getEnumType(enumValues),
+            enum: enumValues
+        };
+        delete options.enum;
+    }
+    else if ('enum' in options && options.enum !== undefined) {
+        const enumValues = getEnumValues(options.enum);
+        options.enum = enumValues;
+        if (!options.type) {
+            options.type = getEnumType(enumValues);
+        }
+    }
+    if (Array.isArray(options.type)) {
+        const innerType = options.type[0];
+        options.type = 'array';
+        options.items = {
+            type: 'array',
+            items: {
+                type: typeof innerType === 'function'
+                    ? innerType.name.charAt(0).toLowerCase() + innerType.name.slice(1)
+                    : innerType
+            }
+        };
+    }
+    if (options.pattern instanceof RegExp) {
+        options.pattern = options.pattern.source;
+    }
+    const decorator = createPropertyDecorator(DECORATORS.API_MODEL_PROPERTIES, options, overrideExisting);
+    if (!overrideExisting) {
+        return decorator;
+    }
+    const explicitOptions = Object.keys(options).filter((option) => options[option] !== undefined);
+    return (target, propertyKey) => {
+        decorator(target, propertyKey);
+        Reflect.defineMetadata(DECORATORS.API_MODEL_PROPERTY_EXPLICIT_OPTIONS, [
+            ...new Set([
+                ...(Reflect.getOwnMetadata(DECORATORS.API_MODEL_PROPERTY_EXPLICIT_OPTIONS, target, propertyKey) ?? []),
+                ...explicitOptions
+            ])
+        ], target, propertyKey);
+    };
+}
+function ApiPropertyOptional(options = {}) {
+    return ApiProperty({
+        ...options,
+        required: false
+    });
+}
+function ApiResponseProperty(options = {}) {
+    return ApiProperty({
+        readOnly: true,
+        ...options
+    });
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-query.decorator.js
+
+
+
+
+const defaultQueryOptions = {
+    name: '',
+    required: true
+};
+function ApiQuery(options) {
+    const apiQueryMetadata = options;
+    const [type, isArray] = getTypeIsArrayTuple(apiQueryMetadata.type, apiQueryMetadata.isArray);
+    const param = {
+        name: 'name' in options ? options.name : defaultQueryOptions.name,
+        in: 'query',
+        ...omit(options, ['enum', 'extensions']),
+        type
+    };
+    if (isEnumArray(options)) {
+        addEnumArraySchema(param, options);
+    }
+    else if (isEnumDefined(options)) {
+        addEnumSchema(param, options);
+    }
+    if (isArray) {
+        param.isArray = isArray;
+    }
+    const extensions = options.extensions;
+    if (extensions && typeof extensions === 'object') {
+        const cloned = clone(extensions);
+        for (const [key, value] of Object.entries(cloned)) {
+            const extKey = key.startsWith('x-') ? key : `x-${key}`;
+            param[extKey] = value;
+        }
+    }
+    return createParamDecorator(param, defaultQueryOptions);
+}
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-response.decorator.js
+
+
+
+
+function ApiResponse(options, { overrideExisting } = { overrideExisting: true }) {
+    const apiResponseMetadata = options;
+    const [type, isArray] = getTypeIsArrayTuple(apiResponseMetadata.type, apiResponseMetadata.isArray);
+    apiResponseMetadata.type = type;
+    apiResponseMetadata.isArray = isArray;
+    options.description = options.description ? options.description : '';
+    const statusKey = options.status || 'default';
+    const incomingEntry = omit(options, 'status');
+    return (target, key, descriptor) => {
+        if (descriptor) {
+            const responses = Reflect.getMetadata(DECORATORS.API_RESPONSE, descriptor.value);
+            if (responses && !overrideExisting) {
+                return descriptor;
+            }
+            Reflect.defineMetadata(DECORATORS.API_RESPONSE, {
+                ...responses,
+                [statusKey]: mergeResponseEntry(responses?.[statusKey], incomingEntry)
+            }, descriptor.value);
+            return descriptor;
+        }
+        const responses = Reflect.getMetadata(DECORATORS.API_RESPONSE, target);
+        if (responses && !overrideExisting) {
+            return descriptor;
+        }
+        Reflect.defineMetadata(DECORATORS.API_RESPONSE, {
+            ...responses,
+            [statusKey]: mergeResponseEntry(responses?.[statusKey], incomingEntry)
+        }, target);
+        return target;
+    };
+}
+function mergeResponseEntry(existing, incoming) {
+    if (!existing) {
+        return incoming;
+    }
+    const existingDesc = existing.description || '';
+    const incomingDesc = incoming.description || '';
+    const mergedDescription = existingDesc && incomingDesc
+        ? `${existingDesc}\n\n${incomingDesc}`
+        : existingDesc || incomingDesc;
+    const mergedExamples = existing.examples && incoming.examples
+        ? { ...existing.examples, ...incoming.examples }
+        : (incoming.examples ?? existing.examples);
+    return {
+        ...existing,
+        ...incoming,
+        description: mergedDescription,
+        ...(mergedExamples !== undefined ? { examples: mergedExamples } : {})
+    };
+}
+const decorators = {};
+const statusList = Object.keys(common.HttpStatus)
+    .filter((key) => !isNaN(Number(common.HttpStatus[key])))
+    .map((key) => {
+    const functionName = key
+        .split('_')
+        .map((strToken) => `${strToken[0].toUpperCase()}${strToken.slice(1).toLowerCase()}`)
+        .join('');
+    return {
+        code: Number(common.HttpStatus[key]),
+        functionName: `Api${functionName}Response`
+    };
+});
+statusList.forEach(({ code, functionName }) => {
+    decorators[functionName] = function (options = {}) {
+        return ApiResponse({
+            ...options,
+            status: code
+        });
+    };
+});
+const { ApiContinueResponse, ApiSwitchingProtocolsResponse, ApiProcessingResponse, ApiEarlyhintsResponse, ApiOkResponse, ApiCreatedResponse, ApiAcceptedResponse, ApiNonAuthoritativeInformationResponse, ApiNoContentResponse, ApiResetContentResponse, ApiPartialContentResponse, ApiAmbiguousResponse, ApiMovedPermanentlyResponse, ApiFoundResponse, ApiSeeOtherResponse, ApiNotModifiedResponse, ApiTemporaryRedirectResponse, ApiPermanentRedirectResponse, ApiBadRequestResponse, ApiUnauthorizedResponse, ApiPaymentRequiredResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiMethodNotAllowedResponse, ApiNotAcceptableResponse, ApiProxyAuthenticationRequiredResponse, ApiRequestTimeoutResponse, ApiConflictResponse, ApiGoneResponse, ApiLengthRequiredResponse, ApiPreconditionFailedResponse, ApiPayloadTooLargeResponse, ApiUriTooLongResponse, ApiUnsupportedMediaTypeResponse, ApiRequestedRangeNotSatisfiableResponse, ApiExpectationFailedResponse, ApiIAmATeapotResponse, ApiMisdirectedResponse, ApiUnprocessableEntityResponse, ApiFailedDependencyResponse, ApiPreconditionRequiredResponse, ApiTooManyRequestsResponse, ApiInternalServerErrorResponse, ApiNotImplementedResponse, ApiBadGatewayResponse, ApiServiceUnavailableResponse, ApiGatewayTimeoutResponse, ApiHttpVersionNotSupportedResponse } = decorators;
+const ApiDefaultResponse = (options = {}) => ApiResponse({
+    ...options,
+    status: 'default'
+});
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-schema.decorator.js
+
+
+function ApiSchema(options) {
+    return createClassDecorator(DECORATORS.API_SCHEMA, [options]);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-use-tags.decorator.js
+
+
+
+const logger = new common.Logger('ApiTags');
+function ApiTags(...tags) {
+    const normalizedTags = tags.map((tag) => {
+        if (typeof tag === 'string') {
+            return tag;
+        }
+        if (tag.parent !== undefined || tag.kind !== undefined) {
+            logger.warn(`Tag "${tag.name}" includes hierarchy fields (parent/kind) defined via @ApiTags, but those values are ignored there. Define them with DocumentBuilder.addTag("${tag.name}", description, { parent, kind }) to include them in the document's root-level tags.`);
+        }
+        return tag.name;
+    });
+    return createMixedDecorator(DECORATORS.API_TAGS, normalizedTags);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/api-webhook.decorator.js
+
+
+function ApiWebhook(name) {
+    return createMethodDecorator(DECORATORS.API_WEBHOOK, name ?? true);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/decorators/index.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/fixtures/document.base.js
+const buildDocumentBase = () => ({
+    openapi: '3.0.0',
+    info: {
+        title: '',
+        description: '',
+        version: '1.0.0',
+        contact: {}
+    },
+    tags: [],
+    servers: [],
+    components: {}
+});
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/interfaces/global-metadata.interface.js
+const GLOBAL_PARAMETERS = Symbol.for('swagger/globalParameters');
+const GLOBAL_RESPONSES = Symbol.for('swagger/globalResponses');
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/document-builder.js
+
+
+
+
+
+
+
+
+
+
+
+class DocumentBuilder {
+    constructor() {
+        this.logger = new common.Logger(DocumentBuilder.name);
+        this.document = buildDocumentBase();
+    }
+    setTitle(title) {
+        this.document.info.title = title;
+        return this;
+    }
+    setDescription(description) {
+        this.document.info.description = description;
+        return this;
+    }
+    setVersion(version) {
+        this.document.info.version = version;
+        return this;
+    }
+    setTermsOfService(termsOfService) {
+        this.document.info.termsOfService = termsOfService;
+        return this;
+    }
+    setContact(name, url, email) {
+        this.document.info.contact = { name, url, email };
+        return this;
+    }
+    setLicense(name, url) {
+        this.document.info.license = { name, url };
+        return this;
+    }
+    setOpenAPIVersion(version) {
+        if (/^\d+\.\d+\.\d+$/.test(version)) {
+            this.document.openapi = version;
+        }
+        else {
+            this.logger.warn('The OpenApi version is invalid. Expecting format "x.x.x"');
+        }
+        return this;
+    }
+    addServer(url, description, variables, serverExtraProperties) {
+        const serverObjDef = {
+            url,
+            description,
+            variables
+        };
+        if (serverExtraProperties) {
+            const alreadyDefinedKeysForServerEntry = Object.keys(serverObjDef);
+            for (const key in serverExtraProperties) {
+                if (alreadyDefinedKeysForServerEntry.includes(key))
+                    continue;
+                const extraFieldValue = serverExtraProperties[key];
+                serverObjDef[key] = extraFieldValue;
+            }
+        }
+        this.document.servers.push(serverObjDef);
+        return this;
+    }
+    setExternalDoc(description, url) {
+        this.document.externalDocs = { description, url };
+        return this;
+    }
+    setBasePath(path) {
+        this.logger.warn('The "setBasePath" method has been deprecated. Now, a global prefix is populated automatically. If you want to ignore it, take a look here: https://docs.nestjs.com/recipes/swagger#global-prefix. Alternatively, you can use "addServer" method to set up multiple different paths.');
+        return this;
+    }
+    addTag(name, description = '', externalDocs, options) {
+        this.document.tags = this.document.tags.concat(pickBy({
+            name,
+            summary: options?.summary,
+            description,
+            externalDocs,
+            parent: options?.parent,
+            kind: options?.kind
+        }, negate(isUndefined)));
+        return this;
+    }
+    addExtension(extensionKey, extensionProperties, location = 'root') {
+        if (!extensionKey.startsWith('x-')) {
+            throw new Error('Extension key is not prefixed. Please ensure you prefix it with `x-`.');
+        }
+        if (location === 'root') {
+            this.document[extensionKey] = clone(extensionProperties);
+        }
+        else {
+            this.document[location][extensionKey] = clone(extensionProperties);
+        }
+        return this;
+    }
+    addSecurity(name, options) {
+        this.document.components.securitySchemes = {
+            ...(this.document.components.securitySchemes || {}),
+            [name]: options
+        };
+        return this;
+    }
+    addGlobalResponse(...respones) {
+        const groupedByStatus = respones.reduce((acc, response) => {
+            const { status = 'default' } = response;
+            const [type, isArray] = getTypeIsArrayTuple(response.type, response.isArray);
+            acc[status] = {
+                ...omit(response, 'status'),
+                type,
+                isArray,
+                description: response.description ?? ''
+            };
+            return acc;
+        }, {});
+        this.document[GLOBAL_RESPONSES] = {
+            ...this.document[GLOBAL_RESPONSES],
+            ...groupedByStatus
+        };
+        return this;
+    }
+    addGlobalParameters(...parameters) {
+        this.document[GLOBAL_PARAMETERS] = [
+            ...(this.document[GLOBAL_PARAMETERS] || []),
+            ...parameters
+        ];
+        return this;
+    }
+    addSecurityRequirements(name, requirements = []) {
+        let securityRequirement;
+        if (isString(name)) {
+            securityRequirement = { [name]: requirements };
+        }
+        else {
+            securityRequirement = name;
+        }
+        this.document.security = (this.document.security || []).concat({
+            ...securityRequirement
+        });
+        return this;
+    }
+    addBearerAuth(options = {
+        type: 'http'
+    }, name = 'bearer') {
+        this.addSecurity(name, {
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            ...options
+        });
+        return this;
+    }
+    addOAuth2(options = {
+        type: 'oauth2'
+    }, name = 'oauth2') {
+        this.addSecurity(name, {
+            type: 'oauth2',
+            flows: {},
+            ...options
+        });
+        return this;
+    }
+    addApiKey(options = {
+        type: 'apiKey'
+    }, name = 'api_key') {
+        this.addSecurity(name, {
+            type: 'apiKey',
+            in: 'header',
+            name,
+            ...options
+        });
+        return this;
+    }
+    addBasicAuth(options = {
+        type: 'http'
+    }, name = 'basic') {
+        this.addSecurity(name, {
+            type: 'http',
+            scheme: 'basic',
+            ...options
+        });
+        return this;
+    }
+    addCookieAuth(cookieName = 'connect.sid', options = {
+        type: 'apiKey'
+    }, securityName = 'cookie') {
+        this.addSecurity(securityName, {
+            type: 'apiKey',
+            in: 'cookie',
+            name: cookieName,
+            ...options
+        });
+        return this;
+    }
+    build() {
+        return cloneDeep(this.document);
+    }
+}
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/utils/load-package.util.js
+var load_package_util = __nccwpck_require__(56986);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/js-yaml@5.5.0/node_modules/js-yaml/dist/js-yaml.mjs
+/*! js-yaml 5.5.0 https://github.com/nodeca/js-yaml @license MIT */
+//#region src/tag.ts
+/**
+* Returned by a scalar resolver when the source does not match its tag.
+*
+* @category Tags
+*/
+var NOT_RESOLVED = Symbol("NOT_RESOLVED");
+/**
+* Create a normalized scalar tag definition.
+*
+* @category Tags
+*/
+function defineScalarTag(tagName, options) {
+	return {
+		tagName,
+		nodeKind: "scalar",
+		implicit: options.implicit ?? false,
+		matchByTagPrefix: options.matchByTagPrefix ?? false,
+		implicitFirstChars: options.implicitFirstChars ?? null,
+		resolve: options.resolve,
+		identify: options.identify,
+		represent: options.represent ?? ((data) => String(data)),
+		representTagName: options.representTagName ?? (() => tagName)
+	};
+}
+/**
+* Create a normalized sequence tag definition.
+*
+* @category Tags
+*/
+function defineSequenceTag(tagName, options) {
+	const carrierIsResult = options.finalize === void 0;
+	return {
+		tagName,
+		nodeKind: "sequence",
+		implicit: false,
+		matchByTagPrefix: options.matchByTagPrefix ?? false,
+		create: options.create,
+		addItem: options.addItem,
+		finalize: options.finalize ?? ((carrier) => carrier),
+		carrierIsResult,
+		identify: options.identify,
+		represent: options.represent ?? ((data) => data),
+		representTagName: options.representTagName ?? (() => tagName)
+	};
+}
+/**
+* Create a normalized mapping tag definition.
+*
+* @category Tags
+*/
+function defineMappingTag(tagName, options) {
+	const carrierIsResult = options.finalize === void 0;
+	return {
+		tagName,
+		nodeKind: "mapping",
+		implicit: false,
+		matchByTagPrefix: options.matchByTagPrefix ?? false,
+		create: options.create,
+		addPair: options.addPair,
+		has: options.has,
+		keys: options.keys,
+		get: options.get,
+		finalize: options.finalize ?? ((carrier) => carrier),
+		carrierIsResult,
+		identify: options.identify,
+		represent: options.represent ?? ((data) => data),
+		representTagName: options.representTagName ?? (() => tagName)
+	};
+}
+//#endregion
+//#region src/tag/scalar/str.ts
+/** @category Tags */
+var strTag = defineScalarTag("tag:yaml.org,2002:str", {
+	resolve: (source) => source,
+	identify: (data) => typeof data === "string"
+});
+//#endregion
+//#region src/tag/scalar/null_core.ts
+var NULL_VALUES$1 = [
+	"",
+	"~",
+	"null",
+	"Null",
+	"NULL"
+];
+/** @category Tags */
+var nullCoreTag = defineScalarTag("tag:yaml.org,2002:null", {
+	implicit: true,
+	implicitFirstChars: [
+		"",
+		"~",
+		"n",
+		"N"
+	],
+	resolve: (source) => {
+		if (NULL_VALUES$1.indexOf(source) !== -1) return null;
+		return NOT_RESOLVED;
+	},
+	identify: (object) => object === null,
+	represent: () => "null"
+});
+//#endregion
+//#region src/tag/scalar/null_json.ts
+/** @category Tags */
+var nullJsonTag = defineScalarTag("tag:yaml.org,2002:null", {
+	implicit: true,
+	implicitFirstChars: ["n"],
+	resolve: (source, isExplicit) => {
+		if (source === "null" || isExplicit && source === "") return null;
+		return NOT_RESOLVED;
+	},
+	identify: (object) => object === null,
+	represent: () => "null"
+});
+//#endregion
+//#region src/tag/scalar/null_yaml11.ts
+var NULL_VALUES = [
+	"",
+	"~",
+	"null",
+	"Null",
+	"NULL"
+];
+/** @category Tags */
+var nullYaml11Tag = defineScalarTag("tag:yaml.org,2002:null", {
+	implicit: true,
+	implicitFirstChars: [
+		"",
+		"~",
+		"n",
+		"N"
+	],
+	resolve: (source) => {
+		if (NULL_VALUES.indexOf(source) !== -1) return null;
+		return NOT_RESOLVED;
+	},
+	identify: (object) => object === null,
+	represent: () => "null"
+});
+//#endregion
+//#region src/tag/scalar/bool_core.ts
+var TRUE_VALUES$2 = [
+	"true",
+	"True",
+	"TRUE"
+];
+var FALSE_VALUES$2 = [
+	"false",
+	"False",
+	"FALSE"
+];
+/** @category Tags */
+var boolCoreTag = defineScalarTag("tag:yaml.org,2002:bool", {
+	implicit: true,
+	implicitFirstChars: [
+		"t",
+		"T",
+		"f",
+		"F"
+	],
+	resolve: (source) => {
+		if (TRUE_VALUES$2.indexOf(source) !== -1) return true;
+		if (FALSE_VALUES$2.indexOf(source) !== -1) return false;
+		return NOT_RESOLVED;
+	},
+	identify: (object) => Object.prototype.toString.call(object) === "[object Boolean]",
+	represent: (object) => object ? "true" : "false"
+});
+//#endregion
+//#region src/tag/scalar/bool_json.ts
+var TRUE_VALUES$1 = ["true"];
+var FALSE_VALUES$1 = ["false"];
+/** @category Tags */
+var boolJsonTag = defineScalarTag("tag:yaml.org,2002:bool", {
+	implicit: true,
+	implicitFirstChars: ["t", "f"],
+	resolve: (source) => {
+		if (TRUE_VALUES$1.indexOf(source) !== -1) return true;
+		if (FALSE_VALUES$1.indexOf(source) !== -1) return false;
+		return NOT_RESOLVED;
+	},
+	identify: (object) => Object.prototype.toString.call(object) === "[object Boolean]",
+	represent: (object) => object ? "true" : "false"
+});
+//#endregion
+//#region src/tag/scalar/bool_yaml11.ts
+var TRUE_VALUES = [
+	"true",
+	"True",
+	"TRUE",
+	"y",
+	"Y",
+	"yes",
+	"Yes",
+	"YES",
+	"on",
+	"On",
+	"ON"
+];
+var FALSE_VALUES = [
+	"false",
+	"False",
+	"FALSE",
+	"n",
+	"N",
+	"no",
+	"No",
+	"NO",
+	"off",
+	"Off",
+	"OFF"
+];
+/** @category Tags */
+var boolYaml11Tag = defineScalarTag("tag:yaml.org,2002:bool", {
+	implicit: true,
+	implicitFirstChars: [
+		"y",
+		"Y",
+		"n",
+		"N",
+		"t",
+		"T",
+		"f",
+		"F",
+		"o",
+		"O"
+	],
+	resolve: (source) => {
+		if (TRUE_VALUES.indexOf(source) !== -1) return true;
+		if (FALSE_VALUES.indexOf(source) !== -1) return false;
+		return NOT_RESOLVED;
+	},
+	identify: (object) => Object.prototype.toString.call(object) === "[object Boolean]",
+	represent: (object) => object ? "true" : "false"
+});
+//#endregion
+//#region src/tag/scalar/int_core.ts
+var YAML_INTEGER_IMPLICIT_PATTERN$1 = /* @__PURE__ */ new RegExp("^(?:0o[0-7]+|0x[0-9a-fA-F]+|[-+]?[0-9]+)$");
+var YAML_INTEGER_EXPLICIT_PATTERN$1 = /* @__PURE__ */ new RegExp("^(?:[-+]?0b[0-1]+|[-+]?0o[0-7]+|[-+]?0x[0-9a-fA-F]+|[-+]?[0-9]+)$");
+function parseYamlInteger$2(source) {
+	let value = source;
+	let sign = 1;
+	if (value[0] === "-" || value[0] === "+") {
+		if (value[0] === "-") sign = -1;
+		value = value.slice(1);
+	}
+	if (value.startsWith("0b")) return sign * parseInt(value.slice(2), 2);
+	if (value.startsWith("0o")) return sign * parseInt(value.slice(2), 8);
+	if (value.startsWith("0x")) return sign * parseInt(value.slice(2), 16);
+	return sign * parseInt(value, 10);
+}
+function resolveYamlInteger$2(source, isExplicit) {
+	if (isExplicit) {
+		if (!YAML_INTEGER_EXPLICIT_PATTERN$1.test(source)) return NOT_RESOLVED;
+	} else if (!YAML_INTEGER_IMPLICIT_PATTERN$1.test(source)) return NOT_RESOLVED;
+	const result = parseYamlInteger$2(source);
+	return Number.isFinite(result) ? result : NOT_RESOLVED;
+}
+/** @category Tags */
+var intCoreTag = defineScalarTag("tag:yaml.org,2002:int", {
+	implicit: true,
+	implicitFirstChars: [
+		"-",
+		"+",
+		..."0123456789"
+	],
+	resolve: resolveYamlInteger$2,
+	identify: (object) => Number.isInteger(object) && !Object.is(object, -0) && object.toString(10).indexOf("e") < 0,
+	represent: (object) => object.toString(10)
+});
+//#endregion
+//#region src/tag/scalar/int_json.ts
+var YAML_INTEGER_IMPLICIT_PATTERN = /* @__PURE__ */ new RegExp("^-?(?:0|[1-9][0-9]*)$");
+var YAML_INTEGER_EXPLICIT_PATTERN = /* @__PURE__ */ new RegExp("^(?:[-+]?0b[0-1]+|[-+]?0o[0-7]+|[-+]?0x[0-9a-fA-F]+|[-+]?[0-9]+)$");
+function parseYamlInteger$1(source) {
+	let value = source;
+	let sign = 1;
+	if (value[0] === "-" || value[0] === "+") {
+		if (value[0] === "-") sign = -1;
+		value = value.slice(1);
+	}
+	if (value.startsWith("0b")) return sign * parseInt(value.slice(2), 2);
+	if (value.startsWith("0o")) return sign * parseInt(value.slice(2), 8);
+	if (value.startsWith("0x")) return sign * parseInt(value.slice(2), 16);
+	return sign * parseInt(value, 10);
+}
+function resolveYamlInteger$1(source, isExplicit) {
+	if (isExplicit) {
+		if (!YAML_INTEGER_EXPLICIT_PATTERN.test(source)) return NOT_RESOLVED;
+	} else if (!YAML_INTEGER_IMPLICIT_PATTERN.test(source)) return NOT_RESOLVED;
+	const result = parseYamlInteger$1(source);
+	return Number.isFinite(result) ? result : NOT_RESOLVED;
+}
+/** @category Tags */
+var intJsonTag = defineScalarTag("tag:yaml.org,2002:int", {
+	implicit: true,
+	implicitFirstChars: ["-", ..."0123456789"],
+	resolve: resolveYamlInteger$1,
+	identify: (object) => Number.isInteger(object) && !Object.is(object, -0) && object.toString(10).indexOf("e") < 0,
+	represent: (object) => object.toString(10)
+});
+//#endregion
+//#region src/tag/scalar/int_yaml11.ts
+var YAML_INTEGER_PATTERN = /* @__PURE__ */ new RegExp("^(?:[-+]?0b[0-1_]+|[-+]?0[0-7_]+|[-+]?0x[0-9a-fA-F_]+|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+|[-+]?(?:0|[1-9][0-9_]*))$");
+function parseYamlInteger(source) {
+	let value = source.replace(/_/g, "");
+	let sign = 1;
+	if (value[0] === "-" || value[0] === "+") {
+		if (value[0] === "-") sign = -1;
+		value = value.slice(1);
+	}
+	if (value.startsWith("0b")) return sign * parseInt(value.slice(2), 2);
+	if (value.startsWith("0x")) return sign * parseInt(value.slice(2), 16);
+	if (value.includes(":")) {
+		let result = 0;
+		for (const part of value.split(":")) result = result * 60 + Number(part);
+		return sign * result;
+	}
+	if (value !== "0" && value[0] === "0") return sign * parseInt(value, 8);
+	return sign * parseInt(value, 10);
+}
+function resolveYamlInteger(source) {
+	if (!YAML_INTEGER_PATTERN.test(source)) return NOT_RESOLVED;
+	const result = parseYamlInteger(source);
+	return Number.isFinite(result) ? result : NOT_RESOLVED;
+}
+/** @category Tags */
+var intYaml11Tag = defineScalarTag("tag:yaml.org,2002:int", {
+	implicit: true,
+	implicitFirstChars: [
+		"-",
+		"+",
+		..."0123456789"
+	],
+	resolve: resolveYamlInteger,
+	identify: (object) => Number.isInteger(object) && !Object.is(object, -0) && object.toString(10).indexOf("e") < 0,
+	represent: (object) => object.toString(10)
+});
+//#endregion
+//#region src/tag/scalar/float_core.ts
+var YAML_FLOAT_PATTERN$1 = /* @__PURE__ */ new RegExp("^(?:[-+]?[0-9]+(?:\\.[0-9]*)?(?:[eE][-+]?[0-9]+)?|[-+]?\\.[0-9]+(?:[eE][-+]?[0-9]+)?|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");
+var YAML_FLOAT_SPECIAL_PATTERN$1 = /* @__PURE__ */ new RegExp("^(?:[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");
+function resolveYamlFloat$2(source) {
+	if (!YAML_FLOAT_PATTERN$1.test(source)) return NOT_RESOLVED;
+	let value = source.toLowerCase();
+	const sign = value[0] === "-" ? -1 : 1;
+	if ("+-".includes(value[0])) value = value.slice(1);
+	if (value === ".inf") return sign === 1 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+	if (value === ".nan") return NaN;
+	const result = sign * parseFloat(value);
+	if (Number.isFinite(result) || YAML_FLOAT_SPECIAL_PATTERN$1.test(source)) return result;
+	return NOT_RESOLVED;
+}
+function representYamlFloat$2(object) {
+	if (isNaN(object)) return ".nan";
+	if (object === Number.POSITIVE_INFINITY) return ".inf";
+	if (object === Number.NEGATIVE_INFINITY) return "-.inf";
+	if (Object.is(object, -0)) return "-0.0";
+	const result = object.toString(10);
+	return /^[-+]?[0-9]+e/.test(result) ? result.replace("e", ".e") : result;
+}
+/** @category Tags */
+var floatCoreTag = defineScalarTag("tag:yaml.org,2002:float", {
+	implicit: true,
+	implicitFirstChars: [
+		"-",
+		"+",
+		".",
+		..."0123456789"
+	],
+	resolve: resolveYamlFloat$2,
+	identify: (object) => typeof object === "number" && (!Number.isInteger(object) || Object.is(object, -0) || object.toString(10).indexOf("e") >= 0),
+	represent: representYamlFloat$2
+});
+//#endregion
+//#region src/tag/scalar/float_json.ts
+var YAML_FLOAT_IMPLICIT_PATTERN = /* @__PURE__ */ new RegExp("^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]*)?(?:[eE][-+]?[0-9]+)?$");
+var YAML_FLOAT_EXPLICIT_PATTERN = /* @__PURE__ */ new RegExp("^(?:[-+]?[0-9]+(?:\\.[0-9]*)?(?:[eE][-+]?[0-9]+)?|[-+]?\\.[0-9]+(?:[eE][-+]?[0-9]+)?|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");
+function resolveYamlFloat$1(source, isExplicit) {
+	if (isExplicit) {
+		if (!YAML_FLOAT_EXPLICIT_PATTERN.test(source)) return NOT_RESOLVED;
+		let value = source.toLowerCase();
+		const sign = value[0] === "-" ? -1 : 1;
+		if ("+-".includes(value[0])) value = value.slice(1);
+		if (value === ".inf") return sign === 1 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+		if (value === ".nan") return NaN;
+		const result = sign * parseFloat(value);
+		return Number.isFinite(result) ? result : NOT_RESOLVED;
+	}
+	if (!YAML_FLOAT_IMPLICIT_PATTERN.test(source)) return NOT_RESOLVED;
+	const result = Number(source);
+	if (Number.isFinite(result)) return result;
+	return NOT_RESOLVED;
+}
+function representYamlFloat$1(object) {
+	if (isNaN(object)) return ".nan";
+	if (object === Number.POSITIVE_INFINITY) return ".inf";
+	if (object === Number.NEGATIVE_INFINITY) return "-.inf";
+	if (Object.is(object, -0)) return "-0.0";
+	const result = object.toString(10);
+	return /^[-+]?[0-9]+e/.test(result) ? result.replace("e", ".e") : result;
+}
+/** @category Tags */
+var floatJsonTag = defineScalarTag("tag:yaml.org,2002:float", {
+	implicit: true,
+	implicitFirstChars: ["-", ..."0123456789"],
+	resolve: resolveYamlFloat$1,
+	identify: (object) => typeof object === "number" && (!Number.isInteger(object) || Object.is(object, -0) || object.toString(10).indexOf("e") >= 0),
+	represent: representYamlFloat$1
+});
+//#endregion
+//#region src/tag/scalar/float_yaml11.ts
+var YAML_FLOAT_PATTERN = /* @__PURE__ */ new RegExp("^(?:[-+]?(?:(?:[0-9][0-9_]*)?\\.[0-9_]*)(?:[eE][-+][0-9]+)?|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");
+var YAML_FLOAT_SPECIAL_PATTERN = /* @__PURE__ */ new RegExp("^(?:[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");
+function resolveYamlFloat(source) {
+	if (!YAML_FLOAT_PATTERN.test(source)) return NOT_RESOLVED;
+	let value = source.toLowerCase().replace(/_/g, "");
+	const sign = value[0] === "-" ? -1 : 1;
+	if ("+-".includes(value[0])) value = value.slice(1);
+	if (value === ".inf") return sign === 1 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+	if (value === ".nan") return NaN;
+	let result = 0;
+	if (value.includes(":")) {
+		for (const part of value.split(":")) result = result * 60 + Number(part);
+		result *= sign;
+	} else result = sign * parseFloat(value);
+	if (Number.isFinite(result) || YAML_FLOAT_SPECIAL_PATTERN.test(source)) return result;
+	return NOT_RESOLVED;
+}
+function representYamlFloat(object) {
+	if (isNaN(object)) return ".nan";
+	if (object === Number.POSITIVE_INFINITY) return ".inf";
+	if (object === Number.NEGATIVE_INFINITY) return "-.inf";
+	if (Object.is(object, -0)) return "-0.0";
+	const result = object.toString(10);
+	return /^[-+]?[0-9]+e/.test(result) ? result.replace("e", ".e") : result;
+}
+/** @category Tags */
+var floatYaml11Tag = defineScalarTag("tag:yaml.org,2002:float", {
+	implicit: true,
+	implicitFirstChars: [
+		"-",
+		"+",
+		".",
+		..."0123456789"
+	],
+	resolve: resolveYamlFloat,
+	identify: (object) => typeof object === "number" && (!Number.isInteger(object) || Object.is(object, -0) || object.toString(10).indexOf("e") >= 0),
+	represent: representYamlFloat
+});
+//#endregion
+//#region src/tag/scalar/merge.ts
+/**
+* Enables merge keys in {@link CORE_SCHEMA} when added with
+* {@link Schema.withTags}.
+*
+* @category Tags
+*/
+var mergeTag = defineScalarTag("tag:yaml.org,2002:merge", {
+	implicit: true,
+	implicitFirstChars: ["<"],
+	resolve: (source, isExplicit) => {
+		if (source === "<<" || isExplicit && source === "") return "<<";
+		return NOT_RESOLVED;
+	},
+	identify: () => false
+});
+//#endregion
+//#region src/tag/scalar/binary.ts
+var BASE64_PATTERN = /^[A-Za-z0-9+/]*={0,2}$/;
+function resolveYamlBinary(source) {
+	const input = source.replace(/\s/g, "");
+	if (input.length % 4 !== 0 || !BASE64_PATTERN.test(input)) return NOT_RESOLVED;
+	const binary = atob(input);
+	const result = new Uint8Array(binary.length);
+	for (let index = 0; index < binary.length; index++) result[index] = binary.charCodeAt(index);
+	return result;
+}
+function representYamlBinary(object) {
+	let binary = "";
+	for (let index = 0; index < object.length; index++) binary += String.fromCharCode(object[index]);
+	return btoa(binary);
+}
+/**
+* The `!!binary` tag, represented as a `Uint8Array`.
+*
+* @category Tags
+*/
+var binaryTag = defineScalarTag("tag:yaml.org,2002:binary", {
+	resolve: resolveYamlBinary,
+	identify: (object) => Object.prototype.toString.call(object) === "[object Uint8Array]",
+	represent: representYamlBinary
+});
+//#endregion
+//#region src/tag/scalar/timestamp.ts
+var YAML_DATE_REGEXP = /* @__PURE__ */ new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$");
+var YAML_TIMESTAMP_REGEXP = /* @__PURE__ */ new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$");
+function makeUtcDate(year, month, day, hour = 0, minute = 0, second = 0, fraction = 0) {
+	const date = new Date(Date.UTC(year, month, day, hour, minute, second, fraction));
+	date.setUTCFullYear(year, month, day);
+	return date;
+}
+function resolveYamlTimestamp(source) {
+	let match = YAML_DATE_REGEXP.exec(source);
+	if (match === null) match = YAML_TIMESTAMP_REGEXP.exec(source);
+	if (match === null) return NOT_RESOLVED;
+	const year = +match[1];
+	const month = +match[2] - 1;
+	const day = +match[3];
+	if (!match[4]) {
+		const date = makeUtcDate(year, month, day);
+		if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month || date.getUTCDate() !== day) return NOT_RESOLVED;
+		return date;
+	}
+	const hour = +match[4];
+	const minute = +match[5];
+	const second = +match[6];
+	let fraction = 0;
+	if (hour > 23 || minute > 59 || second > 59) return NOT_RESOLVED;
+	if (match[7]) {
+		let value = match[7].slice(0, 3);
+		while (value.length < 3) value += "0";
+		fraction = +value;
+	}
+	const date = makeUtcDate(year, month, day, hour, minute, second, fraction);
+	if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month || date.getUTCDate() !== day) return NOT_RESOLVED;
+	if (match[9]) {
+		const offsetHour = +match[10];
+		const offsetMinute = +(match[11] || 0);
+		if (offsetHour > 23 || offsetMinute > 59) return NOT_RESOLVED;
+		const offset = (offsetHour * 60 + offsetMinute) * 6e4;
+		date.setTime(date.getTime() - (match[9] === "-" ? -offset : offset));
+	}
+	return date;
+}
+/**
+* The YAML 1.1 `!!timestamp` tag, represented as a JavaScript `Date`.
+*
+* @category Tags
+*/
+var timestampTag = defineScalarTag("tag:yaml.org,2002:timestamp", {
+	implicit: true,
+	implicitFirstChars: [..."0123456789"],
+	resolve: resolveYamlTimestamp,
+	identify: (object) => object instanceof Date,
+	represent: (object) => object.toISOString()
+});
+//#endregion
+//#region src/tag/sequence/seq.ts
+/** @category Tags */
+var seqTag = defineSequenceTag("tag:yaml.org,2002:seq", {
+	create: () => [],
+	addItem: (container, item) => {
+		container.push(item);
+	},
+	identify: Array.isArray
+});
+//#endregion
+//#region src/common/object.ts
+function js_yaml_isPlainObject(data) {
+	if (data === null || typeof data !== "object" || Array.isArray(data)) return false;
+	const prototype = Object.getPrototypeOf(data);
+	return prototype === null || prototype === Object.prototype;
+}
+function pick(object, keys) {
+	const result = {};
+	for (const key of keys) if (object[key] !== void 0) result[key] = object[key];
+	return result;
+}
+//#endregion
+//#region src/tag/sequence/omap.ts
+/**
+* Provided only for YAML 1.1 compatibility and supported by the loader only.
+* JavaScript has no dedicated class to represent this type, so it cannot be
+* identified and dumped.
+*
+* ```yaml
+* !!omap
+*   - one: 1
+*   - two: 2
+* ```
+*
+* is loaded as
+*
+* ```javascript
+* [
+*   { one: 1 },
+*   { two: 2 }
+* ]
+* ```
+*
+* @category Tags
+*/
+var omapTag = defineSequenceTag("tag:yaml.org,2002:omap", {
+	create: () => ({
+		list: [],
+		seen: /* @__PURE__ */ new Set()
+	}),
+	addItem: (carrier, item) => {
+		let key;
+		if (item instanceof Map) {
+			if (item.size !== 1) return "cannot resolve an ordered map item";
+			key = item.keys().next().value;
+		} else if (js_yaml_isPlainObject(item)) {
+			const itemKeys = Object.keys(item);
+			if (itemKeys.length !== 1) return "cannot resolve an ordered map item";
+			key = itemKeys[0];
+		} else return "cannot resolve an ordered map item";
+		if (carrier.seen.has(key)) return "duplicate key in ordered map";
+		carrier.seen.add(key);
+		carrier.list.push(item);
+		return "";
+	},
+	finalize: (carrier) => carrier.list,
+	identify: () => false
+});
+//#endregion
+//#region src/tag/sequence/pairs.ts
+/**
+* Provided only for YAML 1.1 compatibility and supported by the loader only.
+* JavaScript has no dedicated class to represent this type, so it cannot be
+* identified and dumped.
+*
+* ```yaml
+* !!pairs
+*   - one: 1
+*   - two: 2
+* ```
+*
+* is loaded as
+*
+* ```javascript
+* [
+*   ['one', 1],
+*   ['two', 2]
+* ]
+* ```
+*
+* @category Tags
+*/
+var pairsTag = defineSequenceTag("tag:yaml.org,2002:pairs", {
+	create: () => [],
+	addItem: (container, item) => {
+		if (item instanceof Map) {
+			if (item.size !== 1) return "cannot resolve a pairs item";
+			container.push(item.entries().next().value);
+			return "";
+		}
+		if (Object.prototype.toString.call(item) !== "[object Object]") return "cannot resolve a pairs item";
+		const object = item;
+		const keys = Object.keys(object);
+		if (keys.length !== 1) return "cannot resolve a pairs item";
+		container.push([keys[0], object[keys[0]]]);
+		return "";
+	},
+	identify: () => false
+});
+//#endregion
+//#region src/tag/mapping/map.ts
+/**
+* This is the default mapping implementation. It uses `{}` objects and has only
+* partial functionality due to language limitations. This choice was made
+* because users expect to get JavaScript objects, and it was left unchanged to
+* avoid too many breaking changes in the v5 release.
+*
+* Side effects:
+*
+* - `Object.hasOwn()` checks or `for...of` loops are required for safe use (to
+*   avoid falling through to prototypes).
+* - Only scalar string keys are supported properly.
+* - Other scalar keys, such as `null` and numbers, are converted to strings.
+*   This is historical behaviour, and it can cause side effects such as
+*   problems with `!!merge`.
+*
+* Note that non-string scalar keys may be deprecated in future versions.
+*
+* Ideally, use {@link realMapTag} instead.
+*
+* @category Tags
+*/
+var js_yaml_mapTag = defineMappingTag("tag:yaml.org,2002:map", {
+	create: () => ({}),
+	identify: js_yaml_isPlainObject,
+	represent: (o) => {
+		const map = /* @__PURE__ */ new Map();
+		for (const key of Object.keys(o)) map.set(key, o[key]);
+		return map;
+	},
+	addPair: (container, key, value) => {
+		if (key !== null && typeof key === "object") return "object-based map does not support complex keys";
+		const normalizedKey = String(key);
+		if (normalizedKey === "__proto__") Object.defineProperty(container, normalizedKey, {
+			value,
+			enumerable: true,
+			configurable: true,
+			writable: true
+		});
+		else container[normalizedKey] = value;
+		return "";
+	},
+	has: (container, key) => {
+		if (key !== null && typeof key === "object") return false;
+		return Object.prototype.hasOwnProperty.call(container, String(key));
+	},
+	keys: (container) => Object.keys(container),
+	get: (container, key) => {
+		const normalizedKey = String(key);
+		if (!Object.prototype.hasOwnProperty.call(container, normalizedKey)) return null;
+		return container[normalizedKey];
+	}
+});
+//#endregion
+//#region src/tag/mapping/set.ts
+/**
+* The YAML 1.1 `!!set` tag, represented as a JavaScript `Set`.
+*
+* @category Tags
+*/
+var js_yaml_setTag = defineMappingTag("tag:yaml.org,2002:set", {
+	create: () => /* @__PURE__ */ new Set(),
+	identify: (data) => data instanceof Set,
+	represent: (data) => {
+		const map = /* @__PURE__ */ new Map();
+		for (const key of data) map.set(key, null);
+		return map;
+	},
+	addPair: (container, key, value) => {
+		if (value !== null) return "cannot resolve a set item";
+		container.add(key);
+		return "";
+	},
+	has: (container, key) => container.has(key),
+	keys: (container) => container.keys(),
+	get: () => null
+});
+//#endregion
+//#region src/schema.ts
+function createTagDefinitionMap() {
+	return {
+		scalar: Object.create(null),
+		sequence: Object.create(null),
+		mapping: Object.create(null)
+	};
+}
+function createTagDefinitionListMap() {
+	return {
+		scalar: [],
+		sequence: [],
+		mapping: []
+	};
+}
+function compileTags(tags) {
+	const result = [];
+	for (const tag of tags) {
+		let index = result.length;
+		for (let previousIndex = 0; previousIndex < result.length; previousIndex++) {
+			const previous = result[previousIndex];
+			if (previous.nodeKind === tag.nodeKind && previous.tagName === tag.tagName && previous.matchByTagPrefix === tag.matchByTagPrefix) {
+				index = previousIndex;
+				break;
+			}
+		}
+		result[index] = tag;
+	}
+	return result;
+}
+/**
+* Controls tag resolution when loading and type selection when dumping.
+*
+* @category Schemas
+*/
+var Schema = class Schema {
+	tags;
+	/** @internal */
+	implicitScalarTags;
+	/**
+	* Dispatch implicit scalar resolvers by `source.charAt(0)`. Each bucket holds
+	* the resolvers that may match that key, in schema order; a key absent from
+	* the map uses
+	* {@link Schema.implicitScalarAnyFirstChar}
+	* (resolvers that declared no first-char constraint, so they apply to any
+	* first character).
+	*/
+	implicitScalarByFirstChar;
+	implicitScalarAnyFirstChar;
+	/**
+	* The default scalar tag (`!!str`), resolved once so the composer's fallback
+	* for unresolved plain scalars avoids a keyed lookup per scalar.
+	*
+	* @internal
+	*/
+	defaultScalarTag;
+	/**
+	* The default container tags (`!!seq` / `!!map`), used by the dumper: when a
+	* value is identified by its default tag, the tag is implicit and not
+	* printed. Undefined if the schema does not define them (then such values
+	* can't be dumped).
+	*
+	* @internal
+	*/
+	defaultSequenceTag;
+	/** @internal */
+	defaultMappingTag;
+	exact;
+	prefix;
+	constructor(tags) {
+		const compiledTags = compileTags(tags);
+		const implicitScalarTags = [];
+		const exact = createTagDefinitionMap();
+		const prefix = createTagDefinitionListMap();
+		for (const tag of compiledTags) {
+			if (tag.nodeKind === "scalar" && tag.implicit) {
+				if (tag.matchByTagPrefix) throw new Error("Implicit scalar tags cannot match by tag prefix");
+				implicitScalarTags.push(tag);
+			}
+			switch (tag.nodeKind) {
+				case "scalar":
+					if (tag.matchByTagPrefix) prefix.scalar.push(tag);
+					else exact.scalar[tag.tagName] = tag;
+					break;
+				case "sequence":
+					if (tag.matchByTagPrefix) prefix.sequence.push(tag);
+					else exact.sequence[tag.tagName] = tag;
+					break;
+				case "mapping": if (tag.matchByTagPrefix) prefix.mapping.push(tag);
+				else exact.mapping[tag.tagName] = tag;
+			}
+		}
+		const implicitScalarAnyFirstChar = implicitScalarTags.filter((tag) => tag.implicitFirstChars === null);
+		const keys = /* @__PURE__ */ new Set();
+		for (const tag of implicitScalarTags) if (tag.implicitFirstChars !== null) for (const key of tag.implicitFirstChars) keys.add(key);
+		const implicitScalarByFirstChar = /* @__PURE__ */ new Map();
+		for (const key of keys) implicitScalarByFirstChar.set(key, implicitScalarTags.filter((tag) => tag.implicitFirstChars === null || tag.implicitFirstChars.indexOf(key) !== -1));
+		const defaultScalarTag = exact.scalar["tag:yaml.org,2002:str"];
+		if (!defaultScalarTag) throw new Error("schema does not define the default scalar tag (tag:yaml.org,2002:str)");
+		this.tags = compiledTags;
+		this.implicitScalarTags = implicitScalarTags;
+		this.implicitScalarByFirstChar = implicitScalarByFirstChar;
+		this.implicitScalarAnyFirstChar = implicitScalarAnyFirstChar;
+		this.defaultScalarTag = defaultScalarTag;
+		this.defaultSequenceTag = exact.sequence["tag:yaml.org,2002:seq"];
+		this.defaultMappingTag = exact.mapping["tag:yaml.org,2002:map"];
+		this.exact = exact;
+		this.prefix = prefix;
+	}
+	/** @internal */
+	lookupScalarTag(tagName) {
+		const exactTag = this.exact.scalar[tagName];
+		if (exactTag) return exactTag;
+		for (const tag of this.prefix.scalar) if (tagName.startsWith(tag.tagName)) return tag;
+	}
+	/** @internal */
+	lookupSequenceTag(tagName) {
+		const exactTag = this.exact.sequence[tagName];
+		if (exactTag) return exactTag;
+		for (const tag of this.prefix.sequence) if (tagName.startsWith(tag.tagName)) return tag;
+	}
+	/** @internal */
+	lookupMappingTag(tagName) {
+		const exactTag = this.exact.mapping[tagName];
+		if (exactTag) return exactTag;
+		for (const tag of this.prefix.mapping) if (tagName.startsWith(tag.tagName)) return tag;
+	}
+	/** @internal */
+	resolveImplicitScalarTag(source) {
+		const candidates = this.implicitScalarByFirstChar.get(source.charAt(0)) ?? this.implicitScalarAnyFirstChar;
+		for (const tag of candidates) {
+			const value = tag.resolve(source, false, tag.tagName);
+			if (value !== NOT_RESOLVED) return {
+				value,
+				tag
+			};
+		}
+		const tag = this.defaultScalarTag;
+		return {
+			value: tag.resolve(source, false, tag.tagName),
+			tag
+		};
+	}
+	/**
+	* Creates a new schema with the specified tags added. If a tag already
+	* exists, it is replaced by the specified tag.
+	*
+	* @example
+	*
+	* ```javascript
+	* import { CORE_SCHEMA, mergeTag, realMapTag } from 'js-yaml'
+	*
+	* const schema = CORE_SCHEMA.withTags(mergeTag, realMapTag)
+	* ```
+	*/
+	withTags(...tags) {
+		let flatTags = [];
+		for (const tag of tags) flatTags = flatTags.concat(tag);
+		return new Schema([...this.tags, ...flatTags]);
+	}
+};
+/**
+* The YAML 1.2 Failsafe Schema: strings, sequences, and mappings.
+*
+* @category Schemas
+*/
+var FAILSAFE_SCHEMA = new Schema([
+	strTag,
+	seqTag,
+	js_yaml_mapTag
+]);
+/**
+* The YAML 1.2 JSON Schema. It uses JSON scalar forms while retaining YAML
+* collection syntax.
+*
+* @category Schemas
+*/
+var JSON_SCHEMA = new Schema([
+	...FAILSAFE_SCHEMA.tags,
+	nullJsonTag,
+	boolJsonTag,
+	intJsonTag,
+	floatJsonTag
+]);
+/**
+* The default schema for the loaders. Note, {@link CORE_SCHEMA} comes
+* without the `!!merge` tag. You can easily enable it if needed.
+*
+* @example
+* Enable {@link mergeTag}:
+*
+* ```javascript
+* import { load, CORE_SCHEMA, mergeTag } from 'js-yaml'
+*
+* try {
+*   load(data, { schema: CORE_SCHEMA.withTags(mergeTag) })
+* } catch (e) {
+*   console.error(e)
+* }
+* ```
+*
+* @category Schemas
+*/
+var CORE_SCHEMA = new Schema([
+	...FAILSAFE_SCHEMA.tags,
+	nullCoreTag,
+	boolCoreTag,
+	intCoreTag,
+	floatCoreTag
+]);
+/**
+* YAML 1.1-compatible schema.
+*
+* @category Schemas
+*/
+var YAML11_SCHEMA = new Schema([
+	...FAILSAFE_SCHEMA.tags,
+	nullYaml11Tag,
+	boolYaml11Tag,
+	intYaml11Tag,
+	floatYaml11Tag,
+	timestampTag,
+	mergeTag,
+	binaryTag,
+	omapTag,
+	pairsTag,
+	js_yaml_setTag
+]);
+/**
+* The dumper schema for maximum compatibility. It combines all supported type
+* variants from YAML 1.1 and YAML 1.2 so strings matching any of them are
+* quoted. This makes the generated YAML more compatible with other parsers.
+*
+* The schema is based on YAML 1.1, but extends `!!int` and `!!float` to accept
+* both YAML 1.1 and Core Schema forms, since Core Schema supports some forms
+* that YAML 1.1 does not.
+*
+* @category Schemas
+*/
+var DUMP_SCHEMA = YAML11_SCHEMA.withTags({
+	...intYaml11Tag,
+	resolve: (source, isExplicit, tagName) => {
+		const result = intYaml11Tag.resolve(source, isExplicit, tagName);
+		return result === NOT_RESOLVED ? intCoreTag.resolve(source, isExplicit, tagName) : result;
+	}
+}, {
+	...floatYaml11Tag,
+	resolve: (source, isExplicit, tagName) => {
+		const result = floatYaml11Tag.resolve(source, isExplicit, tagName);
+		return result === NOT_RESOLVED ? floatCoreTag.resolve(source, isExplicit, tagName) : result;
+	}
+});
+//#endregion
+//#region src/tag/mapping/real_map.ts
+/**
+* Recommended when non-string keys are actually needed. It uses native
+* JavaScript `Map` objects, so keys keep their constructed types instead of
+* being converted to strings.
+*
+* It is not the default to avoid widespread breaking changes in existing
+* projects. `Map` has a different access API and does not pass deep equality
+* checks against `{}`-based fixtures. Alongside the other changes in v5,
+* making it the default was considered too disruptive.
+*
+* If these differences are acceptable for your project, we recommend using
+* {@link realMapTag} to guarantee the absence of problems and side effects.
+*
+* @example
+* Enable {@link realMapTag}:
+*
+* ```javascript
+* import { load, CORE_SCHEMA, realMapTag } from 'js-yaml'
+*
+* try {
+*   load(data, { schema: CORE_SCHEMA.withTags(realMapTag) })
+* } catch (e) {
+*   console.error(e)
+* }
+* ```
+*
+* @category Tags
+*/
+var realMapTag = defineMappingTag("tag:yaml.org,2002:map", {
+	create: () => /* @__PURE__ */ new Map(),
+	addPair: (container, key, value) => {
+		container.set(key, value);
+		return "";
+	},
+	has: (container, key) => container.has(key),
+	keys: (container) => container.keys(),
+	get: (container, key) => container.get(key),
+	identify: (data) => data instanceof Map || js_yaml_isPlainObject(data),
+	represent: (data) => {
+		if (data instanceof Map) return data;
+		const map = /* @__PURE__ */ new Map();
+		const obj = data;
+		for (const key of Object.keys(obj)) map.set(key, obj[key]);
+		return map;
+	}
+});
+//#endregion
+//#region src/tag/mapping/legacy_map.ts
+function normalizeKey(key) {
+	if (Array.isArray(key)) {
+		const array = Array.prototype.slice.call(key);
+		for (let index = 0; index < array.length; index++) {
+			if (Array.isArray(array[index])) return null;
+			if (typeof array[index] === "object" && Object.prototype.toString.call(array[index]) === "[object Object]") array[index] = "[object Object]";
+		}
+		return String(array);
+	}
+	if (typeof key === "object" && Object.prototype.toString.call(key) === "[object Object]") return "[object Object]";
+	return String(key);
+}
+/**
+* This implementation exists solely to reproduce v4 behavior exactly. Its use
+* is strongly discouraged. If complex or non-string keys are needed, use
+* {@link realMapTag} instead.
+*
+* @category Tags
+*/
+var legacyMapTag = defineMappingTag("tag:yaml.org,2002:map", {
+	create: () => ({}),
+	identify: js_yaml_isPlainObject,
+	represent: (o) => {
+		const map = /* @__PURE__ */ new Map();
+		for (const key of Object.keys(o)) map.set(key, o[key]);
+		return map;
+	},
+	addPair: (container, key, value) => {
+		const normalizedKey = normalizeKey(key);
+		if (normalizedKey === null) return "nested arrays are not supported inside keys";
+		if (normalizedKey === "__proto__") Object.defineProperty(container, normalizedKey, {
+			value,
+			enumerable: true,
+			configurable: true,
+			writable: true
+		});
+		else container[normalizedKey] = value;
+		return "";
+	},
+	has: (container, key) => {
+		const normalizedKey = normalizeKey(key);
+		return normalizedKey !== null && Object.prototype.hasOwnProperty.call(container, normalizedKey);
+	},
+	keys: (container) => Object.keys(container),
+	get: (container, key) => {
+		const normalizedKey = String(key);
+		if (!Object.prototype.hasOwnProperty.call(container, normalizedKey)) return null;
+		return container[normalizedKey];
+	}
+});
+//#endregion
+//#region src/common/snippet.ts
+var DEFAULT_SNIPPET_OPTIONS = {
+	maxLength: 79,
+	indent: 1,
+	linesBefore: 3,
+	linesAfter: 2
+};
+function getLine(buffer, lineStart, lineEnd, position, maxLineLength) {
+	let head = "";
+	let tail = "";
+	const maxHalfLength = Math.floor(maxLineLength / 2) - 1;
+	if (position - lineStart > maxHalfLength) {
+		head = " ... ";
+		lineStart = position - maxHalfLength + head.length;
+	}
+	if (lineEnd - position > maxHalfLength) {
+		tail = " ...";
+		lineEnd = position + maxHalfLength - tail.length;
+	}
+	return {
+		str: head + buffer.slice(lineStart, lineEnd).replace(/\t/g, "→") + tail,
+		pos: position - lineStart + head.length
+	};
+}
+function padStart(string, max) {
+	return " ".repeat(Math.max(max - string.length, 0)) + string;
+}
+function makeSnippet(mark, options) {
+	if (!mark.buffer) return null;
+	const opts = {
+		...DEFAULT_SNIPPET_OPTIONS,
+		...options
+	};
+	const re = /\r?\n|\r|\0/g;
+	const lineStarts = [0];
+	const lineEnds = [];
+	let match;
+	let foundLineNo = -1;
+	while (match = re.exec(mark.buffer)) {
+		lineEnds.push(match.index);
+		lineStarts.push(match.index + match[0].length);
+		if (mark.position <= match.index && foundLineNo < 0) foundLineNo = lineStarts.length - 2;
+	}
+	if (foundLineNo < 0) foundLineNo = lineStarts.length - 1;
+	let result = "";
+	const lineNoLength = Math.min(mark.line + opts.linesAfter, lineEnds.length).toString().length;
+	const maxLineLength = opts.maxLength - (opts.indent + lineNoLength + 3);
+	for (let i = 1; i <= opts.linesBefore; i++) {
+		if (foundLineNo - i < 0) break;
+		const line = getLine(mark.buffer, lineStarts[foundLineNo - i], lineEnds[foundLineNo - i], mark.position - (lineStarts[foundLineNo] - lineStarts[foundLineNo - i]), maxLineLength);
+		result = `${" ".repeat(opts.indent)}${padStart((mark.line - i + 1).toString(), lineNoLength)} | ${line.str}\n${result}`;
+	}
+	const line = getLine(mark.buffer, lineStarts[foundLineNo], lineEnds[foundLineNo], mark.position, maxLineLength);
+	result += `${" ".repeat(opts.indent)}${padStart((mark.line + 1).toString(), lineNoLength)} | ${line.str}\n`;
+	result += `${"-".repeat(opts.indent + lineNoLength + 3 + line.pos)}^\n`;
+	for (let i = 1; i <= opts.linesAfter; i++) {
+		if (foundLineNo + i >= lineEnds.length) break;
+		const line = getLine(mark.buffer, lineStarts[foundLineNo + i], lineEnds[foundLineNo + i], mark.position - (lineStarts[foundLineNo] - lineStarts[foundLineNo + i]), maxLineLength);
+		result += `${" ".repeat(opts.indent)}${padStart((mark.line + i + 1).toString(), lineNoLength)} | ${line.str}\n`;
+	}
+	return result.replace(/\n$/, "");
+}
+//#endregion
+//#region src/common/exception.ts
+function formatError(exception, compact) {
+	let where = "";
+	if (!exception.mark) return exception.reason;
+	if (exception.mark.name) where += `in "${exception.mark.name}" `;
+	where += `(${exception.mark.line + 1}:${exception.mark.column + 1})`;
+	if (!compact && exception.mark.snippet) where += `\n\n${exception.mark.snippet}`;
+	return `${exception.reason} ${where}`;
+}
+/**
+* A YAML error. Unlike an ordinary `Error`, it adds a source snippet showing
+* the location of the problem to the error message, when available.
+*
+* @category Main
+*/
+var YAMLException = class YAMLException extends Error {
+	reason;
+	mark;
+	/**
+	* Optional `mark` contains source snippet data. Usually, use
+	* {@link YAMLException.throwAt} instead of passing it directly.
+	*/
+	constructor(reason, mark) {
+		super();
+		this.name = "YAMLException";
+		this.reason = reason;
+		this.mark = mark;
+		this.message = formatError(this, false);
+		if (Error.captureStackTrace) Error.captureStackTrace(this, this.constructor);
+	}
+	/**
+	* Returns the formatted error, omitting the source snippet in compact mode.
+	*/
+	toString(compact) {
+		return `${this.name}: ${formatError(this, compact)}`;
+	}
+	/**
+	* Builds a YAMLException with a source snippet and throws it. `source` is
+	* the raw input text; `position` is an offset into it.
+	*/
+	static throwAt(source, position, message, filename = "") {
+		let line = 0;
+		let lineStart = 0;
+		for (let index = 0; index < position; index++) {
+			const ch = source.charCodeAt(index);
+			if (ch === 10) {
+				line++;
+				lineStart = index + 1;
+			} else if (ch === 13) {
+				line++;
+				if (source.charCodeAt(index + 1) === 10) index++;
+				lineStart = index + 1;
+			}
+		}
+		const mark = {
+			name: filename,
+			buffer: source,
+			position,
+			line,
+			column: position - lineStart
+		};
+		mark.snippet = makeSnippet(mark);
+		throw new YAMLException(message, mark);
+	}
+};
+//#endregion
+//#region src/parser/events.ts
+/** @category Events */
+var EVENT_ID = {
+	DOCUMENT: 1,
+	SEQUENCE: 2,
+	MAPPING: 3,
+	SCALAR: 4,
+	ALIAS: 5,
+	POP: 6
+};
+/** @category Nodes */
+var SCALAR_STYLE = {
+	PLAIN: 1,
+	SINGLE_QUOTED: 2,
+	DOUBLE_QUOTED: 3,
+	LITERAL_BLOCK: 4,
+	FOLDED_BLOCK: 5
+};
+/** @category Nodes */
+var COLLECTION_STYLE = {
+	BLOCK: 1,
+	FLOW: 2
+};
+/** @category Nodes */
+var CHOMPING_MODE = {
+	CLIP: 1,
+	STRIP: 2,
+	KEEP: 3
+};
+//#endregion
+//#region src/parser/parser_scalar.ts
+var NO_RANGE$3 = (/* unused pure expression or super */ null && (-1));
+function simpleEscapeSequence(c) {
+	switch (c) {
+		case 48: return "\0";
+		case 97: return "\x07";
+		case 98: return "\b";
+		case 116: return "	";
+		case 9: return "	";
+		case 110: return "\n";
+		case 118: return "\v";
+		case 102: return "\f";
+		case 114: return "\r";
+		case 101: return "\x1B";
+		case 32: return " ";
+		case 34: return "\"";
+		case 47: return "/";
+		case 92: return "\\";
+		case 78: return "";
+		case 95: return "\xA0";
+		case 76: return "\u2028";
+		case 80: return "\u2029";
+		default: return "";
+	}
+}
+var simpleEscapeCheck = new Array(256);
+var simpleEscapeMap = new Array(256);
+for (let i = 0; i < 256; i++) {
+	simpleEscapeCheck[i] = simpleEscapeSequence(i) ? 1 : 0;
+	simpleEscapeMap[i] = simpleEscapeSequence(i);
+}
+function charFromCodepoint(c) {
+	if (c <= 65535) return String.fromCharCode(c);
+	return String.fromCharCode((c - 65536 >> 10) + 55296, (c - 65536 & 1023) + 56320);
+}
+function fromHexCode$1(c) {
+	if (c >= 48 && c <= 57) return c - 48;
+	return (c | 32) - 97 + 10;
+}
+function escapedHexLen$1(c) {
+	if (c === 120) return 2;
+	if (c === 117) return 4;
+	return 8;
+}
+function skipFoldedBreaks(input, position, end) {
+	let breaks = 0;
+	while (position < end) {
+		const ch = input.charCodeAt(position);
+		if (ch === 10) {
+			breaks++;
+			position++;
+		} else if (ch === 13) {
+			breaks++;
+			position++;
+			if (input.charCodeAt(position) === 10) position++;
+		} else if (ch === 32 || ch === 9) position++;
+		else break;
+	}
+	return {
+		position,
+		breaks
+	};
+}
+function foldedBreaks(count) {
+	if (count === 1) return " ";
+	return "\n".repeat(count - 1);
+}
+function getPlainValue(input, start, end) {
+	let result = "";
+	let position = start;
+	let captureStart = start;
+	let captureEnd = start;
+	while (position < end) {
+		const ch = input.charCodeAt(position);
+		if (ch === 10 || ch === 13) {
+			result += input.slice(captureStart, captureEnd);
+			const fold = skipFoldedBreaks(input, position, end);
+			result += foldedBreaks(fold.breaks);
+			position = captureStart = captureEnd = fold.position;
+		} else {
+			position++;
+			if (ch !== 32 && ch !== 9) captureEnd = position;
+		}
+	}
+	return result + input.slice(captureStart, captureEnd);
+}
+function getSingleQuotedValue(input, start, end) {
+	let result = "";
+	let position = start;
+	let captureStart = start;
+	let captureEnd = start;
+	while (position < end) {
+		const ch = input.charCodeAt(position);
+		if (ch === 39) {
+			result += input.slice(captureStart, position) + "'";
+			position += 2;
+			captureStart = captureEnd = position;
+		} else if (ch === 10 || ch === 13) {
+			result += input.slice(captureStart, captureEnd);
+			const fold = skipFoldedBreaks(input, position, end);
+			result += foldedBreaks(fold.breaks);
+			position = captureStart = captureEnd = fold.position;
+		} else {
+			position++;
+			if (ch !== 32 && ch !== 9) captureEnd = position;
+		}
+	}
+	return result + input.slice(captureStart, end);
+}
+function getDoubleQuotedValue(input, start, end) {
+	let result = "";
+	let position = start;
+	let captureStart = start;
+	let captureEnd = start;
+	while (position < end) {
+		const ch = input.charCodeAt(position);
+		if (ch === 92) {
+			result += input.slice(captureStart, position);
+			position++;
+			const escaped = input.charCodeAt(position);
+			if (escaped === 10 || escaped === 13) position = skipFoldedBreaks(input, position, end).position;
+			else if (escaped < 256 && simpleEscapeCheck[escaped]) {
+				result += simpleEscapeMap[escaped];
+				position++;
+			} else {
+				let hexLength = escapedHexLen$1(escaped);
+				let hexResult = 0;
+				for (; hexLength > 0; hexLength--) {
+					position++;
+					const digit = fromHexCode$1(input.charCodeAt(position));
+					hexResult = (hexResult << 4) + digit;
+				}
+				result += charFromCodepoint(hexResult);
+				position++;
+			}
+			captureStart = captureEnd = position;
+		} else if (ch === 10 || ch === 13) {
+			result += input.slice(captureStart, captureEnd);
+			const fold = skipFoldedBreaks(input, position, end);
+			result += foldedBreaks(fold.breaks);
+			position = captureStart = captureEnd = fold.position;
+		} else {
+			position++;
+			if (ch !== 32 && ch !== 9) captureEnd = position;
+		}
+	}
+	return result + input.slice(captureStart, end);
+}
+function getBlockValue(input, start, end, indent, chomping, folded) {
+	const textIndent = indent < 0 ? 0 : indent;
+	const region = input.slice(start, end).replace(/\r\n?/g, "\n");
+	const lines = region === "" ? [] : (region.endsWith("\n") ? region.slice(0, -1) : region).split("\n");
+	let result = "";
+	let didReadContent = false;
+	let emptyLines = 0;
+	let atMoreIndented = false;
+	for (const line of lines) {
+		let column = 0;
+		while (column < textIndent && line.charCodeAt(column) === 32) column++;
+		if (indent < 0 || column >= line.length) {
+			emptyLines++;
+			continue;
+		}
+		const content = line.slice(textIndent);
+		const first = content.charCodeAt(0);
+		if (folded) {
+			if (first === 32 || first === 9) {
+				atMoreIndented = true;
+				result += "\n".repeat(didReadContent ? 1 + emptyLines : emptyLines);
+			} else if (atMoreIndented) {
+				atMoreIndented = false;
+				result += "\n".repeat(emptyLines + 1);
+			} else if (emptyLines === 0) {
+				if (didReadContent) result += " ";
+			} else result += "\n".repeat(emptyLines);
+		} else result += "\n".repeat(didReadContent ? 1 + emptyLines : emptyLines);
+		result += content;
+		didReadContent = true;
+		emptyLines = 0;
+	}
+	if (chomping === CHOMPING_MODE.KEEP) result += "\n".repeat(didReadContent ? 1 + emptyLines : emptyLines);
+	else if (chomping !== CHOMPING_MODE.STRIP) {
+		if (didReadContent) result += "\n";
+	}
+	return result;
+}
+/**
+* Decodes the scalar referenced by event offsets in `input`.
+*
+* @category Events
+*/
+function getScalarValue(input, scalar) {
+	if (scalar.valueStart === NO_RANGE$3) return "";
+	const { valueStart, valueEnd } = scalar;
+	if (scalar.fast) return input.slice(valueStart, valueEnd);
+	switch (scalar.style) {
+		case SCALAR_STYLE.SINGLE_QUOTED: return getSingleQuotedValue(input, valueStart, valueEnd);
+		case SCALAR_STYLE.DOUBLE_QUOTED: return getDoubleQuotedValue(input, valueStart, valueEnd);
+		case SCALAR_STYLE.LITERAL_BLOCK: return getBlockValue(input, valueStart, valueEnd, scalar.indent, scalar.chomping, false);
+		case SCALAR_STYLE.FOLDED_BLOCK: return getBlockValue(input, valueStart, valueEnd, scalar.indent, scalar.chomping, true);
+		default: return getPlainValue(input, valueStart, valueEnd);
+	}
+}
+//#endregion
+//#region src/common/tagname.ts
+var DEFAULT_TAG_HANDLERS = Object.assign(Object.create(null), {
+	"!": "!",
+	"!!": "tag:yaml.org,2002:"
+});
+var TAG_SUFFIX_CHARS = "-#;/?:@&=+$_.~*'()";
+var TAG_URI_CHARS = TAG_SUFFIX_CHARS + "!,[]";
+var HEX = "0123456789ABCDEF";
+function percentByte(byte) {
+	return "%" + HEX[byte >> 4] + HEX[byte & 15];
+}
+function tagPercentEncode(source, isSuffix) {
+	const allowed = isSuffix ? TAG_SUFFIX_CHARS : TAG_URI_CHARS;
+	let result = "";
+	for (let index = 0; index < source.length; index++) {
+		let ch = source.charCodeAt(index);
+		if (ch >= 48 && ch <= 57 || ch >= 65 && ch <= 90 || ch >= 97 && ch <= 122 || allowed.includes(source[index])) {
+			result += source[index];
+			continue;
+		}
+		if (ch >= 55296 && ch <= 56319) ch = 65536 + ((ch & 1023) << 10) + (source.charCodeAt(++index) & 1023);
+		if (ch < 128) result += percentByte(ch);
+		else if (ch < 2048) result += percentByte(192 | ch >> 6) + percentByte(128 | ch & 63);
+		else if (ch < 65536) result += percentByte(224 | ch >> 12) + percentByte(128 | ch >> 6 & 63) + percentByte(128 | ch & 63);
+		else result += percentByte(240 | ch >> 18) + percentByte(128 | ch >> 12 & 63) + percentByte(128 | ch >> 6 & 63) + percentByte(128 | ch & 63);
+	}
+	return result;
+}
+function tagPercentDecode(source) {
+	let result = "";
+	let index = 0;
+	while (index < source.length) {
+		if (source.charCodeAt(index) !== 37) {
+			result += source[index++];
+			continue;
+		}
+		let ch = parseInt(source.slice(index + 1, index + 3), 16);
+		index += 3;
+		if (ch >= 192) {
+			let remaining = ch < 224 ? 1 : ch < 240 ? 2 : 3;
+			ch &= (1 << 6 - remaining) - 1;
+			while (remaining-- > 0) {
+				ch = ch << 6 | parseInt(source.slice(index + 1, index + 3), 16) & 63;
+				index += 3;
+			}
+		}
+		if (ch < 65536) result += String.fromCharCode(ch);
+		else {
+			ch -= 65536;
+			result += String.fromCharCode(55296 | ch >> 10, 56320 | ch & 1023);
+		}
+	}
+	return result;
+}
+function tagNameFull(rawTag, tagHandlers) {
+	if (rawTag.startsWith("!<") && rawTag.endsWith(">")) return tagPercentDecode(rawTag.slice(2, -1));
+	const handleEnd = rawTag.indexOf("!", 1);
+	const handle = handleEnd === -1 ? "!" : rawTag.slice(0, handleEnd + 1);
+	return tagPercentDecode(tagHandlers?.[handle] ?? DEFAULT_TAG_HANDLERS[handle] ?? handle) + tagPercentDecode(rawTag.slice(handle.length));
+}
+function tagNameShort(fullTag) {
+	let tag = fullTag;
+	if (tag.charCodeAt(0) === 33) {
+		tag = tag.slice(1);
+		return `!${tagPercentEncode(tag, true)}`;
+	}
+	if (tag.slice(0, 18) === "tag:yaml.org,2002:") return `!!${tagPercentEncode(tag.slice(18), true)}`;
+	return `!<${tagPercentEncode(tag, false)}>`;
+}
+//#endregion
+//#region src/parser/constructor.ts
+var NO_RANGE$2 = (/* unused pure expression or super */ null && (-1));
+var MERGE_TAG_NAME = "tag:yaml.org,2002:merge";
+var DEFAULT_CONSTRUCTOR_OPTIONS = {
+	filename: "",
+	schema: CORE_SCHEMA,
+	json: false,
+	maxTotalMergeKeys: 1e4,
+	maxAliases: -1
+};
+function eventPosition$1(event) {
+	if ("tagStart" in event && event.tagStart !== NO_RANGE$2) return event.tagStart;
+	if ("anchorStart" in event && event.anchorStart !== NO_RANGE$2) return event.anchorStart;
+	if ("valueStart" in event && event.valueStart !== NO_RANGE$2) return event.valueStart;
+	if ("start" in event) return event.start;
+	return 0;
+}
+function throwError$1(state, message) {
+	YAMLException.throwAt(state.source, state.position, message, state.filename);
+}
+function finalizeCollection(state, position, tag, carrier) {
+	try {
+		return tag.finalize(carrier);
+	} catch (error) {
+		if (error instanceof YAMLException) throw error;
+		YAMLException.throwAt(state.source, position, error instanceof Error ? error.message : String(error), state.filename);
+	}
+}
+function constructScalar(state, event) {
+	const source = getScalarValue(state.source, event);
+	const rawTag = event.tagStart === NO_RANGE$2 ? "" : state.source.slice(event.tagStart, event.tagEnd);
+	const strTag = state.schema.defaultScalarTag;
+	if (rawTag !== "") {
+		if (rawTag === "!") return {
+			value: source,
+			tag: strTag
+		};
+		const tagName = tagNameFull(rawTag, state.tagHandlers);
+		const scalarTag = state.schema.lookupScalarTag(tagName);
+		if (scalarTag) {
+			const result = scalarTag.resolve(source, true, tagName);
+			if (result === NOT_RESOLVED) throwError$1(state, `cannot resolve a node with !<${tagName}> explicit tag`);
+			return {
+				value: result,
+				tag: scalarTag
+			};
+		}
+		const collectionTagDef = state.schema.lookupMappingTag(tagName) ?? state.schema.lookupSequenceTag(tagName);
+		if (collectionTagDef) {
+			if (source !== "") throwError$1(state, `cannot resolve a node with !<${tagName}> explicit tag`);
+			const carrier = collectionTagDef.create(tagName);
+			return {
+				value: collectionTagDef.carrierIsResult ? carrier : finalizeCollection(state, state.position, collectionTagDef, carrier),
+				tag: collectionTagDef
+			};
+		}
+		throwError$1(state, `unknown scalar tag !<${tagName}>`);
+	}
+	if (event.style === SCALAR_STYLE.PLAIN) return state.schema.resolveImplicitScalarTag(source);
+	return {
+		value: strTag.resolve(source, false, strTag.tagName),
+		tag: strTag
+	};
+}
+function collectionTagName(state, event, defaultTagName) {
+	const rawTag = event.tagStart === NO_RANGE$2 ? "" : state.source.slice(event.tagStart, event.tagEnd);
+	return rawTag === "" || rawTag === "!" ? defaultTagName : tagNameFull(rawTag, state.tagHandlers);
+}
+function isMappingTag(tag) {
+	return tag.nodeKind === "mapping";
+}
+function chargeMergeWork(state) {
+	state.totalMergeKeys++;
+	if (state.maxTotalMergeKeys !== -1 && state.totalMergeKeys > state.maxTotalMergeKeys) throwError$1(state, `merge keys exceeded maxTotalMergeKeys (${state.maxTotalMergeKeys})`);
+}
+function mergeKeys(state, frame, source, sourceTag) {
+	chargeMergeWork(state);
+	for (const sourceKey of sourceTag.keys(source)) {
+		chargeMergeWork(state);
+		if (frame.tag.has(frame.value, sourceKey)) continue;
+		const err = frame.tag.addPair(frame.value, sourceKey, sourceTag.get(source, sourceKey));
+		if (err) throwError$1(state, err);
+		frame.overridable ??= /* @__PURE__ */ new Set();
+		frame.overridable.add(sourceKey);
+	}
+}
+function mergeSource(state, frame, source, sourceTag) {
+	state.position = frame.keyPosition;
+	if (isMappingTag(sourceTag)) mergeKeys(state, frame, source, sourceTag);
+	else if (sourceTag.nodeKind === "sequence" && Array.isArray(source)) {
+		if (source.length > 100) throwError$1(state, "abnormal merge sequence size");
+		for (const element of source) {
+			const elementTag = state.nodeTags.get(element);
+			if (!elementTag) throwError$1(state, "cannot merge mappings; the provided source object is unacceptable");
+			mergeKeys(state, frame, element, elementTag);
+		}
+	} else throwError$1(state, "cannot merge mappings; the provided source object is unacceptable");
+}
+function addMappingValue(state, frame, key, value, tag) {
+	state.position = frame.keyPosition;
+	if (frame.keyIsMerge) {
+		mergeSource(state, frame, value, tag);
+		return;
+	}
+	if (!state.json && frame.tag.has(frame.value, key) && !frame.overridable?.has(key)) throwError$1(state, "duplicated mapping key");
+	const err = frame.tag.addPair(frame.value, key, value);
+	if (err) throwError$1(state, err);
+	frame.overridable?.delete(key);
+}
+function addValue(state, value, tag) {
+	const frame = state.frames[state.frames.length - 1];
+	if (frame.kind === "document") {
+		frame.value = value;
+		frame.hasValue = true;
+	} else if (frame.kind === "sequence") {
+		if (isMappingTag(tag)) state.nodeTags.set(value, tag);
+		const err = frame.tag.addItem(frame.value, value, frame.index++);
+		if (err) throwError$1(state, err);
+	} else if (frame.hasKey) {
+		const key = frame.key;
+		frame.key = void 0;
+		frame.hasKey = false;
+		addMappingValue(state, frame, key, value, tag);
+	} else {
+		frame.key = value;
+		frame.keyPosition = state.position;
+		frame.hasKey = true;
+		frame.keyIsMerge = tag.tagName === MERGE_TAG_NAME;
+	}
+}
+function storeAnchor(state, event, value, tag, isValueFinal) {
+	if (event.anchorStart !== NO_RANGE$2) {
+		const anchor = {
+			value,
+			tag,
+			isValueFinal
+		};
+		state.anchors.set(state.source.slice(event.anchorStart, event.anchorEnd), anchor);
+		return anchor;
+	}
+	return null;
+}
+/**
+* Constructs JavaScript documents directly from parser events, without an
+* intermediate AST.
+*
+* @category Events
+*/
+function constructFromEvents(events, options) {
+	const state = {
+		...DEFAULT_CONSTRUCTOR_OPTIONS,
+		...options,
+		events,
+		documents: [],
+		eventIndex: 0,
+		position: 0,
+		frames: [],
+		anchors: /* @__PURE__ */ new Map(),
+		nodeTags: /* @__PURE__ */ new Map(),
+		tagHandlers: Object.create(null),
+		totalMergeKeys: 0,
+		aliasCount: 0
+	};
+	while (state.eventIndex < state.events.length) {
+		const event = state.events[state.eventIndex++];
+		state.position = eventPosition$1(event);
+		switch (event.type) {
+			case EVENT_ID.DOCUMENT:
+				state.anchors = /* @__PURE__ */ new Map();
+				state.nodeTags = /* @__PURE__ */ new Map();
+				state.aliasCount = 0;
+				state.tagHandlers = Object.create(null);
+				for (const directive of event.directives) if (directive.kind === "tag") state.tagHandlers[directive.handle] = directive.prefix;
+				state.frames.push({
+					kind: "document",
+					position: state.position,
+					value: void 0,
+					hasValue: false
+				});
+				break;
+			case EVENT_ID.SCALAR: {
+				const { value, tag } = constructScalar(state, event);
+				storeAnchor(state, event, value, tag, true);
+				addValue(state, value, tag);
+				break;
+			}
+			case EVENT_ID.SEQUENCE: {
+				const tagName = collectionTagName(state, event, "tag:yaml.org,2002:seq");
+				const tag = state.schema.lookupSequenceTag(tagName);
+				if (!tag) throwError$1(state, `unknown sequence tag !<${tagName}>`);
+				const value = tag.create(tagName);
+				const anchor = storeAnchor(state, event, value, tag, tag.carrierIsResult);
+				state.frames.push({
+					kind: "sequence",
+					position: state.position,
+					value,
+					tag,
+					anchor,
+					index: 0
+				});
+				break;
+			}
+			case EVENT_ID.MAPPING: {
+				const tagName = collectionTagName(state, event, "tag:yaml.org,2002:map");
+				const tag = state.schema.lookupMappingTag(tagName);
+				if (!tag) throwError$1(state, `unknown mapping tag !<${tagName}>`);
+				const value = tag.create(tagName);
+				const anchor = storeAnchor(state, event, value, tag, tag.carrierIsResult);
+				state.frames.push({
+					kind: "mapping",
+					position: state.position,
+					value,
+					tag,
+					anchor,
+					key: void 0,
+					keyPosition: state.position,
+					hasKey: false,
+					keyIsMerge: false,
+					overridable: null
+				});
+				break;
+			}
+			case EVENT_ID.ALIAS: {
+				if (state.maxAliases !== -1 && ++state.aliasCount > state.maxAliases) throwError$1(state, `aliases exceeded maxAliases (${state.maxAliases})`);
+				const name = state.source.slice(event.anchorStart, event.anchorEnd);
+				const anchor = state.anchors.get(name);
+				if (!anchor) throwError$1(state, `unidentified alias "${name}"`);
+				if (!anchor.isValueFinal) throwError$1(state, `recursive alias "${name}" is not supported for tag ${anchor.tag.tagName} because it uses finalize()`);
+				addValue(state, anchor.value, anchor.tag);
+				break;
+			}
+			case EVENT_ID.POP: {
+				const frame = state.frames.pop();
+				if (frame.kind === "mapping" && frame.hasKey) {
+					state.position = frame.keyPosition;
+					throwError$1(state, "incomplete mapping pair in event stream");
+				}
+				if (frame.kind === "document") state.documents.push(frame.value);
+				else {
+					const value = frame.tag.carrierIsResult ? frame.value : finalizeCollection(state, frame.position, frame.tag, frame.value);
+					if (frame.anchor) {
+						frame.anchor.value = value;
+						frame.anchor.isValueFinal = true;
+					}
+					addValue(state, value, frame.tag);
+				}
+				break;
+			}
+		}
+	}
+	return state.documents;
+}
+//#endregion
+//#region src/parser/parser.ts
+var NO_RANGE$1 = (/* unused pure expression or super */ null && (-1));
+var HAS_OWN = Object.prototype.hasOwnProperty;
+var CONTEXT_FLOW_IN = 1;
+var CONTEXT_FLOW_OUT = 2;
+var CONTEXT_BLOCK_IN = 3;
+var CONTEXT_BLOCK_OUT = 4;
+var PATTERN_NON_PRINTABLE = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/;
+var PATTERN_FLOW_INDICATORS = /[,\[\]{}]/;
+var PATTERN_TAG_HANDLE = /^(?:!|!!|![0-9A-Za-z-]+!)$/;
+var NS_URI_CHAR = String.raw`(?:%[0-9A-Fa-f]{2}|[0-9A-Za-z\-#;/?:@&=+$,_.!~*'()\[\]])`;
+var NS_TAG_CHAR = String.raw`(?:%[0-9A-Fa-f]{2}|[0-9A-Za-z\-#;/?:@&=+$.~*'()_])`;
+var PATTERN_TAG_URI = new RegExp(`^(?:${NS_URI_CHAR})*$`);
+var PATTERN_TAG_SUFFIX = new RegExp(`^(?:${NS_TAG_CHAR})+$`);
+var PATTERN_TAG_PREFIX = new RegExp(`^(?:!(?:${NS_URI_CHAR})*|${NS_TAG_CHAR}(?:${NS_URI_CHAR})*)$`);
+var DEFAULT_PARSER_OPTIONS = {
+	filename: "",
+	maxDepth: 100
+};
+function addDocumentEvent(state, explicitStart, explicitEnd) {
+	state.events.push({
+		type: EVENT_ID.DOCUMENT,
+		explicitStart,
+		explicitEnd,
+		directives: state.directives
+	});
+}
+function addSequenceEvent(state, start, anchorStart, anchorEnd, tagStart, tagEnd, style) {
+	state.events.push({
+		type: EVENT_ID.SEQUENCE,
+		start,
+		anchorStart,
+		anchorEnd,
+		tagStart,
+		tagEnd,
+		style
+	});
+}
+function addMappingEvent(state, start, anchorStart, anchorEnd, tagStart, tagEnd, style) {
+	state.events.push({
+		type: EVENT_ID.MAPPING,
+		start,
+		anchorStart,
+		anchorEnd,
+		tagStart,
+		tagEnd,
+		style
+	});
+}
+function insertFlowPairMappingEvent(state, snapshot) {
+	state.events.splice(snapshot.eventsLength, 0, {
+		type: EVENT_ID.MAPPING,
+		start: snapshot.position,
+		anchorStart: NO_RANGE$1,
+		anchorEnd: NO_RANGE$1,
+		tagStart: NO_RANGE$1,
+		tagEnd: NO_RANGE$1,
+		style: COLLECTION_STYLE.FLOW
+	});
+}
+function addScalarEvent(state, valueStart, valueEnd, anchorStart, anchorEnd, tagStart, tagEnd, style, chomping = CHOMPING_MODE.CLIP, indent = -1, fast = false) {
+	state.events.push({
+		type: EVENT_ID.SCALAR,
+		valueStart,
+		valueEnd,
+		anchorStart,
+		anchorEnd,
+		tagStart,
+		tagEnd,
+		style,
+		chomping,
+		indent,
+		fast
+	});
+}
+function addAliasEvent(state, anchorStart, anchorEnd) {
+	state.events.push({
+		type: EVENT_ID.ALIAS,
+		anchorStart,
+		anchorEnd
+	});
+}
+function addPopEvent(state) {
+	state.events.push({ type: EVENT_ID.POP });
+}
+function addEmptyScalarEvent(state) {
+	addScalarEvent(state, NO_RANGE$1, NO_RANGE$1, NO_RANGE$1, NO_RANGE$1, NO_RANGE$1, NO_RANGE$1, SCALAR_STYLE.PLAIN);
+}
+function emptyProperties() {
+	return {
+		anchorStart: NO_RANGE$1,
+		anchorEnd: NO_RANGE$1,
+		tagStart: NO_RANGE$1,
+		tagEnd: NO_RANGE$1
+	};
+}
+function snapshotState(state) {
+	return {
+		position: state.position,
+		line: state.line,
+		lineStart: state.lineStart,
+		lineIndent: state.lineIndent,
+		firstTabInLine: state.firstTabInLine,
+		eventsLength: state.events.length
+	};
+}
+function restoreState(state, snapshot) {
+	state.position = snapshot.position;
+	state.line = snapshot.line;
+	state.lineStart = snapshot.lineStart;
+	state.lineIndent = snapshot.lineIndent;
+	state.firstTabInLine = snapshot.firstTabInLine;
+	state.events.length = snapshot.eventsLength;
+}
+function throwError(state, message) {
+	YAMLException.throwAt(state.input.slice(0, state.length), state.position, message, state.filename);
+}
+function isEol(c) {
+	return c === 10 || c === 13;
+}
+function isWhiteSpace(c) {
+	return c === 9 || c === 32;
+}
+function isWsOrEol(c) {
+	return isWhiteSpace(c) || isEol(c);
+}
+function isWsOrEolOrEnd(c) {
+	return c === 0 || isWsOrEol(c);
+}
+function isFlowIndicator(c) {
+	return c === 44 || c === 91 || c === 93 || c === 123 || c === 125;
+}
+function fromDecimalCode(c) {
+	return c >= 48 && c <= 57 ? c - 48 : -1;
+}
+function fromHexCode(c) {
+	if (c >= 48 && c <= 57) return c - 48;
+	const lc = c | 32;
+	if (lc >= 97 && lc <= 102) return lc - 97 + 10;
+	return -1;
+}
+function escapedHexLen(c) {
+	if (c === 120) return 2;
+	if (c === 117) return 4;
+	if (c === 85) return 8;
+	return 0;
+}
+function isSimpleEscape(c) {
+	return c === 48 || c === 97 || c === 98 || c === 116 || c === 9 || c === 110 || c === 118 || c === 102 || c === 114 || c === 101 || c === 32 || c === 34 || c === 47 || c === 92 || c === 78 || c === 95 || c === 76 || c === 80;
+}
+function consumeLineBreak(state) {
+	if (state.input.charCodeAt(state.position) === 10) state.position++;
+	else {
+		state.position++;
+		if (state.input.charCodeAt(state.position) === 10) state.position++;
+	}
+	state.line++;
+	state.lineStart = state.position;
+	state.lineIndent = 0;
+	state.firstTabInLine = -1;
+}
+function skipSeparationSpace(state, allowComments) {
+	let lineBreaks = 0;
+	let ch = state.input.charCodeAt(state.position);
+	let hasSeparation = state.position === state.lineStart || isWsOrEol(state.input.charCodeAt(state.position - 1));
+	while (ch !== 0) {
+		while (isWhiteSpace(ch)) {
+			hasSeparation = true;
+			if (ch === 9 && state.firstTabInLine === -1) state.firstTabInLine = state.position;
+			ch = state.input.charCodeAt(++state.position);
+		}
+		if (allowComments && hasSeparation && ch === 35) do
+			ch = state.input.charCodeAt(++state.position);
+		while (!isEol(ch) && ch !== 0);
+		if (!isEol(ch)) break;
+		consumeLineBreak(state);
+		lineBreaks++;
+		hasSeparation = true;
+		ch = state.input.charCodeAt(state.position);
+		while (ch === 32) {
+			state.lineIndent++;
+			ch = state.input.charCodeAt(++state.position);
+		}
+	}
+	return lineBreaks;
+}
+function testDocumentSeparator(state, position = state.position) {
+	const ch = state.input.charCodeAt(position);
+	if ((ch === 45 || ch === 46) && ch === state.input.charCodeAt(position + 1) && ch === state.input.charCodeAt(position + 2)) {
+		const following = state.input.charCodeAt(position + 3);
+		return following === 0 || isWsOrEol(following);
+	}
+	return false;
+}
+function skipByteOrderMark(state) {
+	if (state.position === state.lineStart && state.input.charCodeAt(state.position) === 65279) {
+		state.position++;
+		state.lineStart = state.position;
+	}
+}
+function testDocumentBoundary(state) {
+	if (state.position !== state.lineStart) return false;
+	if (testDocumentSeparator(state)) return true;
+	if (state.input.charCodeAt(state.position) !== 65279) return false;
+	const snapshot = snapshotState(state);
+	skipByteOrderMark(state);
+	skipSeparationSpace(state, true);
+	const ch = state.input.charCodeAt(state.position);
+	const result = state.position === state.lineStart && (ch === 37 || ch === 45 && testDocumentSeparator(state));
+	restoreState(state, snapshot);
+	return result;
+}
+function skipUntilLineEnd(state) {
+	let ch = state.input.charCodeAt(state.position);
+	while (ch !== 0 && !isEol(ch)) ch = state.input.charCodeAt(++state.position);
+}
+function checkPrintable(state, start, end) {
+	const match = PATTERN_NON_PRINTABLE.exec(state.input.slice(start, end));
+	if (match !== null) {
+		state.position = start + match.index + match[0].length - 1;
+		throwError(state, "the stream contains non-printable characters");
+	}
+}
+function readTagProperty(state, props, inFlow) {
+	if (state.input.charCodeAt(state.position) !== 33) return false;
+	if (props.tagStart !== NO_RANGE$1) throwError(state, "duplication of a tag property");
+	const start = state.position;
+	let isVerbatim = false;
+	let isNamed = false;
+	let tagHandle = "!";
+	let ch = state.input.charCodeAt(++state.position);
+	if (ch === 60) {
+		isVerbatim = true;
+		ch = state.input.charCodeAt(++state.position);
+	} else if (ch === 33) {
+		isNamed = true;
+		tagHandle = "!!";
+		ch = state.input.charCodeAt(++state.position);
+	}
+	let suffixStart = state.position;
+	let tagName;
+	if (isVerbatim) {
+		while (ch !== 0 && ch !== 62) ch = state.input.charCodeAt(++state.position);
+		if (ch !== 62) throwError(state, "unexpected end of the stream within a verbatim tag");
+		tagName = state.input.slice(suffixStart, state.position);
+		state.position++;
+	} else {
+		while (ch !== 0 && !isWsOrEol(ch) && !(inFlow && isFlowIndicator(ch))) {
+			if (ch === 33) {
+				if (!isNamed) {
+					tagHandle = state.input.slice(suffixStart - 1, state.position + 1);
+					if (!PATTERN_TAG_HANDLE.test(tagHandle)) throwError(state, "named tag handle cannot contain such characters");
+					isNamed = true;
+					suffixStart = state.position + 1;
+				} else throwError(state, "tag suffix cannot contain exclamation marks");
+			}
+			ch = state.input.charCodeAt(++state.position);
+		}
+		tagName = state.input.slice(suffixStart, state.position);
+		if (PATTERN_FLOW_INDICATORS.test(tagName)) throwError(state, "tag suffix cannot contain flow indicator characters");
+	}
+	if (tagName && !(isVerbatim ? PATTERN_TAG_URI.test(tagName) : PATTERN_TAG_SUFFIX.test(tagName))) throwError(state, `tag name cannot contain such characters: ${tagName}`);
+	if (!isVerbatim && tagHandle !== "!" && tagHandle !== "!!" && !HAS_OWN.call(state.tagHandlers, tagHandle)) throwError(state, `undeclared tag handle "${tagHandle}"`);
+	props.tagStart = start;
+	props.tagEnd = state.position;
+	return true;
+}
+function readAnchorProperty(state, props) {
+	if (state.input.charCodeAt(state.position) !== 38) return false;
+	if (props.anchorStart !== NO_RANGE$1) throwError(state, "duplication of an anchor property");
+	state.position++;
+	const start = state.position;
+	while (state.input.charCodeAt(state.position) !== 0 && !isWsOrEol(state.input.charCodeAt(state.position)) && !isFlowIndicator(state.input.charCodeAt(state.position))) state.position++;
+	if (state.position === start) throwError(state, "name of an anchor node must contain at least one character");
+	props.anchorStart = start;
+	props.anchorEnd = state.position;
+	return true;
+}
+function readAlias(state, props) {
+	if (state.input.charCodeAt(state.position) !== 42) return false;
+	if (props.anchorStart !== NO_RANGE$1 || props.tagStart !== NO_RANGE$1) throwError(state, "alias node should not have any properties");
+	state.position++;
+	const start = state.position;
+	while (state.input.charCodeAt(state.position) !== 0 && !isWsOrEol(state.input.charCodeAt(state.position)) && !isFlowIndicator(state.input.charCodeAt(state.position))) state.position++;
+	if (state.position === start) throwError(state, "name of an alias node must contain at least one character");
+	addAliasEvent(state, start, state.position);
+	return true;
+}
+function readFlowScalarBreak(state, nodeIndent) {
+	skipSeparationSpace(state, false);
+	if (state.lineIndent < nodeIndent) throwError(state, "deficient indentation");
+}
+function readSingleQuotedScalar(state, nodeIndent, props) {
+	if (state.input.charCodeAt(state.position) !== 39) return false;
+	state.position++;
+	const start = state.position;
+	let simple = true;
+	while (state.input.charCodeAt(state.position) !== 0) {
+		const ch = state.input.charCodeAt(state.position);
+		if (ch === 39) {
+			if (state.input.charCodeAt(state.position + 1) === 39) {
+				simple = false;
+				state.position += 2;
+				continue;
+			}
+			const end = state.position;
+			state.position++;
+			addScalarEvent(state, start, end, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, SCALAR_STYLE.SINGLE_QUOTED, CHOMPING_MODE.CLIP, -1, simple);
+			return true;
+		}
+		if (isEol(ch)) {
+			simple = false;
+			readFlowScalarBreak(state, nodeIndent);
+		} else if (state.position === state.lineStart && testDocumentSeparator(state)) throwError(state, "unexpected end of the document within a single quoted scalar");
+		else if (ch !== 9 && ch < 32) throwError(state, "expected valid JSON character");
+		else state.position++;
+	}
+	throwError(state, "unexpected end of the stream within a single quoted scalar");
+}
+function readDoubleQuotedScalar(state, nodeIndent, props) {
+	if (state.input.charCodeAt(state.position) !== 34) return false;
+	state.position++;
+	const start = state.position;
+	let simple = true;
+	while (state.input.charCodeAt(state.position) !== 0) {
+		const ch = state.input.charCodeAt(state.position);
+		if (ch === 34) {
+			const end = state.position;
+			state.position++;
+			addScalarEvent(state, start, end, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, SCALAR_STYLE.DOUBLE_QUOTED, CHOMPING_MODE.CLIP, -1, simple);
+			return true;
+		}
+		if (ch === 92) {
+			simple = false;
+			const escaped = state.input.charCodeAt(++state.position);
+			if (isEol(escaped)) readFlowScalarBreak(state, nodeIndent);
+			else if (isSimpleEscape(escaped)) state.position++;
+			else {
+				let hexLength = escapedHexLen(escaped);
+				if (hexLength === 0) throwError(state, "unknown escape sequence");
+				while (hexLength-- > 0) {
+					state.position++;
+					if (fromHexCode(state.input.charCodeAt(state.position)) < 0) throwError(state, "expected hexadecimal character");
+				}
+				state.position++;
+			}
+		} else if (isEol(ch)) {
+			simple = false;
+			readFlowScalarBreak(state, nodeIndent);
+		} else if (state.position === state.lineStart && testDocumentSeparator(state)) throwError(state, "unexpected end of the document within a double quoted scalar");
+		else if (ch !== 9 && ch < 32) throwError(state, "expected valid JSON character");
+		else state.position++;
+	}
+	throwError(state, "unexpected end of the stream within a double quoted scalar");
+}
+function readBlockScalar(state, parentIndent, props) {
+	const ch = state.input.charCodeAt(state.position);
+	let chomping = CHOMPING_MODE.CLIP;
+	let indent = -1;
+	let detectedIndent = false;
+	if (ch !== 124 && ch !== 62) return false;
+	const style = ch === 124 ? SCALAR_STYLE.LITERAL_BLOCK : SCALAR_STYLE.FOLDED_BLOCK;
+	state.position++;
+	while (state.input.charCodeAt(state.position) !== 0) {
+		const current = state.input.charCodeAt(state.position);
+		const digit = fromDecimalCode(current);
+		if (current === 43 || current === 45) {
+			if (chomping !== CHOMPING_MODE.CLIP) throwError(state, "repeat of a chomping mode identifier");
+			chomping = current === 43 ? CHOMPING_MODE.KEEP : CHOMPING_MODE.STRIP;
+			state.position++;
+		} else if (digit >= 0) {
+			if (digit === 0) throwError(state, "bad explicit indentation width of a block scalar; it cannot be less than one");
+			if (detectedIndent) throwError(state, "repeat of an indentation width identifier");
+			indent = parentIndent + digit - 1;
+			detectedIndent = true;
+			state.position++;
+		} else break;
+	}
+	let hadWhitespace = false;
+	while (isWhiteSpace(state.input.charCodeAt(state.position))) {
+		hadWhitespace = true;
+		state.position++;
+	}
+	if (hadWhitespace && state.input.charCodeAt(state.position) === 35) skipUntilLineEnd(state);
+	if (isEol(state.input.charCodeAt(state.position))) consumeLineBreak(state);
+	else if (state.input.charCodeAt(state.position) !== 0) throwError(state, "a line break is expected");
+	let contentIndent = detectedIndent ? indent : -1;
+	let maxLeadingIndent = 0;
+	const valueStart = state.position;
+	let valueEnd = state.position;
+	while (state.input.charCodeAt(state.position) !== 0) {
+		const linePosition = state.position;
+		let column = 0;
+		while (state.input.charCodeAt(linePosition + column) === 32) column++;
+		const first = state.input.charCodeAt(linePosition + column);
+		if (first === 0) {
+			if (contentIndent >= 0) {
+				if (column > contentIndent) valueEnd = linePosition + column;
+			} else if (column > 0) valueEnd = linePosition + column;
+			break;
+		}
+		if (testDocumentBoundary(state)) break;
+		if (!detectedIndent && contentIndent === -1 && isEol(first)) maxLeadingIndent = Math.max(maxLeadingIndent, column);
+		if (!detectedIndent && contentIndent === -1 && !isEol(first)) {
+			if (first === 9 && column < parentIndent) {
+				state.position = linePosition + column;
+				throwError(state, "tab characters must not be used in indentation");
+			}
+			if (column >= parentIndent && column < maxLeadingIndent) {
+				state.position = linePosition + column;
+				throwError(state, "bad indentation of a mapping entry");
+			}
+		}
+		if (contentIndent === -1 && first !== 0 && !isEol(first) && column < parentIndent) {
+			state.lineIndent = column;
+			state.position = linePosition + column;
+			break;
+		}
+		if (!detectedIndent && first !== 0 && !isEol(first) && contentIndent === -1) contentIndent = column;
+		const requiredIndent = contentIndent === -1 ? parentIndent + 1 : contentIndent;
+		if (first !== 0 && !isEol(first) && column < requiredIndent) {
+			state.lineIndent = column;
+			state.position = linePosition + column;
+			break;
+		}
+		skipUntilLineEnd(state);
+		valueEnd = state.position;
+		if (isEol(state.input.charCodeAt(state.position))) {
+			consumeLineBreak(state);
+			valueEnd = state.position;
+		}
+	}
+	checkPrintable(state, valueStart, valueEnd);
+	addScalarEvent(state, valueStart, valueEnd, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, style, chomping, contentIndent);
+	return true;
+}
+function canStartPlainScalar(state, nodeContext) {
+	const ch = state.input.charCodeAt(state.position);
+	const inFlow = nodeContext === CONTEXT_FLOW_IN;
+	if (ch === 0 || isWsOrEol(ch) || ch === 35 || ch === 38 || ch === 42 || ch === 33 || ch === 124 || ch === 62 || ch === 39 || ch === 34 || ch === 37 || ch === 64 || ch === 96 || isFlowIndicator(ch)) return false;
+	if (ch === 63 || ch === 45) {
+		const following = state.input.charCodeAt(state.position + 1);
+		if (isWsOrEolOrEnd(following) || inFlow && isFlowIndicator(following)) return false;
+	}
+	return true;
+}
+function readPlainScalar(state, nodeIndent, nodeContext, props) {
+	if (!canStartPlainScalar(state, nodeContext)) return false;
+	const start = state.position;
+	let end = state.position;
+	let ch = state.input.charCodeAt(state.position);
+	const inFlow = nodeContext === CONTEXT_FLOW_IN;
+	let multiline = false;
+	while (ch !== 0) {
+		if (testDocumentBoundary(state)) break;
+		if (ch === 58) {
+			const following = state.input.charCodeAt(state.position + 1);
+			if (isWsOrEolOrEnd(following) || inFlow && isFlowIndicator(following)) break;
+		} else if (ch === 35) {
+			if (isWsOrEol(state.input.charCodeAt(state.position - 1))) break;
+		} else if (inFlow && isFlowIndicator(ch)) break;
+		else if (isEol(ch)) {
+			const savedPosition = state.position;
+			const savedLine = state.line;
+			const savedLineStart = state.lineStart;
+			const savedLineIndent = state.lineIndent;
+			skipSeparationSpace(state, false);
+			if (state.lineIndent >= nodeIndent) {
+				multiline = true;
+				ch = state.input.charCodeAt(state.position);
+				continue;
+			}
+			state.position = savedPosition;
+			state.line = savedLine;
+			state.lineStart = savedLineStart;
+			state.lineIndent = savedLineIndent;
+			break;
+		}
+		if (!isWhiteSpace(ch)) end = state.position + 1;
+		ch = state.input.charCodeAt(++state.position);
+	}
+	if (end === start) return false;
+	checkPrintable(state, start, end);
+	addScalarEvent(state, start, end, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, SCALAR_STYLE.PLAIN, CHOMPING_MODE.CLIP, -1, !multiline);
+	return true;
+}
+function skipFlowSeparationSpace(state, nodeIndent) {
+	const startLine = state.line;
+	skipSeparationSpace(state, true);
+	if (state.line > startLine && state.lineIndent < nodeIndent || state.firstTabInLine !== -1 && state.lineIndent < nodeIndent) throwError(state, "deficient indentation");
+}
+function readFlowCollection(state, nodeIndent, props) {
+	const ch = state.input.charCodeAt(state.position);
+	const isMapping = ch === 123;
+	const start = state.position;
+	let readNext = true;
+	if (ch !== 91 && ch !== 123) return false;
+	const terminator = isMapping ? 125 : 93;
+	if (isMapping) addMappingEvent(state, start, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, COLLECTION_STYLE.FLOW);
+	else addSequenceEvent(state, start, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, COLLECTION_STYLE.FLOW);
+	state.position++;
+	while (state.input.charCodeAt(state.position) !== 0) {
+		skipFlowSeparationSpace(state, nodeIndent);
+		let ch = state.input.charCodeAt(state.position);
+		if (ch === terminator) {
+			state.position++;
+			addPopEvent(state);
+			return true;
+		} else if (!readNext) throwError(state, "missed comma between flow collection entries");
+		else if (ch === 44) throwError(state, "expected the node content, but found ','");
+		let isPair = false;
+		let isExplicitPair = false;
+		if (ch === 63 && isWsOrEol(state.input.charCodeAt(state.position + 1))) {
+			isPair = isExplicitPair = true;
+			state.position += 1;
+			skipFlowSeparationSpace(state, nodeIndent);
+		}
+		const entryLine = state.line;
+		const entryStart = snapshotState(state);
+		const keyWasRead = parseNode(state, nodeIndent, CONTEXT_FLOW_IN, false, true);
+		skipFlowSeparationSpace(state, nodeIndent);
+		ch = state.input.charCodeAt(state.position);
+		if ((isMapping || isExplicitPair || state.line === entryLine) && ch === 58) {
+			isPair = true;
+			state.position++;
+			skipFlowSeparationSpace(state, nodeIndent);
+			if (!isMapping) {
+				insertFlowPairMappingEvent(state, entryStart);
+				if (!keyWasRead) addEmptyScalarEvent(state);
+			} else if (!keyWasRead) addEmptyScalarEvent(state);
+			if (!parseNode(state, nodeIndent, CONTEXT_FLOW_IN, false, true)) addEmptyScalarEvent(state);
+			skipFlowSeparationSpace(state, nodeIndent);
+			if (!isMapping) addPopEvent(state);
+		} else if (isMapping && isPair) {
+			if (!keyWasRead) addEmptyScalarEvent(state);
+			addEmptyScalarEvent(state);
+		} else if (isMapping) addEmptyScalarEvent(state);
+		else if (isPair) {
+			insertFlowPairMappingEvent(state, entryStart);
+			if (!keyWasRead) addEmptyScalarEvent(state);
+			addEmptyScalarEvent(state);
+			addPopEvent(state);
+		}
+		ch = state.input.charCodeAt(state.position);
+		if (ch === 44) {
+			readNext = true;
+			state.position++;
+		} else readNext = false;
+	}
+	throwError(state, "unexpected end of the stream within a flow collection");
+}
+function readBlockSequence(state, nodeIndent, props) {
+	if (state.firstTabInLine !== -1 || state.input.charCodeAt(state.position) !== 45 || !isWsOrEolOrEnd(state.input.charCodeAt(state.position + 1))) return false;
+	addSequenceEvent(state, state.position, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, COLLECTION_STYLE.BLOCK);
+	while (state.input.charCodeAt(state.position) === 45 && isWsOrEolOrEnd(state.input.charCodeAt(state.position + 1))) {
+		if (state.firstTabInLine !== -1) {
+			state.position = state.firstTabInLine;
+			throwError(state, "tab characters must not be used in indentation");
+		}
+		const entryLine = state.line;
+		state.position++;
+		const hadBreak = skipSeparationSpace(state, true) > 0;
+		if (state.firstTabInLine !== -1 && state.input.charCodeAt(state.position) === 45 && isWsOrEolOrEnd(state.input.charCodeAt(state.position + 1))) throwError(state, "bad indentation of a sequence entry");
+		if (hadBreak && state.lineIndent <= nodeIndent) addEmptyScalarEvent(state);
+		else parseNode(state, nodeIndent, CONTEXT_BLOCK_IN, false, true);
+		skipSeparationSpace(state, true);
+		if (state.lineIndent < nodeIndent || state.position >= state.length) break;
+		if (state.lineIndent > nodeIndent) throwError(state, "bad indentation of a sequence entry");
+		if (state.line === entryLine && state.input.charCodeAt(state.position) === 45 && isWsOrEolOrEnd(state.input.charCodeAt(state.position + 1))) throwError(state, "bad indentation of a sequence entry");
+	}
+	addPopEvent(state);
+	return true;
+}
+function readBlockMapping(state, nodeIndent, flowIndent, props) {
+	let atExplicitKey = false;
+	let detected = false;
+	let mappingOpened = false;
+	let pendingExplicitKey = false;
+	if (state.firstTabInLine !== -1) return false;
+	let ch = state.input.charCodeAt(state.position);
+	while (ch !== 0) {
+		if (!atExplicitKey && state.firstTabInLine !== -1) {
+			state.position = state.firstTabInLine;
+			throwError(state, "tab characters must not be used in indentation");
+		}
+		const following = state.input.charCodeAt(state.position + 1);
+		const entryLine = state.line;
+		if ((ch === 63 || ch === 58) && isWsOrEolOrEnd(following)) {
+			if (!mappingOpened) {
+				addMappingEvent(state, state.position, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, COLLECTION_STYLE.BLOCK);
+				mappingOpened = true;
+			}
+			if (ch === 63) {
+				if (atExplicitKey) addEmptyScalarEvent(state);
+				detected = true;
+				atExplicitKey = true;
+			} else if (atExplicitKey) atExplicitKey = false;
+			else {
+				addEmptyScalarEvent(state);
+				detected = true;
+				atExplicitKey = false;
+			}
+			state.position += 1;
+			pendingExplicitKey = true;
+		} else {
+			if (atExplicitKey) {
+				addEmptyScalarEvent(state);
+				atExplicitKey = false;
+			}
+			const beforeKey = snapshotState(state);
+			if (!parseNode(state, flowIndent, CONTEXT_FLOW_OUT, false, true)) break;
+			if (state.line === entryLine) {
+				ch = state.input.charCodeAt(state.position);
+				while (isWhiteSpace(ch)) ch = state.input.charCodeAt(++state.position);
+				if (ch === 58) {
+					ch = state.input.charCodeAt(++state.position);
+					if (!isWsOrEolOrEnd(ch)) throwError(state, "a whitespace character is expected after the key-value separator within a block mapping");
+					if (!mappingOpened) {
+						state.events.splice(beforeKey.eventsLength, 0, {
+							type: EVENT_ID.MAPPING,
+							start: beforeKey.position,
+							anchorStart: props.anchorStart,
+							anchorEnd: props.anchorEnd,
+							tagStart: props.tagStart,
+							tagEnd: props.tagEnd,
+							style: COLLECTION_STYLE.BLOCK
+						});
+						mappingOpened = true;
+					}
+					detected = true;
+					atExplicitKey = false;
+					pendingExplicitKey = false;
+				} else if (detected) throwError(state, "expected ':' after a mapping key");
+				else {
+					if (props.anchorStart !== NO_RANGE$1 || props.tagStart !== NO_RANGE$1) {
+						restoreState(state, beforeKey);
+						return false;
+					}
+					return true;
+				}
+			} else if (detected) throwError(state, "can not read a block mapping entry; a multiline key may not be an implicit key");
+			else {
+				if (props.anchorStart !== NO_RANGE$1 || props.tagStart !== NO_RANGE$1) {
+					restoreState(state, beforeKey);
+					return false;
+				}
+				return true;
+			}
+		}
+		if (parseNode(state, nodeIndent, CONTEXT_BLOCK_OUT, true, pendingExplicitKey)) pendingExplicitKey = false;
+		if (!atExplicitKey) {
+			if (pendingExplicitKey) {
+				addEmptyScalarEvent(state);
+				pendingExplicitKey = false;
+			}
+		}
+		skipSeparationSpace(state, true);
+		ch = state.input.charCodeAt(state.position);
+		if ((state.line === entryLine || state.lineIndent > nodeIndent) && ch !== 0) throwError(state, "bad indentation of a mapping entry");
+		else if (state.lineIndent < nodeIndent) break;
+	}
+	if (!detected) return false;
+	if (atExplicitKey) addEmptyScalarEvent(state);
+	if (mappingOpened) addPopEvent(state);
+	return true;
+}
+function parseNode(state, parentIndent, nodeContext, allowToSeek, allowCompact, allowPropertyMapping = true) {
+	if (state.depth >= state.maxDepth) throwError(state, `nesting exceeded maxDepth (${state.maxDepth})`);
+	state.depth++;
+	let indentStatus = 1;
+	let atNewLine = false;
+	let hasContent = false;
+	let propertyStart = null;
+	const props = emptyProperties();
+	let allowBlockScalars = nodeContext === CONTEXT_BLOCK_OUT || nodeContext === CONTEXT_BLOCK_IN;
+	let allowBlockCollections = allowBlockScalars;
+	const allowBlockStyles = allowBlockScalars;
+	if (allowToSeek && skipSeparationSpace(state, true)) {
+		atNewLine = true;
+		if (state.lineIndent > parentIndent) indentStatus = 1;
+		else if (state.lineIndent === parentIndent) indentStatus = 0;
+		else indentStatus = -1;
+	}
+	if (indentStatus === 1) while (true) {
+		const ch = state.input.charCodeAt(state.position);
+		const propertyState = snapshotState(state);
+		if (atNewLine && indentStatus !== 1 && (ch === 33 || ch === 38)) break;
+		if (atNewLine && allowBlockStyles && (props.tagStart !== NO_RANGE$1 || props.anchorStart !== NO_RANGE$1) && (ch === 33 || ch === 38)) {
+			const fallbackState = snapshotState(state);
+			const flowIndent = parentIndent + 1;
+			if (readBlockMapping(state, state.position - state.lineStart, flowIndent, props) && state.events[fallbackState.eventsLength]?.type === EVENT_ID.MAPPING) {
+				state.depth--;
+				return true;
+			}
+			restoreState(state, fallbackState);
+		}
+		if (atNewLine && (ch === 33 && props.tagStart !== NO_RANGE$1 || ch === 38 && props.anchorStart !== NO_RANGE$1)) break;
+		if (!readTagProperty(state, props, nodeContext === CONTEXT_FLOW_IN) && !readAnchorProperty(state, props)) break;
+		if (propertyStart === null) propertyStart = propertyState;
+		if (skipSeparationSpace(state, true)) {
+			atNewLine = true;
+			allowBlockCollections = allowBlockStyles;
+			if (state.lineIndent > parentIndent) indentStatus = 1;
+			else if (state.lineIndent === parentIndent) indentStatus = 0;
+			else indentStatus = -1;
+		} else allowBlockCollections = false;
+	}
+	if (allowBlockCollections) allowBlockCollections = atNewLine || allowCompact;
+	if (indentStatus === 1 || nodeContext === CONTEXT_BLOCK_OUT) {
+		const flowIndent = nodeContext === CONTEXT_FLOW_IN || nodeContext === CONTEXT_FLOW_OUT ? parentIndent : parentIndent + 1;
+		const blockIndent = state.position - state.lineStart;
+		if (indentStatus === 1) {
+			if (allowBlockCollections && (readBlockSequence(state, blockIndent, props) || readBlockMapping(state, blockIndent, flowIndent, props)) || readFlowCollection(state, flowIndent, props)) hasContent = true;
+			else {
+				const ch = state.input.charCodeAt(state.position);
+				if (propertyStart !== null && allowPropertyMapping && allowBlockStyles && !allowBlockCollections && ch !== 124 && ch !== 62) {
+					const fallbackState = snapshotState(state);
+					const propertyIndent = propertyStart.position - propertyStart.lineStart;
+					restoreState(state, propertyStart);
+					if (readBlockMapping(state, propertyIndent, flowIndent, emptyProperties()) && state.events[fallbackState.eventsLength]?.type === EVENT_ID.MAPPING) hasContent = true;
+					else restoreState(state, fallbackState);
+				}
+				if (!hasContent && (allowBlockScalars && readBlockScalar(state, flowIndent, props) || readSingleQuotedScalar(state, flowIndent, props) || readDoubleQuotedScalar(state, flowIndent, props) || readAlias(state, props) || readPlainScalar(state, flowIndent, nodeContext, props))) hasContent = true;
+			}
+		} else if (indentStatus === 0) hasContent = allowBlockCollections && readBlockSequence(state, blockIndent, props);
+	}
+	allowBlockScalars = allowBlockScalars && !hasContent;
+	if (!hasContent && (props.anchorStart !== NO_RANGE$1 || props.tagStart !== NO_RANGE$1 || allowBlockScalars)) {
+		addScalarEvent(state, NO_RANGE$1, NO_RANGE$1, props.anchorStart, props.anchorEnd, props.tagStart, props.tagEnd, SCALAR_STYLE.PLAIN);
+		hasContent = true;
+	}
+	state.depth--;
+	return hasContent || props.anchorStart !== NO_RANGE$1 || props.tagStart !== NO_RANGE$1;
+}
+function readDirective(state) {
+	if (state.lineIndent > 0 || state.input.charCodeAt(state.position) !== 37) return false;
+	state.position++;
+	const nameStart = state.position;
+	while (state.input.charCodeAt(state.position) !== 0 && !isWsOrEol(state.input.charCodeAt(state.position))) state.position++;
+	const name = state.input.slice(nameStart, state.position);
+	const args = [];
+	if (name.length === 0) throwError(state, "directive name must not be less than one character in length");
+	while (state.input.charCodeAt(state.position) !== 0 && !isEol(state.input.charCodeAt(state.position))) {
+		while (isWhiteSpace(state.input.charCodeAt(state.position))) state.position++;
+		if (state.input.charCodeAt(state.position) === 35 || isEol(state.input.charCodeAt(state.position)) || state.input.charCodeAt(state.position) === 0) break;
+		const start = state.position;
+		while (state.input.charCodeAt(state.position) !== 0 && !isWsOrEol(state.input.charCodeAt(state.position))) state.position++;
+		args.push(state.input.slice(start, state.position));
+	}
+	if (isEol(state.input.charCodeAt(state.position))) consumeLineBreak(state);
+	if (name === "YAML") {
+		if (state.directives.some((directive) => directive.kind === "yaml")) throwError(state, "duplication of %YAML directive");
+		if (args.length !== 1) throwError(state, "YAML directive accepts exactly one argument");
+		const match = /^([0-9]+)\.([0-9]+)$/.exec(args[0]);
+		if (match === null) throwError(state, "ill-formed argument of the YAML directive");
+		if (parseInt(match[1], 10) !== 1) throwError(state, "unacceptable YAML version of the document");
+		state.directives.push({
+			kind: "yaml",
+			version: args[0]
+		});
+	} else if (name === "TAG") {
+		if (args.length !== 2) throwError(state, "TAG directive accepts exactly two arguments");
+		const [handle, prefix] = args;
+		if (!PATTERN_TAG_HANDLE.test(handle)) throwError(state, "ill-formed tag handle (first argument) of the TAG directive");
+		if (HAS_OWN.call(state.tagHandlers, handle)) throwError(state, `there is a previously declared suffix for "${handle}" tag handle`);
+		if (!PATTERN_TAG_PREFIX.test(prefix)) throwError(state, "ill-formed tag prefix (second argument) of the TAG directive");
+		state.tagHandlers[handle] = prefix;
+		state.directives.push({
+			kind: "tag",
+			handle,
+			prefix
+		});
+	}
+	return true;
+}
+function readDocument(state) {
+	state.directives = [];
+	state.tagHandlers = Object.create(null);
+	let hasDirectives = false;
+	skipSeparationSpace(state, true);
+	while (readDirective(state)) {
+		hasDirectives = true;
+		skipSeparationSpace(state, true);
+	}
+	let explicitStart = false;
+	let explicitEnd = false;
+	let allowCompact = true;
+	if (state.lineIndent === 0 && state.input.charCodeAt(state.position) === 45 && state.input.charCodeAt(state.position + 1) === 45 && state.input.charCodeAt(state.position + 2) === 45 && isWsOrEolOrEnd(state.input.charCodeAt(state.position + 3))) {
+		explicitStart = true;
+		const markerLine = state.line;
+		state.position += 3;
+		skipSeparationSpace(state, true);
+		allowCompact = state.line > markerLine;
+	} else if (hasDirectives) throwError(state, "directives end mark is expected");
+	const documentEventIndex = state.events.length;
+	if (!explicitStart && state.position === state.lineStart && state.input.charCodeAt(state.position) === 46 && testDocumentSeparator(state)) {
+		state.position += 3;
+		skipSeparationSpace(state, true);
+		return;
+	}
+	addDocumentEvent(state, explicitStart, false);
+	if (!parseNode(state, state.lineIndent - 1, CONTEXT_BLOCK_OUT, false, allowCompact, allowCompact)) addEmptyScalarEvent(state);
+	skipSeparationSpace(state, true);
+	if (state.position === state.lineStart && testDocumentSeparator(state)) {
+		explicitEnd = state.input.charCodeAt(state.position) === 46;
+		if (explicitEnd) {
+			const markerLine = state.line;
+			state.position += 3;
+			skipSeparationSpace(state, true);
+			if (state.line === markerLine && state.position < state.length) throwError(state, "end of the stream or a document separator is expected");
+		}
+	}
+	const documentEvent = state.events[documentEventIndex];
+	if (documentEvent?.type === EVENT_ID.DOCUMENT) documentEvent.explicitEnd = explicitEnd;
+	addPopEvent(state);
+	if (!explicitEnd && state.position < state.length && !testDocumentBoundary(state)) throwError(state, "end of the stream or a document separator is expected");
+}
+/**
+* Parses YAML into a flat event stream referencing source text by offsets.
+*
+* @category Events
+*/
+function parseEvents(input, options) {
+	const length = input.length;
+	const state = {
+		...DEFAULT_PARSER_OPTIONS,
+		...options,
+		input: `${input}\0`,
+		length,
+		position: 0,
+		line: 0,
+		lineStart: 0,
+		lineIndent: 0,
+		firstTabInLine: -1,
+		depth: 0,
+		directives: [],
+		tagHandlers: Object.create(null),
+		events: []
+	};
+	const nullpos = input.indexOf("\0");
+	if (nullpos !== -1) YAMLException.throwAt(input, nullpos, "null byte is not allowed in input", state.filename);
+	while (state.position < state.length) {
+		skipByteOrderMark(state);
+		skipSeparationSpace(state, true);
+		if (state.position >= state.length) break;
+		const documentStart = state.position;
+		readDocument(state);
+		if (state.position === documentStart)
+ /* c8 ignore next */
+		throwError(state, "can not read a document");
+	}
+	return state.events;
+}
+//#endregion
+//#region src/load.ts
+var DEFAULT_LOAD_OPTIONS = {
+	...DEFAULT_PARSER_OPTIONS,
+	...DEFAULT_CONSTRUCTOR_OPTIONS
+};
+function loadDocuments(input, options = {}) {
+	const opts = {
+		...DEFAULT_LOAD_OPTIONS,
+		...options
+	};
+	const source = String(input);
+	const PARSER_OPT_KEYS = Object.keys(DEFAULT_PARSER_OPTIONS);
+	const CONSTRUCTOR_OPT_KEYS = Object.keys(DEFAULT_CONSTRUCTOR_OPTIONS);
+	return constructFromEvents(parseEvents(source, pick(opts, PARSER_OPT_KEYS)), {
+		...pick(opts, CONSTRUCTOR_OPT_KEYS),
+		source
+	});
+}
+function loadAll(input, iteratorOrOptions, options) {
+	let iterator = null;
+	if (typeof iteratorOrOptions === "function") iterator = iteratorOrOptions;
+	else if (iteratorOrOptions !== null && typeof iteratorOrOptions === "object") options = iteratorOrOptions;
+	const documents = loadDocuments(input, options);
+	if (iterator === null) return documents;
+	for (const document of documents) iterator(document);
+}
+/**
+* Parses `string` as a single YAML document. Throws {@link YAMLException} on
+* error. This function does not understand multi-document or empty sources; it
+* throws an exception on those.
+*
+* > [!NOTE]
+* > 1. When processing untrusted input, see the
+* >    [security considerations](../docs/safety.md).
+* > 2. All exceptions MUST be caught, not just {@link YAMLException}.
+* > 3. The default {@link CORE_SCHEMA} comes without the `!!merge` tag. You can
+* >    easily enable it if needed.
+* > 4. The default {@link mapTag} is `{}`-object based, with known limitations
+* >    (see description). For full compatibility use {@link realMapTag}
+* >    instead (it uses native JS `Map`).
+*
+* @example
+* Enable {@link mergeTag} and {@link realMapTag}:
+*
+* ```javascript
+* import { load, CORE_SCHEMA, mergeTag, realMapTag } from 'js-yaml'
+*
+* try {
+*   load(data, { schema: CORE_SCHEMA.withTags(mergeTag, realMapTag) })
+* } catch (e) {
+*   console.error(e)
+* }
+* ```
+*
+* @category Main
+*/
+function load(input, options) {
+	const documents = loadDocuments(input, options);
+	if (documents.length === 0) throw new YAMLException("expected a document, but the input is empty");
+	if (documents.length === 1) return documents[0];
+	throw new YAMLException("expected a single document in the stream, but found more");
+}
+//#endregion
+//#region src/ast/from_js.ts
+var INVALID = Symbol("INVALID");
+function buildRepresentTypes(schema) {
+	const defaultTags = new Set([
+		schema.defaultScalarTag,
+		schema.defaultSequenceTag,
+		schema.defaultMappingTag
+	].filter((t) => t !== void 0));
+	const implicitScalars = schema.implicitScalarTags;
+	const explicitTags = schema.tags.filter((t) => !(t.nodeKind === "scalar" && t.implicit) && !defaultTags.has(t));
+	const defaultTagsLast = schema.tags.filter((t) => defaultTags.has(t));
+	return [
+		...implicitScalars.map((tag) => ({
+			tag,
+			implicitTag: true
+		})),
+		...explicitTags.map((tag) => ({
+			tag,
+			implicitTag: false
+		})),
+		...defaultTagsLast.map((tag) => ({
+			tag,
+			implicitTag: true
+		}))
+	];
+}
+function matchTag(state, object) {
+	for (let index = 0, length = state.representTypes.length; index < length; index += 1) {
+		const { tag, implicitTag } = state.representTypes[index];
+		if (tag.identify(object)) {
+			let tagName;
+			if (tag.matchByTagPrefix) tagName = tag.representTagName(object);
+			else tagName = tag.tagName;
+			return {
+				tag,
+				tagName,
+				implicitTag
+			};
+		}
+	}
+	return null;
+}
+function build(state, object) {
+	if (!state.noRefs && object !== null && typeof object === "object") {
+		const existing = state.refs.get(object);
+		if (existing) {
+			if (existing.anchor === void 0) existing.anchor = `ref_${state.refCounter++}`;
+			return {
+				kind: "alias",
+				anchor: existing.anchor
+			};
+		}
+	}
+	const matched = matchTag(state, object);
+	if (!matched) {
+		if (object === void 0) return INVALID;
+		if (state.skipInvalid) return INVALID;
+		throw new YAMLException(`unacceptable kind of an object to dump ${Object.prototype.toString.call(object)}`);
+	}
+	const { tag, tagName, implicitTag } = matched;
+	const nodeTagName = implicitTag ? tagName : tagNameShort(tagName);
+	if (tag.nodeKind === "scalar") return {
+		kind: "scalar",
+		tag: nodeTagName,
+		tagged: !implicitTag,
+		style: SCALAR_STYLE.PLAIN,
+		value: tag.represent(object)
+	};
+	if (tag.nodeKind === "sequence") {
+		const container = tag.represent(object);
+		const node = {
+			kind: "sequence",
+			tag: nodeTagName,
+			tagged: !implicitTag,
+			style: COLLECTION_STYLE.BLOCK,
+			items: []
+		};
+		if (!state.noRefs) state.refs.set(object, node);
+		for (let index = 0, length = container.length; index < length; index += 1) {
+			let item = build(state, container[index]);
+			if (item === INVALID && container[index] === void 0) item = build(state, null);
+			if (item === INVALID) continue;
+			node.items.push(item);
+		}
+		return node;
+	}
+	const map = tag.represent(object);
+	const node = {
+		kind: "mapping",
+		tag: nodeTagName,
+		tagged: !implicitTag,
+		style: COLLECTION_STYLE.BLOCK,
+		items: []
+	};
+	if (!state.noRefs) state.refs.set(object, node);
+	for (const [objectKey, objectValue] of map) {
+		const key = build(state, objectKey);
+		if (key === INVALID) continue;
+		const value = build(state, objectValue);
+		if (value === INVALID) continue;
+		node.items.push({
+			key,
+			value
+		});
+	}
+	return node;
+}
+/**
+* Convert JS object to AST. A JS value is one YAML document. An unrepresentable
+* root becomes an empty document, which the presenter renders as an empty
+* string.
+*
+* @category AST
+*/
+function jsToAst(input, schema, options = {}) {
+	const root = build({
+		representTypes: buildRepresentTypes(schema),
+		noRefs: options.noRefs ?? false,
+		skipInvalid: options.skipInvalid ?? false,
+		refs: /* @__PURE__ */ new Map(),
+		refCounter: 0
+	}, input);
+	return [{
+		contents: root === INVALID ? null : root,
+		directives: []
+	}];
+}
+//#endregion
+//#region src/ast/visit.ts
+/**
+* Return from a visitor to stop the whole traversal.
+*
+* @category AST
+*/
+var VISIT_BREAK = Symbol("visit:break");
+/**
+* Return from a visitor to skip the current node's children.
+*
+* @category AST
+*/
+var VISIT_SKIP = Symbol("visit:skip");
+function visitNode(node, visitor, ctx) {
+	const control = visitor(node, ctx);
+	if (control === VISIT_BREAK) return true;
+	if (control === VISIT_SKIP) return false;
+	const depth = ctx.depth + 1;
+	switch (node.kind) {
+		case "sequence":
+			for (const item of node.items) if (visitNode(item, visitor, {
+				depth,
+				parent: node,
+				isKey: false
+			})) return true;
+			break;
+		case "mapping": for (const { key, value } of node.items) {
+			if (visitNode(key, visitor, {
+				depth,
+				parent: node,
+				isKey: true
+			})) return true;
+			if (visitNode(value, visitor, {
+				depth,
+				parent: node,
+				isKey: false
+			})) return true;
+		}
+	}
+	return false;
+}
+/**
+* Walk every node in the documents, calling {@link Visitor} once per
+* node (pre-order).
+*
+* @category AST
+*/
+function visit(documents, visitor) {
+	for (const doc of documents) if (doc.contents && visitNode(doc.contents, visitor, {
+		depth: 0,
+		parent: null,
+		isKey: false
+	})) return;
+}
+//#endregion
+//#region src/ast/styler_defaults.ts
+function hasBit(mask, bit) {
+	return (mask & 1 << bit) !== 0;
+}
+/**
+* Default scalar styling rules in application order.
+* See [Scalar styling](../../docs/scalar_styling.md) for usage details.
+*
+* @category AST
+*/
+var DEFAULT_SCALAR_STYLE_RULES = {
+	applyQuoteFlowKeysOption,
+	doubleQuoteForInvisibles,
+	doubleQuoteWhitespaceOnly,
+	applyForceQuotesOption,
+	tryLongOrMultilineAsBlock,
+	quoteInvalidPlain,
+	fallbackToDoubleQuoted
+};
+function _preferredQuotedStyle(layout) {
+	if (layout.presenterOptions.quoteStyle === "single" && hasBit(layout.allowedStylesMask, SCALAR_STYLE.SINGLE_QUOTED)) return SCALAR_STYLE.SINGLE_QUOTED;
+	return SCALAR_STYLE.DOUBLE_QUOTED;
+}
+function applyQuoteFlowKeysOption(layout) {
+	if (!layout.presenterOptions.quoteFlowKeys) return;
+	if (!layout.isKey || !layout.flowOnly || layout.style !== SCALAR_STYLE.PLAIN) return;
+	layout.style = SCALAR_STYLE.DOUBLE_QUOTED;
+}
+function doubleQuoteForInvisibles(layout) {
+	if (layout.style === SCALAR_STYLE.PLAIN && /[\t\x7F-\xA0\u2028\u2029\uFEFF\uFFFE\uFFFF]/.test(layout.node.value)) layout.style = SCALAR_STYLE.DOUBLE_QUOTED;
+}
+function doubleQuoteWhitespaceOnly(layout) {
+	if (layout.style === SCALAR_STYLE.PLAIN && /^\s+$/.test(layout.node.value)) layout.style = SCALAR_STYLE.DOUBLE_QUOTED;
+}
+function applyForceQuotesOption(layout) {
+	if (!layout.presenterOptions.forceQuotes) return;
+	if (layout.isKey || layout.style !== SCALAR_STYLE.PLAIN) return;
+	if (layout.node.tag !== layout.presenterOptions.schema.defaultScalarTag.tagName) return;
+	layout.style = layout.node.value.includes("\n") ? SCALAR_STYLE.DOUBLE_QUOTED : _preferredQuotedStyle(layout);
+}
+function tryLongOrMultilineAsBlock(layout) {
+	if (layout.style !== SCALAR_STYLE.PLAIN || layout.isKey) return;
+	const value = layout.node.value;
+	const multiline = value.indexOf("\n") !== -1;
+	if (!hasBit(layout.allowedStylesMask, SCALAR_STYLE.LITERAL_BLOCK)) {
+		if (multiline) layout.style = SCALAR_STYLE.DOUBLE_QUOTED;
+		return;
+	}
+	const w = layout.presenterOptions.lineWidth;
+	if (w === -1) {
+		if (multiline) layout.style = SCALAR_STYLE.LITERAL_BLOCK;
+		return;
+	}
+	const availableWidth = Math.max(Math.min(w, 40), w - layout.shiftOfContent);
+	let position = 0;
+	let shouldFold = false;
+	while (position <= value.length) {
+		let lineEnd = value.length;
+		const nextLineBreak = value.indexOf("\n", position);
+		if (nextLineBreak !== -1) lineEnd = nextLineBreak;
+		const line = value.slice(position, lineEnd);
+		if (line.length > availableWidth && line[0] !== " " && / [^ \t]/.test(line)) shouldFold = true;
+		if (nextLineBreak === -1) break;
+		position = nextLineBreak + 1;
+	}
+	if (shouldFold) layout.style = SCALAR_STYLE.FOLDED_BLOCK;
+	else if (multiline) layout.style = SCALAR_STYLE.LITERAL_BLOCK;
+}
+function quoteInvalidPlain(layout) {
+	if (layout.style === SCALAR_STYLE.PLAIN && !hasBit(layout.allowedStylesMask, SCALAR_STYLE.PLAIN)) layout.style = _preferredQuotedStyle(layout);
+}
+function fallbackToDoubleQuoted(layout) {
+	if (!hasBit(layout.allowedStylesMask, layout.style)) layout.style = SCALAR_STYLE.DOUBLE_QUOTED;
+}
+//#endregion
+//#region src/ast/scalar_styler.ts
+function setBit(mask, bit) {
+	return mask | 1 << bit;
+}
+var SRC_C_PRINTABLE = "[\\x09\\x0A\\x0D\\x20-\\x7E\\x85\\xA0-\\uD7FF\\uE000-\\uFFFD\\u{10000}-\\u{10FFFF}]";
+var SRC_B_CHAR = "[\\n\\r]";
+var SRC_C_BYTE_ORDER_MARK = "\\uFEFF";
+var SRC_S_WHITE = "[ \\t]";
+var SRC_NB_CHAR = `(?:(?!(?:${SRC_B_CHAR}|${SRC_C_BYTE_ORDER_MARK}))${SRC_C_PRINTABLE})`;
+var SRC_NS_CHAR = `(?:(?!${SRC_S_WHITE})${SRC_NB_CHAR})`;
+var SRC_NB_JSON = "[\\x09\\x20-\\uD7FF\\uE000-\\uFFFF\\u{10000}-\\u{10FFFF}]";
+var SRC_C_INDICATOR = "[-?:,\\[\\]{}#&*!|>'\"%@`]";
+var SRC_C_FLOW_INDICATOR = "[,\\[\\]{}]";
+var SRC_NS_PLAIN_SAFE_FLOW_OUT = SRC_NS_CHAR;
+var SRC_NS_PLAIN_SAFE_FLOW_IN = `(?:(?!${SRC_C_FLOW_INDICATOR})${SRC_NS_CHAR})`;
+var SRC_NS_PLAIN_FIRST_FLOW_OUT = `(?:(?:(?!${SRC_C_INDICATOR})${SRC_NS_CHAR})|[?:-](?=${SRC_NS_PLAIN_SAFE_FLOW_OUT}))`;
+var SRC_NS_PLAIN_FIRST_FLOW_IN = `(?:(?:(?!${SRC_C_INDICATOR})${SRC_NS_CHAR})|[?:-](?=${SRC_NS_PLAIN_SAFE_FLOW_IN}))`;
+var SRC_NS_PLAIN_CHAR_FLOW_OUT = `(?:(?:(?![:#])${SRC_NS_PLAIN_SAFE_FLOW_OUT})|:(?=${SRC_NS_PLAIN_SAFE_FLOW_OUT}))#*`;
+var SRC_NS_PLAIN_CHAR_FLOW_IN = `(?:(?:(?![:#])${SRC_NS_PLAIN_SAFE_FLOW_IN})|:(?=${SRC_NS_PLAIN_SAFE_FLOW_IN}))#*`;
+var SRC_NB_NS_PLAIN_IN_LINE_FLOW_OUT = `(?:${SRC_S_WHITE}*${SRC_NS_PLAIN_CHAR_FLOW_OUT})*`;
+var SRC_NB_NS_PLAIN_IN_LINE_FLOW_IN = `(?:${SRC_S_WHITE}*${SRC_NS_PLAIN_CHAR_FLOW_IN})*`;
+var SRC_NS_PLAIN_ONE_LINE_FLOW_OUT = `${SRC_NS_PLAIN_FIRST_FLOW_OUT}#*${SRC_NB_NS_PLAIN_IN_LINE_FLOW_OUT}`;
+var SRC_NS_PLAIN_ONE_LINE_FLOW_IN = `${SRC_NS_PLAIN_FIRST_FLOW_IN}#*${SRC_NB_NS_PLAIN_IN_LINE_FLOW_IN}`;
+var SRC_NS_PLAIN_ONE_LINE_BLOCK_KEY = SRC_NS_PLAIN_ONE_LINE_FLOW_OUT;
+var SRC_NS_PLAIN_ONE_LINE_FLOW_KEY = SRC_NS_PLAIN_ONE_LINE_FLOW_IN;
+var SRC_S_NS_PLAIN_NEXT_LINE_FLOW_OUT = `\\n+${SRC_NS_PLAIN_CHAR_FLOW_OUT}${SRC_NB_NS_PLAIN_IN_LINE_FLOW_OUT}`;
+var SRC_S_NS_PLAIN_NEXT_LINE_FLOW_IN = `\\n+${SRC_NS_PLAIN_CHAR_FLOW_IN}${SRC_NB_NS_PLAIN_IN_LINE_FLOW_IN}`;
+var SRC_NS_PLAIN_MULTI_LINE_FLOW_OUT = `${SRC_NS_PLAIN_ONE_LINE_FLOW_OUT}(?:${SRC_S_NS_PLAIN_NEXT_LINE_FLOW_OUT})*`;
+var SRC_NS_PLAIN_MULTI_LINE_FLOW_IN = `${SRC_NS_PLAIN_ONE_LINE_FLOW_IN}(?:${SRC_S_NS_PLAIN_NEXT_LINE_FLOW_IN})*`;
+var NS_PLAIN_FLOW_OUT = new RegExp(`^(?:${SRC_NS_PLAIN_MULTI_LINE_FLOW_OUT})$`, "u");
+var NS_PLAIN_FLOW_IN = new RegExp(`^(?:${SRC_NS_PLAIN_MULTI_LINE_FLOW_IN})$`, "u");
+var NS_PLAIN_BLOCK_KEY = new RegExp(`^(?:${SRC_NS_PLAIN_ONE_LINE_BLOCK_KEY})$`, "u");
+var NS_PLAIN_FLOW_KEY = new RegExp(`^(?:${SRC_NS_PLAIN_ONE_LINE_FLOW_KEY})$`, "u");
+var NB_SINGLE_ONE_LINE = new RegExp(`^(?:${SRC_NB_JSON})*$`, "u");
+var NB_SINGLE_MULTI_LINE = new RegExp(`^(?:${SRC_NB_JSON}|\\n)*$`, "u");
+var BLOCK_SCALAR_CONTENT = new RegExp(`^(?:${SRC_NB_CHAR}|\\n)*$`, "u");
+var C_FORBIDDEN_FIRST_LINE = /^(?:---|\.\.\.)(?=$|[ \t\n\r])/;
+var C_FORBIDDEN_CONTENT = /^(?:---|\.\.\.)(?=$|[ \t\n\r])/m;
+function canUsePlain(layout) {
+	const str = layout.node.value;
+	if (str !== "") {
+		if (!(layout.isKey ? layout.flowOnly ? NS_PLAIN_FLOW_KEY : NS_PLAIN_BLOCK_KEY : layout.flowOnly ? NS_PLAIN_FLOW_IN : NS_PLAIN_FLOW_OUT).test(str)) return false;
+		if (layout.shiftOfFirstLine === 0 && C_FORBIDDEN_FIRST_LINE.test(str)) return false;
+		if (layout.shiftOfContent === 0) {
+			const firstLineBreak = str.indexOf("\n");
+			if (firstLineBreak !== -1) {
+				const content = str.slice(firstLineBreak + 1);
+				if (C_FORBIDDEN_CONTENT.test(content)) return false;
+			}
+		}
+	}
+	const resolvedTag = layout.presenterOptions.schema.resolveImplicitScalarTag(str).tag.tagName;
+	if (!layout.node.tagged && resolvedTag !== layout.node.tag) return false;
+	if (!layout.node.tagged && str === "=" && resolvedTag === layout.presenterOptions.schema.defaultScalarTag.tagName) return false;
+	return true;
+}
+function canUseSingleQuoted(layout) {
+	const str = layout.node.value;
+	if (!(layout.isKey ? NB_SINGLE_ONE_LINE : NB_SINGLE_MULTI_LINE).test(str)) return false;
+	if (/[ \t]\n|\n[ \t]/.test(str)) return false;
+	if (!layout.isKey && layout.shiftOfContent === 0) {
+		const firstLineBreak = str.indexOf("\n");
+		if (firstLineBreak !== -1 && C_FORBIDDEN_CONTENT.test(str.slice(firstLineBreak + 1))) return false;
+	}
+	return true;
+}
+function canUseBlock(layout) {
+	if (layout.flowOnly || !BLOCK_SCALAR_CONTENT.test(layout.node.value)) return false;
+	const contentIndent = layout.shiftOfContent - layout.shiftOfParent;
+	if (contentIndent < 1) return false;
+	if (contentIndent > 9 && /^\n* /.test(layout.node.value)) return false;
+	if (layout.shiftOfContent === 0 && C_FORBIDDEN_CONTENT.test(layout.node.value)) return false;
+	return true;
+}
+function detectAllowedStyles(layout) {
+	let mask = setBit(0, SCALAR_STYLE.DOUBLE_QUOTED);
+	if (canUsePlain(layout)) mask = setBit(mask, SCALAR_STYLE.PLAIN);
+	if (canUseSingleQuoted(layout)) mask = setBit(mask, SCALAR_STYLE.SINGLE_QUOTED);
+	if (canUseBlock(layout)) mask = setBit(setBit(mask, SCALAR_STYLE.LITERAL_BLOCK), SCALAR_STYLE.FOLDED_BLOCK);
+	layout.allowedStylesMask = mask;
+}
+function renderScalar(layout) {
+	switch (layout.style) {
+		case SCALAR_STYLE.PLAIN: return renderPlain(layout);
+		case SCALAR_STYLE.SINGLE_QUOTED: return renderSingleQuoted(layout);
+		case SCALAR_STYLE.LITERAL_BLOCK: return renderLiteralBlock(layout);
+		case SCALAR_STYLE.FOLDED_BLOCK: return renderFoldedBlock(layout);
+		case SCALAR_STYLE.DOUBLE_QUOTED: return renderDoubleQuoted(layout);
+	}
+}
+function renderPlain(layout) {
+	return encodeFlowBreaks(layout.node.value, layout.shiftOfContent);
+}
+function renderSingleQuoted(layout) {
+	return `'${encodeFlowBreaks(layout.node.value, layout.shiftOfContent).replace(/'/g, "''")}'`;
+}
+function renderLiteralBlock(layout) {
+	const value = layout.node.value;
+	return "|" + blockHeader(value, layout.shiftOfParent, layout.shiftOfContent) + dropEndingNewline(indentString(value, layout.shiftOfContent));
+}
+function renderFoldedBlock(layout) {
+	const value = layout.node.value;
+	const w = layout.presenterOptions.lineWidth;
+	let availableWidth = Infinity;
+	if (w !== -1) availableWidth = Math.max(Math.min(w, 40), w - layout.shiftOfContent);
+	return ">" + blockHeader(value, layout.shiftOfParent, layout.shiftOfContent) + dropEndingNewline(indentString(foldBlockScalar(value, availableWidth), layout.shiftOfContent));
+}
+function renderDoubleQuoted(layout) {
+	return `"${escapeString(layout.node.value)}"`;
+}
+function encodeFlowBreaks(string, shiftOfContent) {
+	let nextLF = string.indexOf("\n");
+	if (nextLF === -1) return string;
+	const pad = " ".repeat(shiftOfContent);
+	let result = string.slice(0, nextLF);
+	const lineRe = /(\n+)([^\n]*)/g;
+	lineRe.lastIndex = nextLF;
+	let match;
+	while (match = lineRe.exec(string)) {
+		const breaks = match[1].length;
+		const line = match[2];
+		result += "\n".repeat(breaks + 1) + pad + line;
+	}
+	return result;
+}
+function indentString(string, spaces) {
+	const indent = " ".repeat(spaces);
+	let position = 0;
+	let result = "";
+	const length = string.length;
+	while (position < length) {
+		let line;
+		const next = string.indexOf("\n", position);
+		if (next === -1) {
+			line = string.slice(position);
+			position = length;
+		} else {
+			line = string.slice(position, next + 1);
+			position = next + 1;
+		}
+		if (line.length && line !== "\n") result += indent;
+		result += line;
+	}
+	return result;
+}
+function needIndentIndicator(string) {
+	return /^\n* /.test(string);
+}
+function blockHeader(string, shiftOfParent, shiftOfContent) {
+	const indentIndicator = needIndentIndicator(string) ? String(shiftOfContent - shiftOfParent) : "";
+	const clip = string[string.length - 1] === "\n";
+	return `${indentIndicator}${clip && (string[string.length - 2] === "\n" || string === "\n") ? "+" : clip ? "" : "-"}\n`;
+}
+function dropEndingNewline(string) {
+	return string[string.length - 1] === "\n" ? string.slice(0, -1) : string;
+}
+function isMoreIndented(char) {
+	return char === " " || char === "	";
+}
+function foldLine(line, width) {
+	if (line === "" || isMoreIndented(line[0])) return line;
+	const breakRe = / [^ \t]/g;
+	let match;
+	let start = 0;
+	let end;
+	let curr = 0;
+	let next = 0;
+	let result = "";
+	while (match = breakRe.exec(line)) {
+		next = match.index;
+		if (next - start > width) {
+			end = curr > start ? curr : next;
+			result += `\n${line.slice(start, end)}`;
+			start = end + 1;
+		}
+		curr = next;
+	}
+	result += "\n";
+	if (line.length - start > width && curr > start) result += `${line.slice(start, curr)}\n${line.slice(curr + 1)}`;
+	else result += line.slice(start);
+	return result.slice(1);
+}
+function foldBlockScalar(string, width) {
+	const lineRe = /(\n+)([^\n]*)/g;
+	let nextLF = string.indexOf("\n");
+	if (nextLF === -1) nextLF = string.length;
+	lineRe.lastIndex = nextLF;
+	let result = foldLine(string.slice(0, nextLF), width);
+	let prevMoreIndented = string[0] === "\n" || isMoreIndented(string[0]);
+	let moreIndented;
+	let match;
+	while (match = lineRe.exec(string)) {
+		const prefix = match[1];
+		const line = match[2];
+		moreIndented = line !== "" && isMoreIndented(line[0]);
+		result += prefix + (!prevMoreIndented && !moreIndented && line !== "" ? "\n" : "") + foldLine(line, width);
+		prevMoreIndented = moreIndented;
+	}
+	return result;
+}
+var CHARACTERS_TO_ESCAPE = /["\\\x00-\x1F\x7F-\xA0\u2028\u2029\uD800-\uDFFF\uFEFF\uFFFE\uFFFF]/gu;
+function escapeCharacter(character) {
+	switch (character) {
+		case "\0": return "\\0";
+		case "\x07": return "\\a";
+		case "\b": return "\\b";
+		case "	": return "\\t";
+		case "\n": return "\\n";
+		case "\v": return "\\v";
+		case "\f": return "\\f";
+		case "\r": return "\\r";
+		case "\x1B": return "\\e";
+		case "\"": return "\\\"";
+		case "\\": return "\\\\";
+		case "": return "\\N";
+		case "\xA0": return "\\_";
+		case "\u2028": return "\\L";
+		case "\u2029": return "\\P";
+	}
+	const code = character.charCodeAt(0);
+	const hex = code.toString(16).toUpperCase();
+	if (code <= 255) return `\\x${"0".repeat(2 - hex.length)}${hex}`;
+	return `\\u${"0".repeat(4 - hex.length)}${hex}`;
+}
+function escapeString(string) {
+	return string.replace(CHARACTERS_TO_ESCAPE, escapeCharacter);
+}
+//#endregion
+//#region src/ast/presenter.ts
+var CHAR_LINE_FEED = 10;
+var DEFAULT_PRESENTER_OPTIONS = {
+	indent: 2,
+	seqNoIndent: false,
+	seqInlineFirst: true,
+	lineWidth: 80,
+	flowBracketPadding: false,
+	flowSkipCommaSpace: false,
+	flowSkipColonSpace: false,
+	quoteFlowKeys: false,
+	quoteStyle: "single",
+	forceQuotes: false,
+	scalarStyleRules: Object.keys(DEFAULT_SCALAR_STYLE_RULES).map((name) => Reflect.get(DEFAULT_SCALAR_STYLE_RULES, name)),
+	tagBeforeAnchor: false
+};
+function nodeTagShort(node) {
+	return node.tagged ? node.tag : tagNameShort(node.tag);
+}
+function createPresenterState(options) {
+	const opts = {
+		...DEFAULT_PRESENTER_OPTIONS,
+		...options
+	};
+	if (opts.flowSkipColonSpace) opts.quoteFlowKeys = true;
+	return {
+		...opts,
+		defaultScalarTagName: opts.schema.defaultScalarTag.tagName,
+		openEnded: false
+	};
+}
+function generateNextLine(state, level) {
+	return `\n${" ".repeat(state.indent * level)}`;
+}
+function scalarLayout(state, node, parent, level, isKey, flowOnly) {
+	return {
+		node,
+		parent,
+		level,
+		isKey,
+		flowOnly,
+		shiftOfParent: level === 0 ? -1 : state.indent * (level - 1),
+		shiftOfContent: state.indent * Math.max(1, level),
+		shiftOfFirstLine: level === 0 ? 0 : state.indent * level,
+		presenterOptions: state,
+		allowedStylesMask: 0,
+		style: node.style
+	};
+}
+function writeFlowSequence(state, level, node) {
+	let result = "";
+	for (let index = 0, length = node.items.length; index < length; index += 1) {
+		const item = writeNode(state, level, node.items[index], node, {}).text;
+		if (index > 0) result += `,${!state.flowSkipCommaSpace ? " " : ""}`;
+		result += item;
+	}
+	const pad = state.flowBracketPadding && node.items.length > 0 ? " " : "";
+	return `[${pad}${result}${pad}]`;
+}
+function writeBlockSequence(state, level, node, compact) {
+	let result = "";
+	for (let index = 0, length = node.items.length; index < length; index += 1) {
+		const item = writeNode(state, level + 1, node.items[index], node, {
+			block: true,
+			compact: state.seqInlineFirst,
+			isblockseq: true
+		}).text;
+		if (!compact || result !== "") result += generateNextLine(state, level);
+		if (item === "" || CHAR_LINE_FEED === item.charCodeAt(0)) result += "-";
+		else result += "- ";
+		result += item;
+	}
+	return result;
+}
+function writeFlowMapping(state, level, node) {
+	let result = "";
+	for (const { key, value } of node.items) {
+		let pairBuffer = "";
+		if (result !== "") pairBuffer += `,${!state.flowSkipCommaSpace ? " " : ""}`;
+		const keyRender = writeNode(state, level, key, node, { iskey: true });
+		const keyText = keyRender.text;
+		const valueText = writeNode(state, level, value, node, {}).text;
+		const sep = state.flowSkipColonSpace || valueText === "" ? "" : " ";
+		const keyIsBareProps = key.kind === "scalar" && keyRender.noBody && (key.tagged || key.anchor !== void 0);
+		const keyColonSep = key.kind === "alias" || keyIsBareProps ? " " : "";
+		pairBuffer += `${keyText}${keyColonSep}:${sep}${valueText}`;
+		result += pairBuffer;
+	}
+	const pad = state.flowBracketPadding && result !== "" ? " " : "";
+	return `{${pad}${result}${pad}}`;
+}
+function writeBlockMapping(state, level, node, compact) {
+	let result = "";
+	for (let index = 0, length = node.items.length; index < length; index += 1) {
+		let pairBuffer = "";
+		if (!compact || result !== "") pairBuffer += generateNextLine(state, level);
+		const { key, value } = node.items[index];
+		const keyIsBlock = (key.kind === "mapping" || key.kind === "sequence") && key.style === COLLECTION_STYLE.BLOCK && key.items.length !== 0 || key.kind === "scalar" && (key.style === SCALAR_STYLE.LITERAL_BLOCK || key.style === SCALAR_STYLE.FOLDED_BLOCK);
+		const keyRender = keyIsBlock ? writeNode(state, level + 1, key, node, {
+			block: true,
+			compact: true,
+			isblockseq: !cannotBeCompact(state, key, level + 1)
+		}) : writeNode(state, level + 1, key, node, {
+			block: true,
+			compact: true,
+			iskey: true
+		});
+		const keyText = keyRender.text;
+		const keyHasLineBreak = key.kind === "scalar" && key.value.indexOf("\n") !== -1;
+		const keyIsTooLong = keyText.length > 1024 && /^[\s\S]{1025}/u.test(keyText);
+		const explicitPair = keyIsBlock || keyHasLineBreak || keyIsTooLong;
+		if (explicitPair) {
+			if (keyText && CHAR_LINE_FEED === keyText.charCodeAt(0)) pairBuffer += "?";
+			else pairBuffer += "? ";
+		}
+		pairBuffer += keyText;
+		if (explicitPair) pairBuffer += generateNextLine(state, level);
+		const valueText = writeNode(state, level + 1, value, node, {
+			block: true,
+			compact: explicitPair,
+			isblockseq: explicitPair && !cannotBeCompact(state, value, level + 1)
+		}).text;
+		const keyIsBareProps = key.kind === "scalar" && keyRender.noBody && (key.tagged || key.anchor !== void 0);
+		const keyColonSep = !explicitPair && (key.kind === "alias" || keyIsBareProps) ? " " : "";
+		if (valueText === "" || CHAR_LINE_FEED === valueText.charCodeAt(0)) pairBuffer += `${keyColonSep}:`;
+		else pairBuffer += `${keyColonSep}: `;
+		pairBuffer += valueText;
+		result += pairBuffer;
+	}
+	return result;
+}
+function cannotBeCompact(state, node, level) {
+	if (node.kind === "alias") return true;
+	return node.tagged || node.anchor !== void 0 || state.indent < 2 && level > 0;
+}
+function writeNode(state, level, node, parent, ctx) {
+	if (node.kind === "alias") {
+		state.openEnded = false;
+		return {
+			text: `*${node.anchor}`,
+			noBody: false
+		};
+	}
+	const { block = false, iskey = false, isblockseq = false } = ctx;
+	let compact = ctx.compact ?? false;
+	const hasAnchor = node.anchor !== void 0;
+	if (cannotBeCompact(state, node, level)) compact = false;
+	let body;
+	let shouldPrintTag = node.tagged;
+	const useBlockCollection = block && (node.kind === "mapping" || node.kind === "sequence") && node.style === COLLECTION_STYLE.BLOCK && node.items.length !== 0;
+	if (node.kind === "mapping") {
+		if (useBlockCollection) body = writeBlockMapping(state, level, node, compact);
+		else body = writeFlowMapping(state, level, node);
+	} else if (node.kind === "sequence") {
+		if (useBlockCollection) {
+			if (state.seqNoIndent && !isblockseq && level > 0) body = writeBlockSequence(state, level - 1, node, compact);
+			else body = writeBlockSequence(state, level, node, compact);
+		} else body = writeFlowSequence(state, level, node);
+	} else {
+		const layout = scalarLayout(state, node, parent, level, iskey, !block);
+		detectAllowedStyles(layout);
+		for (const rule of state.scalarStyleRules) rule(layout);
+		body = renderScalar(layout);
+		state.openEnded = (layout.style === SCALAR_STYLE.LITERAL_BLOCK || layout.style === SCALAR_STYLE.FOLDED_BLOCK) && (node.value === "\n" || node.value.endsWith("\n\n"));
+		shouldPrintTag = node.tagged || body === "" && layout.flowOnly && parent?.kind === "sequence" && !hasAnchor || layout.style !== SCALAR_STYLE.PLAIN && node.tag !== state.defaultScalarTagName;
+	}
+	if ((node.kind === "mapping" || node.kind === "sequence") && !useBlockCollection) state.openEnded = false;
+	if (useBlockCollection && compact && level > 0 && state.indent > 2) body = `${" ".repeat(state.indent - 2)}${body}`;
+	const noBody = body === "";
+	let text = body;
+	if (shouldPrintTag || hasAnchor) {
+		const props = [];
+		const tag = shouldPrintTag ? nodeTagShort(node) : null;
+		const anchor = hasAnchor ? `&${node.anchor}` : null;
+		if (state.tagBeforeAnchor) {
+			if (tag !== null) props.push(tag);
+			if (anchor !== null) props.push(anchor);
+		} else {
+			if (anchor !== null) props.push(anchor);
+			if (tag !== null) props.push(tag);
+		}
+		const sep = body === "" || body.charCodeAt(0) === CHAR_LINE_FEED ? "" : " ";
+		text = `${props.join(" ")}${sep}${body}`;
+	}
+	return {
+		text,
+		noBody
+	};
+}
+function rootStartsOwnLine(node) {
+	return (node.kind === "sequence" || node.kind === "mapping") && node.style === COLLECTION_STYLE.BLOCK && node.items.length !== 0 && !node.tagged && node.anchor === void 0;
+}
+function writeDocumentDirectives(doc) {
+	let result = "";
+	for (const directive of doc.directives) {
+		if (directive.kind === "yaml") {
+			result += `%YAML ${directive.version}\n`;
+			continue;
+		}
+		const { handle, prefix } = directive;
+		result += `%TAG ${handle} ${prefix}\n`;
+	}
+	return result;
+}
+/**
+* Build YAML from AST.
+*
+* @category AST
+*/
+function present(documents, options) {
+	const state = createPresenterState(options);
+	let result = "";
+	let previousEnded = false;
+	for (let index = 0; index < documents.length; index += 1) {
+		const doc = documents[index];
+		state.openEnded = false;
+		const directives = writeDocumentDirectives(doc);
+		const hasDirectives = directives !== "";
+		const marker = doc.explicitStart || hasDirectives || index > 0 && !previousEnded;
+		result += directives;
+		if (doc.contents === null) {
+			if (marker) result += "---\n";
+		} else if (marker) {
+			const body = writeNode(state, 0, doc.contents, null, {
+				block: true,
+				compact: true
+			}).text;
+			const sep = body === "" ? "" : hasDirectives || rootStartsOwnLine(doc.contents) ? "\n" : " ";
+			result += `---${sep}${body}\n`;
+		} else result += writeNode(state, 0, doc.contents, null, {
+			block: true,
+			compact: true
+		}).text + "\n";
+		previousEnded = doc.explicitEnd || state.openEnded;
+		if (previousEnded) result += "...\n";
+	}
+	return result;
+}
+//#endregion
+//#region src/dump.ts
+var DEFAULT_DUMP_OPTIONS = {
+	...DEFAULT_PRESENTER_OPTIONS,
+	schema: DUMP_SCHEMA,
+	skipInvalid: false,
+	noRefs: false,
+	flowLevel: -1,
+	sortKeys: false,
+	transform: () => {}
+};
+function defaultCompareFn(a, b) {
+	const x = String(a);
+	const y = String(b);
+	if (x < y) return -1;
+	if (x > y) return 1;
+	return 0;
+}
+/**
+* Serializes JS object as a YAML document. By default it can dump every
+* supported YAML type, so it throws an exception if you try to dump regexps or
+* functions. However, you can disable exceptions by setting the
+* {@link DumpOptions.skipInvalid} option to `true`.
+*
+* @category Main
+*/
+function dump(input, options = {}) {
+	const opts = {
+		...DEFAULT_DUMP_OPTIONS,
+		...options
+	};
+	const documents = jsToAst(input, opts.schema, {
+		noRefs: opts.noRefs,
+		skipInvalid: opts.skipInvalid
+	});
+	if (opts.flowLevel >= 0) visit(documents, (node, ctx) => {
+		if (ctx.depth < opts.flowLevel) return;
+		if (node.kind === "sequence" || node.kind === "mapping") node.style = COLLECTION_STYLE.FLOW;
+		return VISIT_SKIP;
+	});
+	if (opts.sortKeys) {
+		const compareFn = opts.sortKeys === true ? defaultCompareFn : opts.sortKeys;
+		visit(documents, (node) => {
+			if (node.kind !== "mapping") return;
+			node.items.sort((a, b) => compareFn(a.key.kind === "scalar" ? a.key.value : "", b.key.kind === "scalar" ? b.key.value : ""));
+		});
+	}
+	opts.transform(documents);
+	return present(documents, {
+		...pick(opts, Object.keys(DEFAULT_PRESENTER_OPTIONS)),
+		schema: opts.schema
+	});
+}
+//#endregion
+//#region src/ast/from_events.ts
+var NO_RANGE = (/* unused pure expression or super */ null && (-1));
+function eventPosition(event) {
+	if ("tagStart" in event && event.tagStart !== NO_RANGE) return event.tagStart;
+	if ("anchorStart" in event && event.anchorStart !== NO_RANGE) return event.anchorStart;
+	if ("valueStart" in event && event.valueStart !== NO_RANGE) return event.valueStart;
+	if ("start" in event) return event.start;
+	return 0;
+}
+function rawTag(state, event) {
+	return event.tagStart === NO_RANGE ? "" : state.source.slice(event.tagStart, event.tagEnd);
+}
+function anchorName(state, event) {
+	return event.anchorStart === NO_RANGE ? void 0 : state.source.slice(event.anchorStart, event.anchorEnd);
+}
+function buildScalar(state, event) {
+	const value = getScalarValue(state.source, event);
+	const raw = rawTag(state, event);
+	let tag;
+	let tagged = false;
+	if (raw !== "") {
+		tagged = true;
+		tag = raw;
+	} else if (event.style === SCALAR_STYLE.PLAIN) tag = state.schema.resolveImplicitScalarTag(value).tag.tagName;
+	else tag = state.schema.defaultScalarTag.tagName;
+	return {
+		kind: "scalar",
+		tag,
+		tagged,
+		style: event.style,
+		anchor: anchorName(state, event),
+		value
+	};
+}
+function buildCollection(state, event, defaultTagName) {
+	const raw = rawTag(state, event);
+	let tag;
+	let tagged = false;
+	if (raw === "") tag = defaultTagName;
+	else {
+		tag = raw;
+		tagged = true;
+	}
+	return {
+		tag,
+		tagged,
+		style: event.style,
+		anchor: anchorName(state, event)
+	};
+}
+function addNode(state, node) {
+	const frame = state.frames[state.frames.length - 1];
+	if (frame.kind === "document") frame.doc.contents = node;
+	else if (frame.kind === "sequence") frame.node.items.push(node);
+	else if (frame.key) {
+		frame.node.items.push({
+			key: frame.key,
+			value: node
+		});
+		frame.key = null;
+	} else frame.key = node;
+}
+/**
+* Builds an AST from parser events
+*
+* @category AST
+*/
+function eventsToAst(events, options) {
+	const state = {
+		source: options.source,
+		schema: options.schema,
+		eventIndex: 0,
+		position: 0,
+		frames: [],
+		documents: []
+	};
+	while (state.eventIndex < events.length) {
+		const event = events[state.eventIndex++];
+		state.position = eventPosition(event);
+		switch (event.type) {
+			case EVENT_ID.DOCUMENT: {
+				const doc = {
+					contents: null,
+					explicitStart: event.explicitStart,
+					explicitEnd: event.explicitEnd,
+					directives: event.directives
+				};
+				state.frames.push({
+					kind: "document",
+					doc
+				});
+				break;
+			}
+			case EVENT_ID.SCALAR:
+				addNode(state, buildScalar(state, event));
+				break;
+			case EVENT_ID.SEQUENCE: {
+				const { tag, tagged, style, anchor } = buildCollection(state, event, "tag:yaml.org,2002:seq");
+				const node = {
+					kind: "sequence",
+					tag,
+					tagged,
+					style,
+					anchor,
+					items: []
+				};
+				state.frames.push({
+					kind: "sequence",
+					node
+				});
+				break;
+			}
+			case EVENT_ID.MAPPING: {
+				const { tag, tagged, style, anchor } = buildCollection(state, event, "tag:yaml.org,2002:map");
+				const node = {
+					kind: "mapping",
+					tag,
+					tagged,
+					style,
+					anchor,
+					items: []
+				};
+				state.frames.push({
+					kind: "mapping",
+					node,
+					key: null
+				});
+				break;
+			}
+			case EVENT_ID.ALIAS:
+				addNode(state, {
+					kind: "alias",
+					anchor: state.source.slice(event.anchorStart, event.anchorEnd)
+				});
+				break;
+			case EVENT_ID.POP: {
+				const frame = state.frames.pop();
+				if (frame.kind === "mapping" && frame.key) throw new Error("incomplete mapping pair in event stream");
+				if (frame.kind === "document") state.documents.push(frame.doc);
+				else addNode(state, frame.node);
+				break;
+			}
+		}
+	}
+	return state.documents;
+}
+//#endregion
+//#region src/index.ts
+/** @deprecated Use `EVENT_ID.DOCUMENT` instead. @internal */
+var EVENT_DOCUMENT = EVENT_ID.DOCUMENT;
+/** @deprecated Use `EVENT_ID.SEQUENCE` instead. @internal */
+var EVENT_SEQUENCE = EVENT_ID.SEQUENCE;
+/** @deprecated Use `EVENT_ID.MAPPING` instead. @internal */
+var EVENT_MAPPING = EVENT_ID.MAPPING;
+/** @deprecated Use `EVENT_ID.SCALAR` instead. @internal */
+var EVENT_SCALAR = EVENT_ID.SCALAR;
+/** @deprecated Use `EVENT_ID.ALIAS` instead. @internal */
+var EVENT_ALIAS = EVENT_ID.ALIAS;
+/** @deprecated Use `EVENT_ID.POP` instead. @internal */
+var EVENT_POP = EVENT_ID.POP;
+/** @deprecated Use `SCALAR_STYLE.PLAIN` instead. @internal */
+var SCALAR_STYLE_PLAIN = SCALAR_STYLE.PLAIN;
+/** @deprecated Use `SCALAR_STYLE.SINGLE_QUOTED` instead. @internal */
+var SCALAR_STYLE_SINGLE_QUOTED = SCALAR_STYLE.SINGLE_QUOTED;
+/** @deprecated Use `SCALAR_STYLE.DOUBLE_QUOTED` instead. @internal */
+var SCALAR_STYLE_DOUBLE_QUOTED = SCALAR_STYLE.DOUBLE_QUOTED;
+/** @deprecated Use `SCALAR_STYLE.LITERAL_BLOCK` instead. @internal */
+var SCALAR_STYLE_LITERAL_BLOCK = SCALAR_STYLE.LITERAL_BLOCK;
+/** @deprecated Use `SCALAR_STYLE.FOLDED_BLOCK` instead. @internal */
+var SCALAR_STYLE_FOLDED_BLOCK = SCALAR_STYLE.FOLDED_BLOCK;
+/** @deprecated Use `COLLECTION_STYLE.BLOCK` instead. @internal */
+var COLLECTION_STYLE_BLOCK = COLLECTION_STYLE.BLOCK;
+/** @deprecated Use `COLLECTION_STYLE.FLOW` instead. @internal */
+var COLLECTION_STYLE_FLOW = COLLECTION_STYLE.FLOW;
+/** @deprecated Use `CHOMPING_MODE.CLIP` instead. @internal */
+var CHOMPING_CLIP = CHOMPING_MODE.CLIP;
+/** @deprecated Use `CHOMPING_MODE.STRIP` instead. @internal */
+var CHOMPING_STRIP = CHOMPING_MODE.STRIP;
+/** @deprecated Use `CHOMPING_MODE.KEEP` instead. @internal */
+var CHOMPING_KEEP = CHOMPING_MODE.KEEP;
+//#endregion
+
+
+//# sourceMappingURL=js-yaml.mjs.map
+// EXTERNAL MODULE: external "path"
+var external_path_ = __nccwpck_require__(16928);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/plugin/metadata-loader.js
+
+class MetadataLoader {
+    static addRefreshHook(hook) {
+        return MetadataLoader.refreshHooks.push(hook);
+    }
+    async load(metadata) {
+        const pkgMetadata = metadata['@nestjs/swagger'];
+        if (!pkgMetadata) {
+            return;
+        }
+        const { models, controllers } = pkgMetadata;
+        if (models) {
+            await this.applyMetadata(models);
+        }
+        if (controllers) {
+            await this.applyMetadata(controllers);
+        }
+        this.runHooks();
+    }
+    async applyMetadata(meta) {
+        const loadPromises = meta.map(async ([fileImport, fileMeta]) => {
+            const fileRef = (await fileImport);
+            Object.keys(fileMeta).map((key) => {
+                const clsRef = fileRef[key] ??
+                    (fileRef.default?.name === key ? fileRef.default : undefined);
+                if (!clsRef) {
+                    return;
+                }
+                clsRef[METADATA_FACTORY_NAME] = () => fileMeta[key];
+            });
+        });
+        await Promise.all(loadPromises);
+    }
+    runHooks() {
+        MetadataLoader.refreshHooks.forEach((hook) => hook());
+    }
+}
+MetadataLoader.refreshHooks = new Array();
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isEmpty.mjs
+
+
+
+
+
+// src/compat/predicate/isEmpty.ts
+/**
+* Checks if a given value is empty.
+*
+* - If the given value is a string, checks if it is an empty string.
+* - If the given value is an array, `Map`, or `Set`, checks if its size is 0.
+* - If the given value is an [array-like object](../predicate/isArrayLike.md), checks if its length is 0.
+* - If the given value is an object, checks if it is an empty object with no properties.
+* - Primitive values (booleans, numbers, or bigints) are considered empty.
+*
+* @param [value] - The value to check.
+* @returns `true` if the value is empty, `false` otherwise.
+*
+* @example
+* isEmpty(); // true
+* isEmpty(null); // true
+* isEmpty(""); // true
+* isEmpty([]); // true
+* isEmpty({}); // true
+* isEmpty(new Map()); // true
+* isEmpty(new Set()); // true
+* isEmpty("hello"); // false
+* isEmpty([1, 2, 3]); // false
+* isEmpty({ a: 1 }); // false
+* isEmpty(new Map([["key", "value"]])); // false
+* isEmpty(new Set([1, 2, 3])); // false
+*/
+function isEmpty(value) {
+	if (value == null) return true;
+	if (isArrayLike(value)) {
+		if (typeof value.splice !== "function" && typeof value !== "string" && !isBuffer(value) && !isTypedArray_isTypedArray(value) && !isArguments(value)) return false;
+		return value.length === 0;
+	}
+	if (typeof value === "object" || typeof value === "function") {
+		if (value instanceof Map || value instanceof Set) return value.size === 0;
+		const keys = Object.keys(value);
+		if (isPrototype(value)) return keys.filter((x) => x !== "constructor").length === 0;
+		return keys.length === 0;
+	}
+	return true;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/isKey.mjs
+
+
+// src/compat/_internal/isKey.ts
+/**  Matches any deep property path. (e.g. `a.b[0].c`)*/
+const isKey_regexIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
+/**  Matches any word character (alphanumeric & underscore).*/
+const regexIsPlainProp = /^\w*$/;
+/**
+* Checks if `value` is a property name and not a property path. (It's ok that the `value` is not in the keys of the `object`)
+* @param {unknown} value The value to check.
+* @param {unknown} object The object to query.
+* @returns {boolean} Returns `true` if `value` is a property name, else `false`.
+*
+* @example
+* isKey('a', { a: 1 });
+* // => true
+*
+* isKey('a.b', { a: { b: 2 } });
+* // => false
+*/
+function isKey(value, object) {
+	if (Array.isArray(value)) return false;
+	if (typeof value === "number" || typeof value === "boolean" || value == null || (0,isSymbol/* isSymbol */.B)(value)) return true;
+	return typeof value === "string" && (regexIsPlainProp.test(value) || !isKey_regexIsDeepProp.test(value)) || object != null && hasOwn(object, value);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/assignValue.mjs
+
+
+// src/compat/_internal/assignValue.ts
+const assignValue = (object, key, value) => {
+	const objValue = object[key];
+	if (!(hasOwn(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) object[key] = value;
+};
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/updateWith.mjs
+
+
+
+
+
+
+
+
+// src/compat/object/updateWith.ts
+/**
+* Updates the value at the specified path of the given object using an updater function and a customizer.
+* If any part of the path does not exist, it will be created.
+*
+* @template T - The type of the object.
+* @template R - The type of the return value.
+* @param obj - The object to modify.
+* @param path - The path of the property to update.
+* @param updater - The function to produce the updated value.
+* @param customizer - The function to customize the update process.
+* @returns The modified object.
+*
+* @example
+* const object = { 'a': [{ 'b': { 'c': 3 } }] };
+* updateWith(object, 'a[0].b.c', (n) => n * n);
+* // => { 'a': [{ 'b': { 'c': 9 } }] }
+*/
+function updateWith(obj, path, updater, customizer) {
+	if (obj == null && !isObject(obj)) return obj;
+	let resolvedPath;
+	if (isKey(path, obj)) resolvedPath = [path];
+	else if (Array.isArray(path)) resolvedPath = path;
+	else resolvedPath = (0,toPath/* toPath */.b)(path);
+	const updateValue = updater(get(obj, resolvedPath));
+	let current = obj;
+	for (let i = 0; i < resolvedPath.length && current != null; i++) {
+		const key = (0,toKey/* toKey */.f)(resolvedPath[i]);
+		if (isUnsafeToWriteProperty(key)) return obj;
+		let newValue;
+		if (i === resolvedPath.length - 1) newValue = updateValue;
+		else {
+			const objValue = current[key];
+			const customizerResult = customizer === null || customizer === void 0 ? void 0 : customizer(objValue, key, obj);
+			newValue = customizerResult !== void 0 ? customizerResult : isObject(objValue) ? objValue : isIndex(resolvedPath[i + 1]) ? [] : {};
+		}
+		assignValue(current, key, newValue);
+		current = current[key];
+	}
+	return obj;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/set.mjs
+
+// src/compat/object/set.ts
+/**
+* Sets the value at the specified path of the given object. If any part of the path does not exist, it will be created.
+*
+* @template T - The type of the object.
+* @param obj - The object to modify.
+* @param path - The path of the property to set.
+* @param value - The value to set.
+* @returns The modified object.
+*
+* @example
+* // Set a value in a nested object
+* const obj = { a: { b: { c: 3 } } };
+* set(obj, 'a.b.c', 4);
+* console.log(obj.a.b.c); // 4
+*
+* @example
+* // Set a value in an array
+* const arr = [1, 2, 3];
+* set(arr, 1, 4);
+* console.log(arr[1]); // 4
+*
+* @example
+* // Create non-existent path and set value
+* const obj = {};
+* set(obj, 'a.b.c', 4);
+* console.log(obj); // { a: { b: { c: 4 } } }
+*/
+function set(obj, path, value) {
+	return updateWith(obj, path, () => value, () => void 0);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/pick.mjs
+
+
+
+
+
+
+// src/compat/object/pick.ts
+/**
+* Creates a new object composed of the picked object properties.
+*
+* This function takes an object and an array of keys, and returns a new object that
+* includes only the properties corresponding to the specified keys.
+*
+* @template T - The type of object.
+* @template U - The type of keys to pick.
+* @param object - The object to pick keys from.
+* @param props - An array of keys to be picked from the object. received keys goes through a flattening process before being used.
+* @returns A new object with the specified keys picked.
+*
+* @example
+* const obj = { a: 1, b: 2, c: 3 };
+* const result = pick(obj, ['a', 'c']);
+* // result will be { a: 1, c: 3 }
+*
+* // each path can be passed individually as an argument
+* const obj = { a: 1, b: 2, c: 3 };
+* const result = pick(obj, 'a', 'c');
+* // result will be { a: 1, c: 3 }
+*
+* // pick a key over a path
+* const obj = { 'a.b': 1, a: { b: 2 } };
+* const result = pick(obj, 'a.b');
+* // result will be { 'a.b': 1 }
+*/
+function pick_pick(object, ...keysArr) {
+	if (isNil(object)) return {};
+	const result = {};
+	for (let i = 0; i < keysArr.length; i++) {
+		let keys = keysArr[i];
+		switch (typeof keys) {
+			case "object":
+				if (!Array.isArray(keys)) {
+					if (isArrayLike(keys)) keys = Array.from(keys);
+					else keys = [keys];
+				}
+				break;
+			case "string":
+			case "symbol":
+			case "number": keys = [keys];
+		}
+		for (const key of keys) {
+			const value = get(object, key);
+			if (value === void 0 && !has(object, key)) continue;
+			if (typeof key === "string" && hasOwn(object, key)) result[key] = object[key];
+			else set(result, key, value);
+		}
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/model-properties-accessor.js
+
+
+
+
+
+
+class ModelPropertiesAccessor {
+    getModelProperties(prototype) {
+        const properties = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES_ARRAY, prototype) ||
+            [];
+        return properties
+            .filter(shared_utils/* isString */.Kg)
+            .filter((key) => key.charAt(0) === ':' && !(0,shared_utils/* isFunction */.Tn)(prototype[key]))
+            .map((key) => key.slice(1))
+            .filter((key) => !this.isHiddenProperty(prototype, key));
+    }
+    isHiddenProperty(prototype, key, stopAt) {
+        let current = prototype;
+        while (current && current !== Object.prototype) {
+            if (Reflect.getOwnMetadata(DECORATORS.API_MODEL_PROPERTY_HIDDEN, current, key)) {
+                return true;
+            }
+            if (current === stopAt ||
+                Reflect.getOwnMetadata(DECORATORS.API_MODEL_PROPERTIES, current, key)) {
+                return false;
+            }
+            current = Reflect.getPrototypeOf(current);
+        }
+        return false;
+    }
+    keepDecoratedInheritedOptions(prototype, key) {
+        if (Reflect.hasOwnMetadata(DECORATORS.API_MODEL_PROPERTIES, prototype, key)) {
+            return;
+        }
+        const inheritedMetadata = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, prototype, key);
+        if (!inheritedMetadata) {
+            return;
+        }
+        const decoratedOptions = new Set();
+        for (let current = Reflect.getPrototypeOf(prototype); current && current !== Object.prototype; current = Reflect.getPrototypeOf(current)) {
+            (Reflect.getOwnMetadata(DECORATORS.API_MODEL_PROPERTY_EXPLICIT_OPTIONS, current, key) ?? []).forEach((option) => decoratedOptions.add(option));
+        }
+        decoratedOptions.delete('type');
+        decoratedOptions.delete('isArray');
+        Reflect.defineMetadata(DECORATORS.API_MODEL_PROPERTIES, pick_pick(inheritedMetadata, [...decoratedOptions]), prototype, key);
+    }
+    applyMetadataFactory(prototype) {
+        const classPrototype = prototype;
+        do {
+            if (!prototype.constructor) {
+                return;
+            }
+            if (!prototype.constructor[METADATA_FACTORY_NAME]) {
+                continue;
+            }
+            const metadata = prototype.constructor[METADATA_FACTORY_NAME]();
+            const properties = Object.keys(metadata);
+            const isOwnFactory = prototype === classPrototype &&
+                Object.prototype.hasOwnProperty.call(prototype.constructor, METADATA_FACTORY_NAME);
+            properties.forEach((key) => {
+                if (this.isHiddenProperty(classPrototype, key, prototype)) {
+                    return;
+                }
+                if (isOwnFactory) {
+                    this.keepDecoratedInheritedOptions(classPrototype, key);
+                }
+                createApiPropertyDecorator(metadata[key], false)(classPrototype, key);
+            });
+        } while ((prototype = Reflect.getPrototypeOf(prototype)) &&
+            prototype !== Object.prototype &&
+            prototype);
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/function/noop.mjs
+// src/function/noop.ts
+/**
+* A no-operation function that does nothing.
+* This can be used as a placeholder or default function.
+*
+* @example
+* noop(); // Does nothing
+*
+* @returns This function does not return anything.
+*/
+function noop() {}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/predicate/isPlainObject.mjs
+// src/predicate/isPlainObject.ts
+/**
+* Checks if a given value is a plain object.
+*
+* @param value - The value to check.
+* @returns True if the value is a plain object, otherwise false.
+*
+* @example
+* ```typescript
+* // ✅👇 True
+*
+* isPlainObject({ });                       // ✅
+* isPlainObject({ key: 'value' });          // ✅
+* isPlainObject({ key: new Date() });       // ✅
+* isPlainObject(new Object());              // ✅
+* isPlainObject(Object.create(null));       // ✅
+* isPlainObject({ nested: { key: true} });  // ✅
+* isPlainObject(new Proxy({}, {}));         // ✅
+* isPlainObject({ [Symbol('tag')]: 'A' });  // ✅
+*
+* // ✅👇 (cross-realms, node context, workers, ...)
+* const runInNewContext = await import('node:vm').then(
+*     (mod) => mod.runInNewContext
+* );
+* isPlainObject(runInNewContext('({})'));   // ✅
+*
+* // ❌👇 False
+*
+* class Test { };
+* isPlainObject(new Test())           // ❌
+* isPlainObject(10);                  // ❌
+* isPlainObject(null);                // ❌
+* isPlainObject('hello');             // ❌
+* isPlainObject([]);                  // ❌
+* isPlainObject(new Date());          // ❌
+* isPlainObject(new Uint8Array([1])); // ❌
+* isPlainObject(Buffer.from('ABC'));  // ❌
+* isPlainObject(Promise.resolve({})); // ❌
+* isPlainObject(Object.create({}));   // ❌
+* isPlainObject(new (class Cls {}));  // ❌
+* isPlainObject(globalThis);          // ❌,
+* ```
+*/
+function isPlainObject_isPlainObject(value) {
+	if (!value || typeof value !== "object") return false;
+	const proto = Object.getPrototypeOf(value);
+	if (!(proto === null || proto === Object.prototype || Object.getPrototypeOf(proto) === null)) return false;
+	return Object.prototype.toString.call(value) === "[object Object]";
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/baseIsEqualWith.mjs
+
+
+
+
+
+
+
+// src/compat/_internal/baseIsEqualWith.ts
+/**
+* A copy of `isEqualWith` from `es-toolkit/predicate` that only relies on ES2015 built-ins,
+* so that `es-toolkit/compat` runs on Node.js 6 without changing the main library.
+*
+* @param a - The first value to compare.
+* @param b - The second value to compare.
+* @param areValuesEqual - A function to customize the comparison.
+*   If it returns a boolean, that result will be used. If it returns undefined,
+*   the default equality comparison will be used.
+* @returns `true` if the values are equal according to the customizer, otherwise `false`.
+*/
+function baseIsEqualWith(a, b, areValuesEqual) {
+	return isEqualWithImpl(a, b, void 0, void 0, void 0, void 0, areValuesEqual);
+}
+function isEqualWithImpl(a, b, property, aParent, bParent, stack, areValuesEqual) {
+	const result = areValuesEqual(a, b, property, aParent, bParent, stack);
+	if (result !== void 0) return result;
+	if (typeof a === typeof b) switch (typeof a) {
+		case "bigint":
+		case "string":
+		case "boolean":
+		case "symbol":
+		case "undefined": return a === b;
+		case "number": return a === b || Object.is(a, b);
+		case "function": return a === b;
+		case "object": return areObjectsEqual(a, b, stack, areValuesEqual);
+	}
+	return areObjectsEqual(a, b, stack, areValuesEqual);
+}
+function areObjectsEqual(a, b, stack, areValuesEqual) {
+	var _stack;
+	if (Object.is(a, b)) return true;
+	let aTag = getTag(a);
+	let bTag = getTag(b);
+	if (aTag === "[object Arguments]") aTag = objectTag;
+	if (bTag === "[object Arguments]") bTag = objectTag;
+	if (aTag !== bTag) return false;
+	switch (aTag) {
+		case stringTag: return a.toString() === b.toString();
+		case numberTag: {
+			const x = a.valueOf();
+			const y = b.valueOf();
+			return eq(x, y);
+		}
+		case booleanTag:
+		case dateTag:
+		case symbolTag: return Object.is(a.valueOf(), b.valueOf());
+		case regexpTag: return a.source === b.source && a.flags === b.flags;
+		case functionTag: return a === b;
+	}
+	stack = (_stack = stack) !== null && _stack !== void 0 ? _stack : /* @__PURE__ */ new Map();
+	const aStack = stack.get(a);
+	const bStack = stack.get(b);
+	if (aStack != null && bStack != null) return aStack === b;
+	stack.set(a, b);
+	stack.set(b, a);
+	try {
+		switch (aTag) {
+			case mapTag:
+				if (a.size !== b.size) return false;
+				for (const [key, value] of a.entries()) if (!b.has(key) || !isEqualWithImpl(value, b.get(key), key, a, b, stack, areValuesEqual)) return false;
+				return true;
+			case setTag: {
+				if (a.size !== b.size) return false;
+				const aValues = Array.from(a.values());
+				const bValues = Array.from(b.values());
+				for (let i = 0; i < aValues.length; i++) {
+					const aValue = aValues[i];
+					const index = bValues.findIndex((bValue) => {
+						return isEqualWithImpl(aValue, bValue, void 0, a, b, stack, areValuesEqual);
+					});
+					if (index === -1) return false;
+					bValues.splice(index, 1);
+				}
+				return true;
+			}
+			case arrayTag:
+			case uint8ArrayTag:
+			case uint8ClampedArrayTag:
+			case uint16ArrayTag:
+			case uint32ArrayTag:
+			case bigUint64ArrayTag:
+			case int8ArrayTag:
+			case int16ArrayTag:
+			case int32ArrayTag:
+			case bigInt64ArrayTag:
+			case float32ArrayTag:
+			case float64ArrayTag:
+				if (isBuffer(a) !== isBuffer(b)) return false;
+				if (a.length !== b.length) return false;
+				for (let i = 0; i < a.length; i++) if (!isEqualWithImpl(a[i], b[i], i, a, b, stack, areValuesEqual)) return false;
+				return true;
+			case arrayBufferTag:
+				if (a.byteLength !== b.byteLength) return false;
+				return areObjectsEqual(new Uint8Array(a), new Uint8Array(b), stack, areValuesEqual);
+			case dataViewTag:
+				if (a.byteLength !== b.byteLength || a.byteOffset !== b.byteOffset) return false;
+				return areObjectsEqual(new Uint8Array(a), new Uint8Array(b), stack, areValuesEqual);
+			case errorTag: return a.name === b.name && a.message === b.message;
+			case objectTag: {
+				if (!(areObjectsEqual(a.constructor, b.constructor, stack, areValuesEqual) || isPlainObject_isPlainObject(a) && isPlainObject_isPlainObject(b))) return false;
+				const aKeys = [...Object.keys(a), ...getSymbols(a)];
+				const bKeys = [...Object.keys(b), ...getSymbols(b)];
+				if (aKeys.length !== bKeys.length) return false;
+				for (let i = 0; i < aKeys.length; i++) {
+					const propKey = aKeys[i];
+					const aProp = a[propKey];
+					if (!hasOwn(b, propKey)) return false;
+					const bProp = b[propKey];
+					if (!isEqualWithImpl(aProp, bProp, propKey, a, b, stack, areValuesEqual)) return false;
+				}
+				return true;
+			}
+			default: return false;
+		}
+	} finally {
+		stack.delete(a);
+		stack.delete(b);
+	}
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isEqual.mjs
+
+
+// src/compat/predicate/isEqual.ts
+/**
+* Checks if two values are equal, including support for `Date`, `RegExp`, and deep object comparison.
+*
+* @param a - The first value to compare.
+* @param b - The second value to compare.
+* @returns `true` if the values are equal, otherwise `false`.
+*
+* @example
+* isEqual(1, 1); // true
+* isEqual({ a: 1 }, { a: 1 }); // true
+* isEqual(/abc/g, /abc/g); // true
+* isEqual(new Date('2020-01-01'), new Date('2020-01-01')); // true
+* isEqual([1, 2, 3], [1, 2, 3]); // true
+*/
+function isEqual(a, b) {
+	return baseIsEqualWith(a, b, noop);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isObjectLike.mjs
+// src/compat/predicate/isObjectLike.ts
+/**
+* Checks if the given value is object-like.
+*
+* A value is object-like if its type is object and it is not null.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to an object-like value.
+*
+* @param value - The value to test if it is an object-like.
+* @returns `true` if the value is an object-like, `false` otherwise.
+*
+* @example
+* const value1 = { a: 1 };
+* const value2 = [1, 2, 3];
+* const value3 = 'abc';
+* const value4 = () => {};
+* const value5 = null;
+*
+* console.log(isObjectLike(value1)); // true
+* console.log(isObjectLike(value2)); // true
+* console.log(isObjectLike(value3)); // false
+* console.log(isObjectLike(value4)); // false
+* console.log(isObjectLike(value5)); // false
+*/
+function isObjectLike(value) {
+	return typeof value === "object" && value !== null;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/math/range.mjs
+// src/math/range.ts
+/**
+* Returns an array of numbers from `start` (inclusive) to `end` (exclusive), incrementing by `step`.
+*
+* @param start - The starting number of the range (inclusive).
+* @param end - The end number of the range (exclusive).
+* @param step - The step value for the range.
+* @returns An array of numbers from `start` (inclusive) to `end` (exclusive) with the specified `step`.
+* @throws {Error} Throws an error if the step value is not a non-zero integer.
+*
+* @example
+* // Returns [0, 1, 2, 3]
+* range(4);
+*
+* @example
+* // Returns [0, -1, -2, -3]
+* range(0, -4, -1);
+*/
+function range(start, end, step = 1) {
+	if (end == null) {
+		end = start;
+		start = 0;
+	}
+	if (!Number.isInteger(step) || step === 0) throw new Error(`The step value must be a non-zero integer.`);
+	const length = Math.max(Math.ceil((end - start) / step), 0);
+	const result = new Array(length);
+	for (let i = 0; i < length; i++) result[i] = start + i * step;
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/reduce.mjs
+
+
+
+
+// src/compat/array/reduce.ts
+/**
+* Reduces a collection to a single value using an iteratee function.
+*
+* @param collection - The collection to iterate over.
+* @param iteratee - The function invoked per iteration or the key to reduce over.
+* @param initialValue - The initial value.
+* @returns Returns the accumulated value.
+*
+* @example
+* // Using a reducer function
+* const array = [1, 2, 3];
+* reduce(array, (acc, value) => acc + value, 0); // => 6
+*
+* @example
+* // Using a reducer function with initialValue
+* const array = [1, 2, 3];
+* reduce(array, (acc, value) => acc + value % 2 === 0, true); // => false
+*
+* @example
+* // Using an object as the collection
+* const obj = { a: 1, b: 2, c: 3 };
+* reduce(obj, (acc, value) => acc + value, 0); // => 6
+*/
+function reduce(collection, iteratee$1 = identity, accumulator) {
+	const hasAccumulator = arguments.length >= 3;
+	if (!collection) return accumulator;
+	iteratee$1 = iteratee(iteratee$1);
+	let keys;
+	let startIndex = 0;
+	if (isArrayLike(collection)) {
+		keys = range(0, collection.length);
+		if (!hasAccumulator && collection.length > 0) {
+			accumulator = collection[0];
+			startIndex += 1;
+		}
+	} else {
+		keys = Object.keys(collection);
+		if (!hasAccumulator && keys.length > 0) {
+			accumulator = collection[keys[0]];
+			startIndex += 1;
+		}
+	}
+	for (let i = startIndex; i < keys.length; i++) {
+		const key = keys[i];
+		const value = collection[key];
+		accumulator = iteratee$1(accumulator, value, key, collection);
+	}
+	return accumulator;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/keyBy.mjs
+
+
+
+
+
+// src/compat/array/keyBy.ts
+/**
+* Maps each element of an array or an object based on a provided key-generating function.
+*
+* This function takes an array or object and a function that generates a key from each element or value. It returns
+* an object where the keys are the generated keys and the values are the corresponding elements or values.
+* If there are multiple elements or values generating the same key, the last one among them is used
+* as the value.
+*
+* @param collection - The collection to iterate over.
+* @param [iteratee] - The iteratee to transform keys.
+*   - If a function is provided, it's invoked for each element in the collection.
+*   - If a property name (string) is provided, that property of each element is used as the key.
+*   - If a property-value pair (array) is provided, elements with matching property values are used.
+*   - If a partial object is provided, elements with matching properties are used.
+*   - If omitted, the identity function is used.
+* @returns Returns the composed aggregate object.
+*
+* @example
+* // Using an array of objects
+* keyBy([{ id: 'a' }, { id: 'b' }], 'id');
+* // => { a: { id: 'a' }, b: { id: 'b' } }
+*
+* @example
+* // Using a function iteratee
+* keyBy(['a', 'b', 'c'], val => val.toUpperCase());
+* // => { A: 'a', B: 'b', C: 'c' }
+*/
+function keyBy(collection, iteratee$1) {
+	if (!isArrayLike(collection) && !isObjectLike(collection)) return {};
+	const keyFn = iteratee(iteratee$1 !== null && iteratee$1 !== void 0 ? iteratee$1 : identity);
+	return reduce(collection, (result, value) => {
+		const key = keyFn(value);
+		result[key] = value;
+		return result;
+	}, {});
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/object/mapValues.mjs
+// src/object/mapValues.ts
+/**
+* Creates a new object with the same keys as the given object, but with values generated
+* by running each own enumerable property of the object through the iteratee function.
+*
+* @template T - The type of the object.
+* @template K - The type of the keys in the object.
+* @template V - The type of the new values generated by the iteratee function.
+*
+* @param object - The object to iterate over.
+* @param getNewValue - The function invoked per own enumerable property.
+* @returns Returns the new mapped object.
+*
+* @example
+* // Example usage:
+* const obj = { a: 1, b: 2 };
+* const result = mapValues(obj, (value) => value * 2);
+* console.log(result); // { a: 2, b: 4 }
+*/
+function mapValues(object, getNewValue) {
+	const result = {};
+	const keys = Object.keys(object);
+	for (let i = 0; i < keys.length; i++) {
+		const key = keys[i];
+		const value = object[key];
+		result[key] = getNewValue(value, key, object);
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/mapValues.mjs
+
+
+
+// src/compat/object/mapValues.ts
+/**
+* Creates a new object with the same keys as the given object, but with values generated
+* by running each own enumerable property of the object through the iteratee function.
+*
+* @template T - The type of the object.
+* @template K - The type of the keys in the object.
+* @template V - The type of the new values generated by the iteratee function.
+*
+* @param object - The object to iterate over.
+* @param [getNewValue] -
+*        The function invoked per own enumerable property, or a path to generate new values.
+* @returns Returns the new mapped object.
+*
+* @example
+* // Example usage:
+* const obj = { a: 1, b: 2 };
+* const result = mapValues(obj, (value) => value * 2);
+* console.log(result); // { a: 2, b: 4 }
+*/
+function mapValues_mapValues(object, getNewValue = identity) {
+	if (object == null) return {};
+	return mapValues(object, iteratee(getNewValue));
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/omitBy.mjs
+
+
+
+
+
+// src/compat/object/omitBy.ts
+/**
+* Creates a new object composed of the properties that do not satisfy the predicate function.
+*
+* This function takes an object and a predicate function, and returns a new object that
+* includes only the properties for which the predicate function returns false.
+*
+* @template T - The type of object.
+* @param obj - The object to omit properties from.
+* @param shouldOmit - A predicate function that determines
+* whether a property should be omitted. It takes the property's value, key, and the source object as arguments and returns `true`
+* if the property should be omitted, and `false` otherwise.
+* @returns Returns the new object.
+*
+* @example
+* const obj = { a: 1, b: 'omit', c: 3 };
+* const shouldOmit = (value) => typeof value === 'string';
+* const result = omitBy(obj, shouldOmit);
+* // result will be { a: 1, c: 3 }
+*/
+function omitBy(object, shouldOmit) {
+	if (object == null) return {};
+	const result = {};
+	const predicate = iteratee(shouldOmit !== null && shouldOmit !== void 0 ? shouldOmit : identity_identity);
+	const keys = [...keysIn(object), ...getSymbolsIn(object)];
+	for (let i = 0; i < keys.length; i++) {
+		const key = (0,isSymbol/* isSymbol */.B)(keys[i]) ? keys[i] : keys[i].toString();
+		const value = object[key];
+		if (!predicate(value, key, object)) result[key] = value;
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-extra-models.explorer.js
+
+const exploreGlobalApiExtraModelsMetadata = (metatype) => {
+    const extraModels = Reflect.getMetadata(DECORATORS.API_EXTRA_MODELS, metatype);
+    return extraModels || [];
+};
+const exploreApiExtraModelsMetadata = (instance, prototype, method) => Reflect.getMetadata(DECORATORS.API_EXTRA_MODELS, method) || [];
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/get-schema-path.util.js
+
+
+function getSchemaPath(model) {
+    const modelName = (0,shared_utils/* isString */.Kg)(model) ? model : getSchemaNameByClass(model);
+    return `#/components/schemas/${modelName}`;
+}
+function getSchemaNameByClass(target) {
+    if (!target || typeof target !== 'function') {
+        return '';
+    }
+    const customSchema = Reflect.getOwnMetadata(DECORATORS.API_SCHEMA, target);
+    if (!customSchema || customSchema.length === 0) {
+        return target.name;
+    }
+    return customSchema[customSchema.length - 1].name ?? target.name;
+}
+function refs(...models) {
+    return models.map((item) => ({
+        $ref: getSchemaPath(item.name)
+    }));
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/is-body-parameter.util.js
+function isBodyParameter(param) {
+    return param.in === 'body';
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/wrap-ref-in-all-of.util.js
+
+
+function wrapRefInAllOf(schema, extraAllOf = []) {
+    const { $ref, allOf, ...siblings } = schema;
+    const rest = omitBy(siblings, isUndefined);
+    const allOfEntries = [...(Array.isArray(allOf) ? allOf : []), ...extraAllOf];
+    if (Object.keys(rest).length === 0 && allOfEntries.length === 0) {
+        return { $ref };
+    }
+    return { ...rest, allOf: [...allOfEntries, { $ref }] };
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/swagger-types-mapper.js
+
+
+
+
+
+
+
+
+class SwaggerTypesMapper {
+    constructor() {
+        this.keysToRemove = [
+            'isArray',
+            'enum',
+            'enumName',
+            'enumSchema',
+            '$ref',
+            'standardSchema',
+            'selfRequired',
+            'exampleMaxDepth',
+            'readOnly',
+            ...this.getSchemaOptionsKeys()
+        ];
+    }
+    mapParamTypes(parameters) {
+        return parameters.map((param) => {
+            if (this.hasSchemaDefinition(param) ||
+                this.hasRawContentDefinition(param)) {
+                if (Array.isArray(param.required) && 'schema' in param) {
+                    param.schema.required = param.required;
+                    delete param.required;
+                }
+                if ('selfRequired' in param) {
+                    param.required = param.selfRequired;
+                }
+                if ('schema' in param &&
+                    !isBodyParameter(param)) {
+                    return {
+                        ...this.omitParamKeys(param),
+                        schema: this.mergeSchemaAnnotations(param.schema, param)
+                    };
+                }
+                return this.omitParamKeys(param);
+            }
+            const { type } = param;
+            const typeName = type && isFunction(type)
+                ? this.mapTypeToOpenAPIType(type.name)
+                : this.mapTypeToOpenAPIType(type);
+            const paramWithTypeMetadata = omitBy({
+                ...param,
+                type: typeName
+            }, isUndefined);
+            if (this.isEnumArrayType(paramWithTypeMetadata)) {
+                return this.mapEnumArrayType(paramWithTypeMetadata, this.keysToRemove);
+            }
+            else if (paramWithTypeMetadata.isArray) {
+                return this.mapArrayType(paramWithTypeMetadata, this.keysToRemove);
+            }
+            return {
+                ...omit(param, this.keysToRemove),
+                schema: omitBy({
+                    ...this.getSchemaOptions(param),
+                    ...(param.schema || {}),
+                    enum: paramWithTypeMetadata.enum,
+                    type: paramWithTypeMetadata.type,
+                    $ref: paramWithTypeMetadata.$ref
+                }, isUndefined)
+            };
+        });
+    }
+    mapTypeToOpenAPIType(type) {
+        if (!(type && type.charAt)) {
+            return;
+        }
+        return type.charAt(0).toLowerCase() + type.slice(1);
+    }
+    mapEnumArrayType(param, keysToRemove) {
+        return {
+            ...omit(param, keysToRemove),
+            schema: {
+                ...this.getSchemaOptions(param),
+                type: 'array',
+                items: param.items
+            }
+        };
+    }
+    mapArrayType(param, keysToRemove) {
+        const itemsModifierKeys = [
+            'exclusiveMaximum',
+            'exclusiveMinimum',
+            'format',
+            'maximum',
+            'maxLength',
+            'minimum',
+            'minLength',
+            'multipleOf',
+            'pattern'
+        ];
+        const explicitItems = param.items;
+        const items = omitBy({
+            ...(param.schema || {}),
+            enum: param.enum,
+            type: this.mapTypeToOpenAPIType(param.type)
+        }, isUndefined);
+        const modifierProperties = pick_pick(param, itemsModifierKeys);
+        return {
+            ...omit(param, keysToRemove),
+            schema: {
+                ...omit(this.getSchemaOptions(param), [...itemsModifierKeys]),
+                type: 'array',
+                items: explicitItems
+                    ? { ...explicitItems, ...modifierProperties }
+                    : isString(items.type)
+                        ? { type: items.type, ...modifierProperties }
+                        : { ...items.type, ...modifierProperties }
+            }
+        };
+    }
+    getSchemaOptionsKeys() {
+        return [
+            'properties',
+            'patternProperties',
+            'additionalProperties',
+            'minimum',
+            'maximum',
+            'maxProperties',
+            'minItems',
+            'minProperties',
+            'maxItems',
+            'minLength',
+            'maxLength',
+            'exclusiveMaximum',
+            'exclusiveMinimum',
+            'uniqueItems',
+            'multipleOf',
+            'title',
+            'format',
+            'pattern',
+            'nullable',
+            'default',
+            'example',
+            'oneOf',
+            'anyOf',
+            'allOf',
+            'type',
+            'items',
+            'writeOnly',
+            'xml',
+            'not',
+            'discriminator',
+            'externalDocs',
+            'const',
+            'contentEncoding',
+            'contentMediaType'
+        ];
+    }
+    getSchemaOptions(param) {
+        const schemaKeys = this.getSchemaOptionsKeys();
+        const optionsObject = schemaKeys.reduce((acc, key) => ({
+            ...acc,
+            [key]: param[key]
+        }), {});
+        return omitBy(optionsObject, isUndefined);
+    }
+    mergeSchemaAnnotations(schema, param) {
+        const structuralKeys = [
+            'type',
+            'items',
+            'properties',
+            'patternProperties',
+            'additionalProperties',
+            'oneOf',
+            'anyOf',
+            'allOf',
+            'not',
+            'discriminator'
+        ];
+        const annotations = omitBy(omit(this.getSchemaOptions(param), structuralKeys), (_, key) => schema[key] !== undefined);
+        const paramAllOf = Array.isArray(param.allOf)
+            ? param.allOf
+            : [];
+        if (Object.keys(annotations).length === 0 && paramAllOf.length === 0) {
+            return schema;
+        }
+        if ('$ref' in schema) {
+            return wrapRefInAllOf({ ...schema, ...annotations }, paramAllOf);
+        }
+        if (paramAllOf.length === 0) {
+            return { ...schema, ...annotations };
+        }
+        return {
+            ...schema,
+            ...annotations,
+            allOf: [...(schema.allOf || []), ...paramAllOf]
+        };
+    }
+    isEnumArrayType(param) {
+        return param.isArray && param.items && param.items.enum;
+    }
+    hasSchemaDefinition(param) {
+        return !!param.schema;
+    }
+    hasRawContentDefinition(param) {
+        return 'content' in param;
+    }
+    omitParamKeys(param) {
+        return omit(param, this.keysToRemove);
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/generate-schema.util.js
+
+
+
+function generateSchema(target, extraSchemas = {}) {
+    const factory = new SchemaObjectFactory(new ModelPropertiesAccessor(), new SwaggerTypesMapper());
+    const schemas = { ...extraSchemas };
+    factory.exploreModelSchema(target, schemas);
+    return { schema: schemas[target.name], schemas };
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/index.js
+
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/is-date-ctor.util.js
+function isDateCtor(type) {
+    return type === Date;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/standard-schema-openapi.converter.js
+
+
+const SCHEMA_MAP_KEYWORDS = new Set([
+    'properties',
+    'patternProperties',
+    'dependentSchemas',
+    '$defs',
+    'definitions'
+]);
+class StandardSchemaOpenApiConverter {
+    constructor(schemaConverter) {
+        this.schemaConverter = schemaConverter;
+        this.logger = new common.Logger(StandardSchemaOpenApiConverter.name);
+    }
+    convertInto(schema, schemas, schemaType = 'input') {
+        const convertedSchema = this.convert(schema, schemaType);
+        if (!convertedSchema) {
+            return undefined;
+        }
+        Object.assign(schemas, convertedSchema.components);
+        return convertedSchema.schema;
+    }
+    convert(schema, schemaType = 'input') {
+        if (!this.isStandardSchema(schema)) {
+            return undefined;
+        }
+        return this.convertSchema(schema, schemaType);
+    }
+    convertSchema(schema, schemaType) {
+        const customSchema = this.schemaConverter?.(schema, { schemaType });
+        if (customSchema) {
+            return this.normalizeCustomConvertedSchema(customSchema);
+        }
+        if (!this.hasStandardJsonSchema(schema)) {
+            return undefined;
+        }
+        const standard = schema['~standard'];
+        const convert = standard.jsonSchema?.[schemaType];
+        if (!convert) {
+            return undefined;
+        }
+        let convertedSchema;
+        try {
+            convertedSchema = convert({ target: 'openapi-3.0' });
+        }
+        catch (error) {
+            if (typeof schema === 'function') {
+                const reason = error instanceof Error ? error.message : String(error);
+                this.logger.warn(`Skipping a "${standard.vendor}" standard schema that could not be converted to OpenAPI 3.0 (${reason}). Pass a "standardSchemaConverter" to SwaggerModule.createDocument() to document it.`);
+                return undefined;
+            }
+            throw error;
+        }
+        if (!convertedSchema || typeof convertedSchema !== 'object') {
+            return undefined;
+        }
+        return this.normalizeConvertedSchema(convertedSchema);
+    }
+    isStandardSchema(schema) {
+        return !!(schema &&
+            (typeof schema === 'object' || typeof schema === 'function') &&
+            '~standard' in schema);
+    }
+    hasStandardJsonSchema(schema) {
+        const standard = schema['~standard'];
+        return !!standard && 'jsonSchema' in standard;
+    }
+    normalizeCustomConvertedSchema(convertedSchema) {
+        return {
+            schema: this.rewriteValue(convertedSchema.schema),
+            components: this.rewriteComponents(convertedSchema.components || {})
+        };
+    }
+    normalizeConvertedSchema(schema) {
+        return {
+            schema: this.rewriteValue(omit(schema, ['$defs', 'definitions', '$schema'])),
+            components: this.rewriteComponents(Object.fromEntries(this.getDefinitionEntries(schema)))
+        };
+    }
+    rewriteComponents(components) {
+        const rewrittenComponents = {};
+        for (const [name, definition] of Object.entries(components)) {
+            rewrittenComponents[name] = this.rewriteDefinitionRefs(definition);
+        }
+        return rewrittenComponents;
+    }
+    getDefinitionEntries(schema) {
+        const definitions = schema.$defs || schema.definitions;
+        if (!definitions || typeof definitions !== 'object') {
+            return [];
+        }
+        return Object.entries(definitions);
+    }
+    rewriteDefinitionRefs(value, isSchema = true) {
+        if (Array.isArray(value)) {
+            return value.map((item) => this.rewriteValue(item));
+        }
+        const rewrittenValue = {};
+        for (const [key, currentValue] of Object.entries(value)) {
+            const rewrittenChild = isSchema && SCHEMA_MAP_KEYWORDS.has(key)
+                ? this.rewriteSchemaMap(currentValue)
+                : this.rewriteValue(currentValue);
+            if (rewrittenChild !== undefined) {
+                rewrittenValue[key] = rewrittenChild;
+            }
+        }
+        return isSchema
+            ? this.normalizeSchemaExamples(rewrittenValue)
+            : rewrittenValue;
+    }
+    rewriteSchemaMap(value) {
+        if (!value || typeof value !== 'object' || Array.isArray(value)) {
+            return this.rewriteValue(value);
+        }
+        return this.rewriteDefinitionRefs(value, false);
+    }
+    rewriteValue(value) {
+        if (Array.isArray(value)) {
+            return value.map((item) => this.rewriteValue(item));
+        }
+        if (!value || typeof value !== 'object') {
+            return value;
+        }
+        const currentValue = value;
+        if (typeof currentValue.$ref === 'string') {
+            return {
+                ...this.rewriteDefinitionRefs(omit(currentValue, ['$ref'])),
+                $ref: currentValue.$ref
+                    .replace('#/$defs/', '#/components/schemas/')
+                    .replace('#/definitions/', '#/components/schemas/')
+            };
+        }
+        return this.rewriteDefinitionRefs(currentValue);
+    }
+    normalizeSchemaExamples(value) {
+        const normalizedConstValue = this.normalizeSchemaConst(value);
+        if (!Array.isArray(normalizedConstValue.examples) ||
+            normalizedConstValue.example !== undefined) {
+            return normalizedConstValue;
+        }
+        const [firstExample] = normalizedConstValue.examples;
+        return {
+            ...omit(normalizedConstValue, ['examples']),
+            example: firstExample
+        };
+    }
+    normalizeSchemaConst(value) {
+        if (!('const' in value)) {
+            return value;
+        }
+        return {
+            ...omit(value, ['const']),
+            enum: [value.const]
+        };
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/schema-object-factory.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class SchemaObjectFactory {
+    constructor(modelPropertiesAccessor, swaggerTypesMapper, standardSchemaConverter) {
+        this.modelPropertiesAccessor = modelPropertiesAccessor;
+        this.swaggerTypesMapper = swaggerTypesMapper;
+        this.standardSchemaConverter = standardSchemaConverter;
+        this.standardSchemaOpenApiConverter = new StandardSchemaOpenApiConverter(this.standardSchemaConverter);
+    }
+    createFromModel(parameters, schemas) {
+        const parameterObjects = parameters.map((param) => {
+            const schemaOverride = this.getSchemaOverride(param, schemas);
+            if (schemaOverride) {
+                const overriddenParam = this.createSchemaOverrideParam(param, schemaOverride);
+                if (overriddenParam) {
+                    return overriddenParam;
+                }
+            }
+            if (this.isLazyTypeFunc(param.type)) {
+                [param.type, param.isArray] = getTypeIsArrayTuple(param.type(), undefined);
+            }
+            param = this.resolveLazyEnum(param);
+            if (!isBodyParameter(param) && param.enumName) {
+                return this.createEnumParam(param, schemas);
+            }
+            if (this.isPrimitiveType(param.type)) {
+                return param;
+            }
+            if (this.isArrayCtor(param.type)) {
+                return this.mapArrayCtorParam(param);
+            }
+            if (!this.isModelBody(param)) {
+                return this.createQueryOrParamSchema(param, schemas);
+            }
+            const customType = this.getCustomType(param, schemas);
+            const schema = customType.schema;
+            return {
+                ...customType,
+                schema: '$ref' in schema
+                    ? this.wrapModelRef(schema)
+                    : { ...schema, items: this.wrapModelRef(schema.items) }
+            };
+        });
+        return flatten(parameterObjects);
+    }
+    getCustomType(param, schemas) {
+        const modelName = this.exploreModelSchema(param.type, schemas);
+        const name = param.name || modelName;
+        const schema = {
+            ...(param.schema || {}),
+            $ref: getSchemaPath(modelName)
+        };
+        const isArray = param.isArray;
+        param = omit(param, 'isArray');
+        if (isArray) {
+            return {
+                ...param,
+                name,
+                schema: {
+                    type: 'array',
+                    items: schema
+                }
+            };
+        }
+        return {
+            ...param,
+            name,
+            schema
+        };
+    }
+    wrapModelRef(schema, extraAllOf = []) {
+        const wrapped = wrapRefInAllOf(schema, extraAllOf);
+        if (!wrapped.nullable || wrapped.type !== undefined) {
+            return wrapped;
+        }
+        const { allOf, ...rest } = wrapped;
+        return { ...rest, type: 'object', allOf };
+    }
+    createQueryOrParamSchema(param, schemas) {
+        if (isDateCtor(param.type)) {
+            return {
+                format: 'date-time',
+                ...param,
+                type: 'string'
+            };
+        }
+        if (this.isBigInt(param.type)) {
+            return {
+                format: 'int64',
+                ...param,
+                type: 'integer'
+            };
+        }
+        if (isFunction(param.type)) {
+            if (param.name && param.type === Object) {
+                const { type: _type, ...rest } = param;
+                const hasCombinator = ['oneOf', 'anyOf', 'allOf'].some((key) => key in rest);
+                return hasCombinator ? rest : { ...rest, type: 'object' };
+            }
+            if (param.name) {
+                const customType = this.getCustomType(param, schemas);
+                const schemaOptionsKeys = this.swaggerTypesMapper.getSchemaOptionsKeys();
+                const schemaOptionsFromParam = {};
+                for (const key of schemaOptionsKeys) {
+                    if (key === 'type' || key === 'items') {
+                        continue;
+                    }
+                    if (key in customType &&
+                        (key === 'allOf' ||
+                            customType.schema[key] === undefined)) {
+                        schemaOptionsFromParam[key] = customType[key];
+                        delete customType[key];
+                    }
+                }
+                const existingSchema = customType.schema;
+                if ('$ref' in existingSchema) {
+                    const { allOf: paramAllOf, ...restParamOptions } = schemaOptionsFromParam;
+                    customType.schema = this.wrapModelRef({ ...existingSchema, ...restParamOptions }, Array.isArray(paramAllOf) ? paramAllOf : []);
+                }
+                else {
+                    customType.schema = {
+                        ...existingSchema,
+                        ...schemaOptionsFromParam,
+                        items: this.wrapModelRef(existingSchema.items)
+                    };
+                }
+                return customType;
+            }
+            const propertiesWithType = this.extractPropertiesFromType(param.type, schemas);
+            if (!propertiesWithType) {
+                return param;
+            }
+            return propertiesWithType.map((property) => {
+                const keysToOmit = [
+                    'isArray',
+                    'enumName',
+                    'enumSchema',
+                    'selfRequired'
+                ];
+                const parameterObject = {
+                    ...omit(property, keysToOmit),
+                    in: 'query',
+                    required: 'selfRequired' in property
+                        ? property.selfRequired
+                        : typeof property.required === 'boolean'
+                            ? property.required
+                            : true
+                };
+                const keysToMoveToSchema = [
+                    ...this.swaggerTypesMapper.getSchemaOptionsKeys(),
+                    ...('items' in property ? [] : ['enum'])
+                ];
+                const result = keysToMoveToSchema.reduce((acc, key) => {
+                    if (key in property) {
+                        acc.schema = { ...acc.schema, [key]: property[key] };
+                        delete acc[key];
+                    }
+                    return acc;
+                }, parameterObject);
+                if (Array.isArray(property.required)) {
+                    result.schema = { ...result.schema, required: property.required };
+                }
+                return result;
+            });
+        }
+        if (this.isConstEnumObject(param.type)) {
+            const enumValues = getEnumValues(param.type);
+            const enumType = getEnumType(enumValues);
+            return {
+                ...param,
+                schema: {
+                    type: enumType,
+                    enum: enumValues
+                },
+                selfRequired: param.required
+            };
+        }
+        if (this.isObjectLiteral(param.type)) {
+            const schemaFromObjectLiteral = this.createFromObjectLiteral(param.name, param.type, schemas);
+            if (param.isArray) {
+                return {
+                    ...param,
+                    schema: {
+                        type: 'array',
+                        items: omit(schemaFromObjectLiteral, 'name')
+                    },
+                    selfRequired: param.required
+                };
+            }
+            return {
+                ...param,
+                schema: {
+                    type: schemaFromObjectLiteral.type,
+                    properties: schemaFromObjectLiteral.properties,
+                    required: schemaFromObjectLiteral.required
+                },
+                selfRequired: param.required
+            };
+        }
+        return param;
+    }
+    extractPropertiesFromType(type, schemas, pendingSchemasRefs = []) {
+        const { prototype } = type;
+        if (!prototype) {
+            return;
+        }
+        const extraModels = exploreGlobalApiExtraModelsMetadata(type);
+        extraModels.forEach((item) => this.exploreModelSchema(item, schemas, pendingSchemasRefs));
+        this.modelPropertiesAccessor.applyMetadataFactory(prototype);
+        const modelProperties = this.modelPropertiesAccessor.getModelProperties(prototype);
+        const propertiesWithType = modelProperties.map((key) => {
+            let property;
+            try {
+                property = this.mergePropertyWithMetadata(key, prototype, schemas, pendingSchemasRefs);
+            }
+            catch (err) {
+                if (err instanceof Error) {
+                    const className = type?.name || 'UnknownType';
+                    const prefix = `[${className}] `;
+                    if (!err.message.startsWith(prefix)) {
+                        err.message = `${prefix}${err.message}`;
+                    }
+                }
+                throw err;
+            }
+            const schemaCombinators = ['oneOf', 'anyOf', 'allOf'];
+            const declaredSchemaCombinator = schemaCombinators.find((combinator) => combinator in property);
+            if (declaredSchemaCombinator) {
+                const reflectedPropertyMetadata = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, prototype, key);
+                const explicitOptions = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTY_EXPLICIT_OPTIONS, prototype, key) ?? [];
+                const hasDeclaredSchemaCombinator = schemaCombinators.some((combinator) => combinator in (reflectedPropertyMetadata || {}));
+                const schemaObjectMetadata = property;
+                const arrayKeywords = [
+                    'items',
+                    'prefixItems',
+                    'minItems',
+                    'maxItems',
+                    'uniqueItems',
+                    'contains',
+                    'minContains',
+                    'maxContains',
+                    'additionalItems',
+                    'unevaluatedItems'
+                ];
+                const combinatorEntries = property[declaredSchemaCombinator];
+                const hasArrayLevelCombinator = Array.isArray(combinatorEntries) &&
+                    combinatorEntries.some((entry) => entry &&
+                        typeof entry === 'object' &&
+                        arrayKeywords.some((kw) => kw in entry));
+                const keepCombinatorOnArray = explicitOptions.includes('items') ||
+                    hasArrayLevelCombinator ||
+                    (declaredSchemaCombinator === 'allOf' &&
+                        explicitOptions.includes('type') &&
+                        reflectedPropertyMetadata?.type !== 'array' &&
+                        reflectedPropertyMetadata?.type !== Object);
+                if ((schemaObjectMetadata?.type === 'array' ||
+                    schemaObjectMetadata.isArray) &&
+                    !keepCombinatorOnArray) {
+                    schemaObjectMetadata.items = {};
+                    schemaObjectMetadata.items[declaredSchemaCombinator] =
+                        property[declaredSchemaCombinator];
+                    delete property[declaredSchemaCombinator];
+                }
+                else if (hasDeclaredSchemaCombinator) {
+                    for (const keyword of ['type', 'additionalProperties']) {
+                        if (!explicitOptions.includes(keyword) &&
+                            !(keyword === 'type' && schemaObjectMetadata.isArray)) {
+                            delete schemaObjectMetadata[keyword];
+                        }
+                    }
+                }
+            }
+            return property;
+        });
+        return propertiesWithType;
+    }
+    exploreModelSchema(type, schemas, pendingSchemasRefs = []) {
+        if (this.isLazyTypeFunc(type)) {
+            type = type();
+        }
+        const propertiesWithType = this.extractPropertiesFromType(type, schemas, pendingSchemasRefs);
+        if (!propertiesWithType) {
+            return '';
+        }
+        const extensionProperties = Reflect.getMetadata(DECORATORS.API_EXTENSION, type) || {};
+        const { schemaName, schemaProperties } = this.getSchemaMetadata(type);
+        const typeDefinition = {
+            type: 'object',
+            properties: mapValues_mapValues(keyBy(propertiesWithType, 'name'), (property) => {
+                const keysToOmit = [
+                    'name',
+                    'isArray',
+                    'enumName',
+                    'enumSchema',
+                    'selfRequired'
+                ];
+                if ('required' in property && Array.isArray(property.required)) {
+                    return omit(property, keysToOmit);
+                }
+                return omit(property, [...keysToOmit, 'required']);
+            }),
+            ...extensionProperties,
+            ...schemaProperties
+        };
+        const typeDefinitionRequiredFields = propertiesWithType
+            .filter((property) => 'selfRequired' in property
+            ? property.selfRequired != false
+            : property.required != false && !Array.isArray(property.required))
+            .map((property) => property.name);
+        if (typeDefinitionRequiredFields.length > 0) {
+            typeDefinition['required'] = typeDefinitionRequiredFields;
+        }
+        if (schemas[schemaName] && !isEqual(schemas[schemaName], typeDefinition)) {
+            common.Logger.warn(`Duplicate DTO detected: "${schemaName}" is defined multiple times with different schemas.\n` +
+                `Consider using unique class names or applying @ApiExtraModels() decorator with custom schema names.\n` +
+                `Note: This will throw an error in the next major version.`);
+        }
+        schemas[schemaName] = typeDefinition;
+        return schemaName;
+    }
+    getSchemaMetadata(type) {
+        const schemas = Reflect.getOwnMetadata(DECORATORS.API_SCHEMA, type) ?? [];
+        const { name, ...schemaProperties } = schemas[schemas.length - 1] ?? {};
+        return { schemaName: name ?? type.name, schemaProperties };
+    }
+    mergePropertyWithMetadata(key, prototype, schemas, pendingSchemaRefs, metadata) {
+        if (!metadata) {
+            metadata =
+                omit(Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, prototype, key), 'link') || {};
+        }
+        if (this.isLazyTypeFunc(metadata.type)) {
+            metadata.type = metadata.type();
+            [metadata.type, metadata.isArray] = getTypeIsArrayTuple(metadata.type, metadata.isArray);
+        }
+        metadata = this.resolveLazyEnum(metadata);
+        if (metadata.default !== undefined) {
+            metadata = {
+                ...metadata,
+                default: this.pickDocumentedDefaultKeys(metadata.default, metadata.type)
+            };
+        }
+        if (Array.isArray(metadata.type)) {
+            return this.createFromNestedArray(key, metadata, schemas, pendingSchemaRefs);
+        }
+        return this.createSchemaMetadata(key, metadata, schemas, pendingSchemaRefs);
+    }
+    resolveLazyEnum(metadata) {
+        if (typeof metadata.enum !== 'function') {
+            return metadata;
+        }
+        const lazyEnum = metadata.enum;
+        const enumValues = getEnumValues(lazyEnum);
+        if (metadata.isArray) {
+            return {
+                ...omit(metadata, 'enum'),
+                type: 'array',
+                items: { type: getEnumType(enumValues), enum: enumValues }
+            };
+        }
+        return {
+            ...metadata,
+            enum: enumValues,
+            type: isLazyEnumTypeInferred(lazyEnum)
+                ? getEnumType(enumValues)
+                : metadata.type
+        };
+    }
+    createEnumParam(param, schemas) {
+        const enumName = param.enumName;
+        const $ref = getSchemaPath(enumName);
+        if (!(enumName in schemas)) {
+            const _enum = param.enum
+                ? param.enum
+                : param.schema
+                    ? param.schema['items']
+                        ? param.schema['items']['enum']
+                        : param.schema['enum']
+                    : param.isArray && param.items
+                        ? param.items.enum
+                        : undefined;
+            schemas[enumName] = {
+                type: this.getEnumParamType(param),
+                enum: _enum,
+                ...param.enumSchema,
+                ...(param['x-enumNames'] ? { 'x-enumNames': param['x-enumNames'] } : {})
+            };
+        }
+        else {
+            if (param.enumSchema) {
+                schemas[enumName] = {
+                    ...schemas[enumName],
+                    ...param.enumSchema
+                };
+            }
+        }
+        const newSchema = param.isArray || param.schema?.['items']
+            ? { type: 'array', items: { $ref } }
+            : { $ref };
+        return omit({ ...param, schema: newSchema }, [
+            'isArray',
+            'items',
+            'enumName',
+            'enum',
+            'x-enumNames',
+            'enumSchema'
+        ]);
+    }
+    createEnumSchemaType(key, metadata, schemas) {
+        if (!('enumName' in metadata) || !metadata.enumName) {
+            return {
+                ...metadata,
+                name: metadata.name || key
+            };
+        }
+        const enumName = metadata.enumName;
+        const $ref = getSchemaPath(enumName);
+        const enumType = (metadata.isArray ? metadata.items['type'] : metadata.type) ?? 'string';
+        if (!schemas[enumName]) {
+            schemas[enumName] = {
+                type: enumType,
+                ...metadata.enumSchema,
+                enum: metadata.isArray && metadata.items
+                    ? metadata.items['enum']
+                    : metadata.enum,
+                description: metadata.description ?? undefined,
+                'x-enumNames': metadata['x-enumNames'] ?? undefined
+            };
+        }
+        else {
+            if (metadata.enumSchema) {
+                schemas[enumName] = {
+                    ...schemas[enumName],
+                    ...metadata.enumSchema
+                };
+            }
+            if (metadata['x-enumNames']) {
+                schemas[enumName]['x-enumNames'] = metadata['x-enumNames'];
+            }
+        }
+        const _schemaObject = {
+            ...metadata,
+            name: metadata.name || key,
+            type: metadata.isArray ? 'array' : 'string'
+        };
+        const existingCombinator = ['oneOf', 'anyOf'].find((key) => key in metadata && Array.isArray(metadata[key]));
+        const refHost = metadata.isArray
+            ? { items: { $ref } }
+            : existingCombinator
+                ? { [existingCombinator]: [...metadata[existingCombinator], { $ref }] }
+                : { allOf: [{ $ref }] };
+        const paramObject = { ..._schemaObject, ...refHost };
+        const pathsToOmit = ['enum', 'enumName', 'enumSchema', 'x-enumNames'];
+        if (!metadata.isArray) {
+            pathsToOmit.push('type');
+        }
+        return omit(paramObject, pathsToOmit);
+    }
+    createNotBuiltInTypeReference(key, metadata, trueMetadataType, schemas, pendingSchemaRefs) {
+        if ((0,shared_utils/* isUndefined */.b0)(trueMetadataType)) {
+            const errorIn = pendingSchemaRefs?.length > 0
+                ? `in "${pendingSchemaRefs[pendingSchemaRefs.length - 1]}" `
+                : '';
+            throw new Error(`A circular dependency has been detected ${errorIn}(property key: "${key}"). To resolve this, use a lazy resolver for the property type ("type: () => ClassType") on each side of the relationship, or break the cycle by introducing a reference via @ApiExtraModels.`);
+        }
+        let { schemaName: schemaObjectName } = this.getSchemaMetadata(trueMetadataType);
+        if (!(schemaObjectName in schemas) &&
+            !pendingSchemaRefs.includes(schemaObjectName)) {
+            schemaObjectName = this.exploreModelSchema(trueMetadataType, schemas, [...pendingSchemaRefs, schemaObjectName]);
+        }
+        const $ref = getSchemaPath(schemaObjectName);
+        if (metadata.isArray) {
+            return this.transformToArraySchemaProperty(metadata, key, { $ref });
+        }
+        const keysToRemove = ['type', 'isArray', 'required', 'name'];
+        const validMetadataObject = omit(metadata, keysToRemove);
+        const extraMetadataKeys = Object.keys(validMetadataObject);
+        if (extraMetadataKeys.length > 0) {
+            return {
+                name: metadata.name || key,
+                required: metadata.required,
+                ...validMetadataObject,
+                ...(validMetadataObject['nullable'] ? { type: 'object' } : {}),
+                allOf: [
+                    ...(Array.isArray(validMetadataObject.allOf)
+                        ? validMetadataObject.allOf
+                        : []),
+                    { $ref }
+                ]
+            };
+        }
+        return {
+            name: metadata.name || key,
+            required: metadata.required,
+            $ref
+        };
+    }
+    transformToArraySchemaProperty(metadata, key, type) {
+        const keysToRemove = ['type', 'enum'];
+        const [movedProperties, keysToMove] = this.extractPropertyModifiers(metadata);
+        const schemaHost = {
+            ...omit(metadata, [...keysToRemove, ...keysToMove]),
+            name: metadata.name || key,
+            type: 'array',
+            items: metadata.items
+                ? { ...metadata.items, ...movedProperties }
+                : isString(type)
+                    ? { type, ...movedProperties }
+                    : { ...type, ...movedProperties }
+        };
+        schemaHost.items = omitBy(schemaHost.items, shared_utils/* isUndefined */.b0);
+        return schemaHost;
+    }
+    mapArrayCtorParam(param) {
+        return {
+            ...omit(param, 'type'),
+            schema: {
+                type: 'array',
+                items: {
+                    type: 'string'
+                }
+            }
+        };
+    }
+    createFromObjectLiteral(key, literalObj, schemas) {
+        const objLiteralKeys = Object.keys(literalObj);
+        const properties = {};
+        const required = [];
+        objLiteralKeys.forEach((key) => {
+            const propertyCompilerMetadata = literalObj[key];
+            if (isEnumArray(propertyCompilerMetadata)) {
+                propertyCompilerMetadata.type = 'array';
+                const enumValues = getEnumValues(propertyCompilerMetadata.enum);
+                propertyCompilerMetadata.items = {
+                    type: propertyCompilerMetadata.items?.type ?? getEnumType(enumValues),
+                    enum: enumValues
+                };
+                delete propertyCompilerMetadata.enum;
+            }
+            else if (propertyCompilerMetadata.enum) {
+                const enumValues = getEnumValues(propertyCompilerMetadata.enum);
+                propertyCompilerMetadata.enum = enumValues;
+                if (!propertyCompilerMetadata.type) {
+                    propertyCompilerMetadata.type = getEnumType(enumValues);
+                }
+            }
+            const propertyMetadata = this.mergePropertyWithMetadata(key, Object, schemas, [], propertyCompilerMetadata);
+            const nestedRequired = Array.isArray(propertyMetadata['required'])
+                ? propertyMetadata['required']
+                : undefined;
+            const isRequired = 'selfRequired' in propertyMetadata
+                ? propertyMetadata.selfRequired
+                : !nestedRequired && propertyMetadata['required'];
+            if (isRequired) {
+                required.push(key);
+            }
+            const keysToRemove = ['isArray', 'name', 'selfRequired'];
+            if (!nestedRequired?.length) {
+                keysToRemove.push('required');
+            }
+            const validMetadataObject = omit(propertyMetadata, keysToRemove);
+            properties[key] = validMetadataObject;
+        });
+        const schema = {
+            name: key,
+            type: 'object',
+            properties,
+            required
+        };
+        return schema;
+    }
+    createFromNestedArray(key, metadata, schemas, pendingSchemaRefs) {
+        const recurse = (type) => {
+            if (!Array.isArray(type)) {
+                const schemaMetadata = this.createSchemaMetadata(key, metadata, schemas, pendingSchemaRefs, type);
+                return omit(schemaMetadata, ['isArray', 'name']);
+            }
+            return {
+                name: key,
+                type: 'array',
+                items: recurse(type[0])
+            };
+        };
+        return recurse(metadata.type);
+    }
+    createSchemaMetadata(key, metadata, schemas, pendingSchemaRefs, nestedArrayType) {
+        const typeRef = nestedArrayType || metadata.type;
+        if (metadata.enum && typeRef === Object) {
+            const enumValues = getEnumValues(metadata.enum);
+            const enumType = getEnumType(enumValues);
+            if (metadata.isArray) {
+                return this.transformToArraySchemaProperty({
+                    ...metadata,
+                    items: {
+                        type: enumType,
+                        enum: enumValues
+                    }
+                }, key, { type: enumType, enum: enumValues });
+            }
+            return this.createSchemaMetadata(key, {
+                ...metadata,
+                type: enumType,
+                enum: enumValues
+            }, schemas, pendingSchemaRefs, enumType);
+        }
+        if (this.isConstEnumObject(typeRef)) {
+            const enumValues = getEnumValues(typeRef);
+            const enumType = getEnumType(enumValues);
+            const syntheticMetadata = {
+                ...metadata,
+                type: enumType,
+                enum: enumValues
+            };
+            return this.createSchemaMetadata(key, syntheticMetadata, schemas, pendingSchemaRefs, enumType);
+        }
+        if (this.isObjectLiteral(typeRef)) {
+            const schemaFromObjectLiteral = this.createFromObjectLiteral(key, typeRef, schemas);
+            if (metadata.isArray) {
+                return {
+                    name: schemaFromObjectLiteral.name,
+                    type: 'array',
+                    items: omit(schemaFromObjectLiteral, 'name'),
+                    selfRequired: metadata.required
+                };
+            }
+            return {
+                ...schemaFromObjectLiteral,
+                selfRequired: metadata.required
+            };
+        }
+        if (isString(typeRef)) {
+            if (isEnumMetadata(metadata)) {
+                return this.createEnumSchemaType(key, metadata, schemas);
+            }
+            if (metadata.isArray) {
+                return this.transformToArraySchemaProperty(metadata, key, typeRef);
+            }
+            return {
+                ...metadata,
+                name: metadata.name || key
+            };
+        }
+        if (isDateCtor(typeRef)) {
+            if (metadata.isArray) {
+                return this.transformToArraySchemaProperty(metadata, key, {
+                    format: metadata.format || 'date-time',
+                    type: 'string'
+                });
+            }
+            return {
+                format: 'date-time',
+                ...metadata,
+                type: 'string',
+                name: metadata.name || key
+            };
+        }
+        if (this.isBigInt(typeRef)) {
+            if (metadata.isArray) {
+                return this.transformToArraySchemaProperty(metadata, key, {
+                    format: metadata.format || 'int64',
+                    type: 'integer'
+                });
+            }
+            return {
+                format: 'int64',
+                ...metadata,
+                type: 'integer',
+                name: metadata.name || key
+            };
+        }
+        if (!isBuiltInType(typeRef)) {
+            return this.createNotBuiltInTypeReference(key, metadata, typeRef, schemas, pendingSchemaRefs);
+        }
+        const typeName = this.getTypeName(typeRef);
+        const itemType = this.swaggerTypesMapper.mapTypeToOpenAPIType(typeName);
+        if (metadata.isArray) {
+            return this.transformToArraySchemaProperty(metadata, key, {
+                type: itemType
+            });
+        }
+        else if (itemType === 'array') {
+            const defaultOnArray = 'string';
+            const hasSchemaCombinator = ['oneOf', 'anyOf', 'allOf'].some((combinator) => combinator in metadata);
+            if (hasSchemaCombinator) {
+                return {
+                    ...metadata,
+                    type: undefined,
+                    name: metadata.name || key
+                };
+            }
+            return this.transformToArraySchemaProperty(metadata, key, {
+                type: defaultOnArray
+            });
+        }
+        return {
+            ...metadata,
+            name: metadata.name || key,
+            type: itemType
+        };
+    }
+    isArrayCtor(type) {
+        return type === Array;
+    }
+    isPrimitiveType(type) {
+        return (isFunction(type) &&
+            [String, Boolean, Number].some((item) => item === type));
+    }
+    isLazyTypeFunc(type) {
+        return isFunction(type) && type.name == 'type';
+    }
+    pickDocumentedDefaultKeys(value, type, ancestors = new Set()) {
+        if (Array.isArray(value)) {
+            return value.map((item) => this.pickDocumentedDefaultKeys(item, type, ancestors));
+        }
+        if (!value || typeof value !== 'object' || value instanceof Date) {
+            return value;
+        }
+        while (Array.isArray(type)) {
+            type = type[0];
+        }
+        const model = value.constructor === Object ? type : value.constructor;
+        if (!this.isUserDefinedClass(model)) {
+            return value;
+        }
+        if (ancestors.has(value)) {
+            return undefined;
+        }
+        ancestors.add(value);
+        const documentedValue = {};
+        const prototype = model.prototype;
+        this.modelPropertiesAccessor.applyMetadataFactory(prototype);
+        for (const key of this.modelPropertiesAccessor.getModelProperties(prototype)) {
+            if (!Object.prototype.hasOwnProperty.call(value, key)) {
+                continue;
+            }
+            const { type: propertyType } = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, prototype, key) ??
+                {};
+            documentedValue[key] = this.pickDocumentedDefaultKeys(value[key], this.isLazyTypeFunc(propertyType) ? propertyType() : propertyType, ancestors);
+        }
+        ancestors.delete(value);
+        return documentedValue;
+    }
+    isUserDefinedClass(type) {
+        return (isFunction(type) &&
+            !isBuiltInType(type) &&
+            !Function.prototype.toString.call(type).includes('[native code]'));
+    }
+    getTypeName(type) {
+        return type && isFunction(type) ? type.name : type;
+    }
+    isObjectLiteral(obj) {
+        if (typeof obj !== 'object' || !obj) {
+            return false;
+        }
+        const hasOwnProp = Object.prototype.hasOwnProperty;
+        let objPrototype = obj;
+        while (Object.getPrototypeOf((objPrototype = Object.getPrototypeOf(objPrototype))) !== null)
+            ;
+        for (const prop in obj) {
+            if (!hasOwnProp.call(obj, prop) && !hasOwnProp.call(objPrototype, prop)) {
+                return false;
+            }
+        }
+        return Object.getPrototypeOf(obj) === objPrototype;
+    }
+    isBigInt(type) {
+        return type === BigInt;
+    }
+    isModelBody(param) {
+        return (isBodyParameter(param) &&
+            !isDateCtor(param.type) &&
+            !this.isBigInt(param.type));
+    }
+    getEnumParamType(param) {
+        const type = param.isArray
+            ? (param.schema?.['items']?.['type'] ?? param.items?.type)
+            : (param.schema?.['type'] ?? param.type);
+        const name = isFunction(type) ? type.name : type;
+        const mapped = isString(name)
+            ? this.swaggerTypesMapper.mapTypeToOpenAPIType(name)
+            : undefined;
+        return mapped ?? 'string';
+    }
+    isConstEnumObject(obj) {
+        if (typeof obj !== 'object' || !obj || Array.isArray(obj)) {
+            return false;
+        }
+        const values = Object.values(obj);
+        if (values.length === 0) {
+            return false;
+        }
+        return values.every((value) => typeof value === 'string' || typeof value === 'number');
+    }
+    extractPropertyModifiers(metadata) {
+        const modifierKeys = [
+            'exclusiveMaximum',
+            'exclusiveMinimum',
+            'format',
+            'maximum',
+            'maxLength',
+            'minimum',
+            'minLength',
+            'multipleOf',
+            'pattern'
+        ];
+        return [pick_pick(metadata, modifierKeys), modifierKeys];
+    }
+    createSchemaOverrideParam(param, schema) {
+        const baseParam = omit(param, [
+            'isArray',
+            'standardSchema',
+            'type'
+        ]);
+        if (isBodyParameter(param)) {
+            const name = param.name || (isFunction(param.type) ? param.type.name : param.type);
+            return {
+                ...baseParam,
+                name,
+                schema
+            };
+        }
+        if (param.name) {
+            return this.withPromotedSchemaDescription(baseParam, schema);
+        }
+        if ('type' in schema &&
+            schema.type === 'object' &&
+            'properties' in schema) {
+            const requiredProperties = new Set(Array.isArray(schema.required)
+                ? schema.required
+                : []);
+            return Object.entries(schema.properties || {}).map(([name, propertySchema]) => this.withPromotedSchemaDescription({
+                ...baseParam,
+                name,
+                required: requiredProperties.has(name)
+            }, propertySchema));
+        }
+        return undefined;
+    }
+    withPromotedSchemaDescription(baseParam, schema) {
+        const description = baseParam.description ??
+            schema.description;
+        return description === undefined
+            ? { ...baseParam, schema }
+            : { ...baseParam, description, schema };
+    }
+    expandStandardSchemaParam(param, schemas) {
+        if (!param.standardSchema || param.name || isBodyParameter(param)) {
+            return undefined;
+        }
+        const schema = this.getSchemaOverride(param, schemas);
+        if (!schema) {
+            return undefined;
+        }
+        const expanded = this.createSchemaOverrideParam(param, schema);
+        return Array.isArray(expanded)
+            ? expanded
+            : undefined;
+    }
+    getSchemaOverride(param, schemas) {
+        return this.standardSchemaOpenApiConverter.convertInto(param.standardSchema, schemas, 'input');
+    }
+}
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/interfaces/index.js + 2 modules
+var interfaces = __nccwpck_require__(27940);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/index.js + 18 modules
+var core = __nccwpck_require__(87544);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/router/legacy-route-converter.js
+var legacy_route_converter = __nccwpck_require__(49384);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/router/route-path-factory.js
+var route_path_factory = __nccwpck_require__(33938);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/array/head.mjs
+// src/array/head.ts
+/**
+* Returns the first element of an array or `undefined` if the array is empty.
+*
+* This function takes an array and returns the first element of the array.
+* If the array is empty, the function returns `undefined`.
+*
+* @template T - The type of elements in the array.
+* @param arr - The array from which to get the first element.
+* @returns The first element of the array, or `undefined` if the array is empty.
+*
+* @example
+* const emptyArr: number[] = [];
+* const noElement = head(emptyArr);
+* // noElement will be undefined
+*/
+function head(arr) {
+	return arr[0];
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/toArray.mjs
+// src/compat/_internal/toArray.ts
+function toArray(value) {
+	return Array.isArray(value) ? value : Array.from(value);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/head.mjs
+
+
+
+// src/compat/array/head.ts
+/**
+* Returns the first element of an array or `undefined` if the array is empty.
+*
+* This function takes an array and returns the first element of the array.
+* If the array is empty, the function returns `undefined`.
+*
+* @template T - The type of elements in the array.
+* @param arr - The array from which to get the first element.
+* @returns The first element of the array, or `undefined` if the array is empty.
+*
+* @example
+* const emptyArr: number[] = [];
+* const noElement = head(emptyArr);
+* // noElement will be undefined
+*/
+function head_head(arr) {
+	if (!isArrayLike(arr)) return;
+	return head(toArray(arr));
+}
+
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/path-to-regexp@8.4.2/node_modules/path-to-regexp/dist/index.js
+var dist = __nccwpck_require__(91654);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-callbacks.explorer.js
+
+
+
+
+const exploreApiCallbacksMetadata = (schemas, schemaObjectFactory, instance, prototype, method) => {
+    const callbacksData = Reflect.getMetadata(DECORATORS.API_CALLBACKS, method);
+    if (!callbacksData)
+        return callbacksData;
+    return callbacksData.reduce((acc, callbackData) => {
+        const { name: eventName, callbackUrl, method: callbackMethod, requestBody, expectedResponse } = callbackData;
+        if (isFunction(requestBody.type) && !isBuiltInType(requestBody.type)) {
+            schemaObjectFactory.exploreModelSchema(requestBody.type, schemas);
+        }
+        return {
+            ...acc,
+            [eventName]: {
+                [callbackUrl]: {
+                    [callbackMethod]: {
+                        requestBody: {
+                            required: true,
+                            content: {
+                                'application/json': {
+                                    schema: {
+                                        $ref: getSchemaPath(requestBody.type)
+                                    }
+                                }
+                            }
+                        },
+                        responses: {
+                            [expectedResponse.status]: {
+                                description: expectedResponse.description ||
+                                    'Your server returns this code if it accepts the callback'
+                            }
+                        }
+                    }
+                }
+            }
+        };
+    }, {});
+};
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-exclude-controller.explorer.js
+
+const exploreApiExcludeControllerMetadata = (metatype) => Reflect.getMetadata(DECORATORS.API_EXCLUDE_CONTROLLER, metatype)?.[0] ===
+    true;
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-exclude-endpoint.explorer.js
+
+const exploreApiExcludeEndpointMetadata = (instance, prototype, method) => Reflect.getMetadata(DECORATORS.API_EXCLUDE_ENDPOINT, method);
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-headers.explorer.js
+
+const exploreGlobalApiHeaderMetadata = (metatype) => {
+    const headers = Reflect.getMetadata(DECORATORS.API_HEADERS, metatype);
+    return headers ? { root: { parameters: headers }, depth: 1 } : undefined;
+};
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-include-endpoint.explorer.js
+
+const exploreApiIncludeEndpointMetadata = (instance, prototype, method) => Reflect.getMetadata(DECORATORS.API_INCLUDE_ENDPOINT, method);
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-operation.explorer.js
+
+
+
+
+const exploreApiOperationMetadata = (instance, prototype, method) => {
+    applyMetadataFactory(prototype, instance);
+    return Reflect.getMetadata(DECORATORS.API_OPERATION, method);
+};
+function applyMetadataFactory(prototype, instance) {
+    do {
+        if (!prototype.constructor) {
+            return;
+        }
+        if (!Object.prototype.hasOwnProperty.call(prototype.constructor, METADATA_FACTORY_NAME)) {
+            continue;
+        }
+        const metadata = prototype.constructor[METADATA_FACTORY_NAME]();
+        const methodKeys = Object.keys(metadata).filter((key) => typeof instance[key] === 'function' &&
+            Object.prototype.hasOwnProperty.call(prototype, key));
+        methodKeys.forEach((key) => {
+            const operationMeta = {};
+            const { summary, deprecated, tags, description } = metadata[key];
+            applyIfNotNil(operationMeta, 'summary', summary);
+            applyIfNotNil(operationMeta, 'deprecated', deprecated);
+            applyIfNotNil(operationMeta, 'tags', tags);
+            applyIfNotNil(operationMeta, 'description', description);
+            if (Object.keys(operationMeta).length === 0) {
+                return;
+            }
+            const descriptor = Object.getOwnPropertyDescriptor(prototype, key);
+            const existing = omitBy(Reflect.getMetadata(DECORATORS.API_OPERATION, descriptor.value), (value, name) => name === 'summary' && value === '');
+            ApiOperation({ ...operationMeta, ...existing })(prototype, key, descriptor);
+        });
+    } while ((prototype = Reflect.getPrototypeOf(prototype)) &&
+        prototype !== Object.prototype &&
+        prototype);
+}
+function applyIfNotNil(target, key, value) {
+    if (value !== undefined && value !== null) {
+        target[key] = value;
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/keys.mjs
+
+
+
+
+
+
+// src/compat/object/keys.ts
+/**
+* Creates an array of the own enumerable property names of `object`.
+*
+* Non-object values are coerced to objects.
+*
+* @param object The object to query.
+* @returns Returns the array of property names.
+* @example
+* function Foo() {
+*   this.a = 1;
+*   this.b = 2;
+* }
+* Foo.prototype.c = 3;
+* keys(new Foo); // ['a', 'b'] (iteration order is not guaranteed)
+*
+* keys('hi'); // ['0', '1']
+* keys([1, 2, 3]); // ['0', '1', '2']
+* keys({ a: 1, b: 2 }); // ['a', 'b']
+*/
+function keys(object) {
+	if (isArrayLike(object)) return arrayLikeKeys(object);
+	const result = Object.keys(Object(object));
+	if (!isPrototype(object)) return result;
+	return result.filter((key) => key !== "constructor");
+}
+function arrayLikeKeys(object) {
+	const indices = times(object.length, (index) => `${index}`);
+	const filteredKeys = new Set(indices);
+	if (isBuffer(object)) {
+		filteredKeys.add("offset");
+		filteredKeys.add("parent");
+	}
+	if (isTypedArray_isTypedArray(object)) {
+		filteredKeys.add("buffer");
+		filteredKeys.add("byteLength");
+		filteredKeys.add("byteOffset");
+	}
+	const inheritedKeys = Object.keys(object).filter((key) => !filteredKeys.has(key));
+	if (Array.isArray(object)) return [...indices, ...inheritedKeys];
+	return [...indices.filter((index) => hasOwn(object, index)), ...inheritedKeys];
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/object/assign.mjs
+
+
+// src/compat/object/assign.ts
+/**
+* Assigns properties from multiple source objects to a target object.
+*
+* This function merges the properties of the source objects into the target object.
+* If a property in the source objects is equal to the corresponding property in the target object,
+* it will not be overwritten.
+*
+* @param object - The target object to which properties will be assigned.
+* @param sources - The source objects whose properties will be assigned to the target object.
+* @returns The updated target object with properties from the source objects assigned.
+*
+* @example
+* const target = { a: 1 };
+* const result = assign(target, { b: 2 }, { c: 3 });
+* console.log(result); // Output: { a: 1, b: 2, c: 3 }
+*/
+function assign_assign(object, ...sources) {
+	for (let i = 0; i < sources.length; i++) assignImpl(object, sources[i]);
+	return object;
+}
+function assignImpl(object, source) {
+	const keys$1 = keys(source);
+	for (let i = 0; i < keys$1.length; i++) {
+		const key = keys$1[i];
+		if (!(key in object) || !eq(object[key], source[key])) object[key] = source[key];
+	}
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/find.mjs
+
+
+
+
+
+// src/compat/array/find.ts
+/**
+* Finds the first item in an object that has a specific property, where the property name is provided as a PropertyKey.
+*
+* @template T
+* @param collection - The source array or object to search through.
+* @param [doesMatch=identity] - The criteria to match. It can be a function, a partial object, a key-value pair, or a property name.
+* @param [fromIndex=0] - The index to start the search from, defaults to 0.
+* @returns The first property value that has the specified property, or `undefined` if no match is found.
+*
+* @example
+* // Using a property name
+* const obj = { a: { id: 1, name: 'Alice' }, b: { id: 2, name: 'Bob' } };
+* const result = find(obj, 'name');
+* console.log(result); // { id: 1, name: 'Alice' }
+*/
+function find(collection, _doesMatch = identity, fromIndex = 0) {
+	if (!collection) return;
+	const doesMatch = iteratee(_doesMatch);
+	const keys = isArrayLike(collection) ? range(0, collection.length) : Object.keys(collection);
+	fromIndex = toInteger(fromIndex);
+	if (!fromIndex) fromIndex = 0;
+	if (fromIndex < 0) fromIndex = Math.max(keys.length + fromIndex, 0);
+	for (let i = fromIndex; i < keys.length; i++) {
+		const key = keys[i];
+		const value = collection[key];
+		if (doesMatch(value, key, collection)) return value;
+	}
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/map.mjs
+
+
+
+
+// src/compat/array/map.ts
+function map(collection, _iteratee = identity) {
+	if (!collection) return [];
+	const keys = isArrayLike(collection) ? range(0, collection.length) : Object.keys(collection);
+	const iteratee$1 = iteratee(_iteratee);
+	const result = new Array(keys.length);
+	for (let i = 0; i < keys.length; i++) {
+		const key = keys[i];
+		const value = collection[key];
+		result[i] = iteratee$1(value, key, collection);
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/isIterateeCall.mjs
+
+
+
+
+// src/compat/_internal/isIterateeCall.ts
+function isIterateeCall(value, index, object) {
+	if (!isObject(object)) return false;
+	if (typeof index === "number" && isArrayLike(object) && isIndex(index) && index < object.length || typeof index === "string" && index in object) return eq(object[index], value);
+	return false;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/some.mjs
+
+
+
+
+// src/compat/array/some.ts
+/**
+* Checks if there is an element in an array that matches the given predicate.
+*
+* Iteration is stopped once there is an element that matches `predicate`.
+*
+* @template T
+* @param source The source to iterate over.
+* @param [predicate=identity] The function invoked per iteration.
+* If a property name or an object is provided it will be used to create a predicate function.
+* @returns Returns `true` if any element passes the predicate check, else `false`.
+*
+* @example
+* some([1, 2, 3, 4], n => n % 2 === 0);
+* // => true
+*
+* some([{ a: 1 }, { a: 2 }, { a: 3 }], { a: 2 });
+* // => true
+*
+* some([{ a: 1 }, { a: 2 }, { a: 3 }], ['a', 2]);
+* // => true
+*
+* some([{ a: 1 }, { a: 2 }, { a: 3 }], 'a');
+* // => true
+*
+* some({ a: 1, b: 2, c: 3 }, n => n % 2 === 0);
+* // => true
+*
+* some({ a: { id: 1, name: 'Alice' }, b: { id: 2, name: 'Bob' } }, { name: 'Bob' });
+* // => true
+*
+* some({ a: { id: 1, name: 'Alice' }, b: { id: 2, name: 'Bob' } }, ['name', 'Alice']);
+* // => true
+*
+* some({ a: { id: 1, name: 'Alice' }, b: { id: 2, name: 'Bob' } }, 'name');
+* // => true
+*/
+function some(source, predicate, guard) {
+	var _predicate;
+	if (!source) return false;
+	if (guard && isIterateeCall(source, predicate, guard)) predicate = void 0;
+	const doesMatch = iteratee((_predicate = predicate) !== null && _predicate !== void 0 ? _predicate : identity);
+	if (!isArrayLike(source)) {
+		const keys = Object.keys(source);
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i];
+			if (doesMatch(source[key], key, source)) return true;
+		}
+		return false;
+	}
+	for (let i = 0; i < source.length; i++) if (doesMatch(source[i], i, source)) return true;
+	return false;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/array/last.mjs
+// src/array/last.ts
+/**
+* Returns the last element of an array.
+*
+* This function takes an array and returns the last element of the array.
+* If the array is empty, the function returns `undefined`.
+*
+* Unlike some implementations, this function is optimized for performance
+* by directly accessing the last index of the array.
+*
+* @template T - The type of elements in the array.
+* @param arr - The array from which to get the last element.
+* @returns The last element of the array, or `undefined` if the array is empty.
+*
+* @example
+* const arr = [1, 2, 3];
+* const lastElement = last(arr);
+* // lastElement will be 3
+*
+* const emptyArr: number[] = [];
+* const noElement = last(emptyArr);
+* // noElement will be undefined
+*/
+function last(arr) {
+	return arr[arr.length - 1];
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/array/uniq.mjs
+// src/array/uniq.ts
+/**
+* Creates a duplicate-free version of an array.
+*
+* This function takes an array and returns a new array containing only the unique values
+* from the original array, preserving the order of first occurrence.
+*
+* @template T - The type of elements in the array.
+* @param arr - The array to process.
+* @returns A new array with only unique values from the original array.
+*
+* @example
+* const array = [1, 2, 2, 3, 4, 4, 5];
+* const result = uniq(array);
+* // result will be [1, 2, 3, 4, 5]
+*/
+function uniq(arr) {
+	return [...new Set(arr)];
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/array/uniqWith.mjs
+// src/array/uniqWith.ts
+/**
+* Returns a new array containing only the unique elements from the original array,
+* based on the values returned by the comparator function.
+*
+* @template T - The type of elements in the array.
+* @param arr - The array to process.
+* @param areItemsEqual - The function used to compare the array elements.
+* @returns A new array containing only the unique elements from the original array, based on the values returned by the comparator function.
+*
+* @example
+* ```ts
+* uniqWith([1.2, 1.5, 2.1, 3.2, 5.7, 5.3, 7.19], (a, b) => Math.abs(a - b) < 1);
+* // [1.2, 3.2, 5.7, 7.19]
+* ```
+*/
+function uniqWith(arr, areItemsEqual) {
+	const result = [];
+	for (let i = 0; i < arr.length; i++) {
+		const item = arr[i];
+		if (result.every((v) => !areItemsEqual(v, item))) result.push(item);
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isArrayLikeObject.mjs
+
+
+// src/compat/predicate/isArrayLikeObject.ts
+/**
+* Checks if the given value is a non-primitive, array-like object.
+*
+* @param value The value to check.
+* @returns `true` if the value is a non-primitive, array-like object, `false` otherwise.
+*
+* @example
+* isArrayLikeObject([1, 2, 3]); // true
+* isArrayLikeObject({ 0: 'a', length: 1 }); // true
+* isArrayLikeObject('abc'); // false
+* isArrayLikeObject(()=>{}); // false
+*/
+function isArrayLikeObject(value) {
+	return isObjectLike(value) && isArrayLike(value);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/flattenArrayLike.mjs
+
+// src/compat/_internal/flattenArrayLike.ts
+function flattenArrayLike(values) {
+	const result = [];
+	for (let i = 0; i < values.length; i++) {
+		const arrayLike = values[i];
+		if (!isArrayLikeObject(arrayLike)) continue;
+		for (let j = 0; j < arrayLike.length; j++) result.push(arrayLike[j]);
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/unionWith.mjs
+
+
+
+
+// src/compat/array/unionWith.ts
+/**
+* This function takes multiple arrays and returns a new array containing only the unique values
+* from all input arrays, preserving the order of their first occurrence.
+* A comparator function can be provided for comparison and it output values from the first possible array
+*
+* @template T - The type of elements in the arrays.
+* @param values - The arrays to inspect, or the comparator function.
+* @returns Returns the new array of combined unique values.
+*
+* @example
+* const objects = [
+*   { x: 1, y: 2 },
+*   { x: 2, y: 1 },
+* ];
+* const others = [
+*   { x: 1, y: 1 },
+*   { x: 1, y: 2 },
+* ];
+* // Returns [objects[0], objects[1], others[0]]
+* unionWith(objects, others, isEqual);
+*
+* @example
+* const objects = [{ x: 1, y: 1 }];
+* const others = [{ x: 1, y: 2 }];
+* // Returns [{ x: 1, y: 1 }]
+* unionWith(objects, others, (a, b) => a.x === b.x);
+*/
+function unionWith(...values) {
+	const lastValue = last(values);
+	const flattened = flattenArrayLike(values);
+	if (typeof lastValue !== "function") return uniq(flattened);
+	return uniqWith(flattened, (kept, candidate) => lastValue(candidate, kept));
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/uniq.mjs
+
+
+// src/compat/array/uniq.ts
+/**
+* Creates a duplicate-free version of an array.
+*
+* This function takes an array and returns a new array containing only the unique values
+* from the original array, preserving the order of first occurrence.
+*
+* @template T - The type of elements in the array.
+* @param arr - The array to process.
+* @returns A new array with only unique values from the original array.
+*
+* @example
+* const array = [1, 2, 2, 3, 4, 4, 5];
+* const result = uniq(array);
+* // result will be [1, 2, 3, 4, 5]
+*/
+function uniq_uniq(arr) {
+	if (!isArrayLike(arr)) return [];
+	return uniq(Array.from(arr));
+}
+
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/enums/route-paramtypes.enum.js
+var route_paramtypes_enum = __nccwpck_require__(27605);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/reverse-object-keys.util.js
+function reverseObjectKeys(originalObject) {
+    const reversedObject = {};
+    const keys = Object.keys(originalObject).reverse();
+    for (const key of keys) {
+        reversedObject[key] = originalObject[key];
+    }
+    return reversedObject;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/parameter-metadata-accessor.js
+
+
+
+
+
+
+const PARAM_TOKEN_PLACEHOLDER = 'placeholder';
+class ParameterMetadataAccessor {
+    explore(instance, prototype, method) {
+        const types = Reflect.getMetadata(constants/* PARAMTYPES_METADATA */.hQ, instance, method.name);
+        if (!types?.length) {
+            return undefined;
+        }
+        const routeArgsMetadata = this.getRouteArgsMetadata(instance.constructor, method.name);
+        const parametersWithType = mapValues_mapValues(reverseObjectKeys(routeArgsMetadata), (param) => ({
+            type: types[param.index],
+            name: param.data,
+            standardSchema: param.schema,
+            required: true
+        }));
+        const excludePredicate = (val) => val.in === PARAM_TOKEN_PLACEHOLDER || (val.name && val.in === 'body');
+        const parameters = omitBy(mapValues_mapValues(parametersWithType, (val, key) => ({
+            ...val,
+            in: this.mapParamType(key)
+        })), excludePredicate);
+        return !isEmpty(parameters) ? parameters : undefined;
+    }
+    getRouteArgsMetadata(target, methodName) {
+        const metadata = Reflect.getMetadata(constants/* ROUTE_ARGS_METADATA */._f, target, methodName) || {};
+        if (!Reflect.hasOwnMetadata(constants/* ROUTE_ARGS_METADATA */._f, target, methodName)) {
+            return metadata;
+        }
+        const parentMetadata = Reflect.getMetadata(constants/* ROUTE_ARGS_METADATA */._f, Object.getPrototypeOf(target), methodName);
+        if (!parentMetadata) {
+            return metadata;
+        }
+        return omitBy(metadata, (param, key) => parentMetadata[key] === param);
+    }
+    mapParamType(key) {
+        const keyPair = key.split(':');
+        switch (Number(keyPair[0])) {
+            case route_paramtypes_enum/* RouteParamtypes */.G.BODY:
+                return 'body';
+            case route_paramtypes_enum/* RouteParamtypes */.G.PARAM:
+                return 'path';
+            case route_paramtypes_enum/* RouteParamtypes */.G.QUERY:
+                return 'query';
+            case route_paramtypes_enum/* RouteParamtypes */.G.HEADERS:
+                return 'header';
+            default:
+                return PARAM_TOKEN_PLACEHOLDER;
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/flatMapDepth.mjs
+
+
+
+
+// src/compat/array/flatMapDepth.ts
+/**
+* Creates a flattened array of values by running each element through iteratee and flattening the mapped results up to depth times.
+*
+* @template T, R
+* @param collection - The array or object to iterate over.
+* @param [iteratee=identity] - The function that produces the new array elements.
+* @param [depth=1] - The maximum recursion depth.
+* @returns A new array that has been flattened up to the specified depth.
+*
+* @example
+* flatMapDepth([1, 2, 3], n => [[n, n]], 2);
+* // => [1, 1, 2, 2, 3, 3]
+*/
+function flatMapDepth(collection, iteratee$1 = identity, depth = 1) {
+	if (collection == null) return [];
+	const iterateeFn = iteratee(iteratee$1);
+	const mapped = map(collection, iterateeFn);
+	return flattenDepth(mapped, depth);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/flatMap.mjs
+
+// src/compat/array/flatMap.ts
+/**
+* Creates a flattened array of values by running each element in collection through iteratee and flattening the mapped results.
+*
+* @template R
+* @param collection - The collection to iterate over.
+* @param [iteratee=identity] - The function invoked per iteration.
+* @returns Returns the new flattened array.
+*
+* @example
+* flatMap([1, 2], n => [n, n * 2]);
+* // => [1, 2, 2, 4]
+*/
+function flatMap(collection, iteratee) {
+	return flatMapDepth(collection, iteratee, 1);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/parameters-metadata-mapper.js
+
+
+
+
+
+class ParametersMetadataMapper {
+    constructor(modelPropertiesAccessor) {
+        this.modelPropertiesAccessor = modelPropertiesAccessor;
+    }
+    transformModelToProperties(parameters) {
+        const properties = flatMap(parameters, (param) => {
+            if (!param) {
+                return undefined;
+            }
+            if (param.standardSchema) {
+                return param;
+            }
+            if (param.type === Object || !param.type) {
+                return undefined;
+            }
+            if (param.name) {
+                return param;
+            }
+            if (isBodyParameter(param)) {
+                const isCtor = param.type && (0,shared_utils/* isFunction */.Tn)(param.type);
+                const name = isCtor ? param.type.name : param.type;
+                return { ...param, name };
+            }
+            const { prototype } = param.type;
+            this.modelPropertiesAccessor.applyMetadataFactory(prototype);
+            const modelProperties = this.modelPropertiesAccessor.getModelProperties(prototype);
+            return modelProperties.map((key) => this.mergeImplicitWithExplicit(key, prototype, param));
+        });
+        return properties.filter(identity);
+    }
+    mergeImplicitWithExplicit(key, prototype, param) {
+        const reflectedParam = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, prototype, key) ||
+            {};
+        return {
+            ...param,
+            ...reflectedParam,
+            name: reflectedParam.name || key
+        };
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/is-same-parameter.util.js
+function isSameParameter(left, right) {
+    if (left.in !== right.in) {
+        return false;
+    }
+    if (left.in === 'header' &&
+        typeof left.name === 'string' &&
+        typeof right.name === 'string') {
+        return left.name.toLowerCase() === right.name.toLowerCase();
+    }
+    return left.name === right.name;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-parameters.explorer.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const parameterMetadataAccessor = new ParameterMetadataAccessor();
+const modelPropertiesAccessor = new ModelPropertiesAccessor();
+const parametersMetadataMapper = new ParametersMetadataMapper(modelPropertiesAccessor);
+const swaggerTypesMapper = new SwaggerTypesMapper();
+const exploreApiParametersMetadata = (schemas, schemaObjectFactory, globalParameters, instance, prototype, method, metatype) => {
+    const methodParameters = Reflect.getMetadata(DECORATORS.API_PARAMETERS, method);
+    const classParameters = metatype && Reflect.getMetadata(DECORATORS.API_PARAMETERS, metatype);
+    const explicitParameters = classParameters
+        ? uniq_uniq([...(methodParameters ?? []), ...classParameters])
+        : methodParameters;
+    const parametersMetadata = parameterMetadataAccessor.explore(instance, prototype, method);
+    const noExplicitAndGlobalMetadata = isNil(explicitParameters) && isNil(globalParameters);
+    if (noExplicitAndGlobalMetadata && isNil(parametersMetadata)) {
+        return undefined;
+    }
+    const reflectedParametersAsProperties = parametersMetadataMapper.transformModelToProperties(parametersMetadata || {});
+    let properties = reflectedParametersAsProperties.flatMap((param) => {
+        const expanded = schemaObjectFactory.expandStandardSchemaParam(param, schemas);
+        return expanded ?? [param];
+    });
+    if (!noExplicitAndGlobalMetadata) {
+        const hasSameParameterIdentity = (left, right) => {
+            if (left.in === 'body' && right.in === 'body') {
+                return true;
+            }
+            return isSameParameter(left, right);
+        };
+        const mergeImplicitAndExplicit = (item) => assign_assign(item, find(explicitParameters, (explicitParam) => hasSameParameterIdentity(item, explicitParam)));
+        properties = removeBodyMetadataIfExplicitExists(properties, explicitParameters);
+        properties = map(properties, mergeImplicitAndExplicit);
+        properties = unionWith(properties, explicitParameters, globalParameters, (arrVal, othVal) => {
+            return hasSameParameterIdentity(arrVal, othVal);
+        });
+    }
+    const paramsWithDefinitions = schemaObjectFactory.createFromModel(properties, schemas);
+    const parameters = swaggerTypesMapper.mapParamTypes(paramsWithDefinitions);
+    return parameters ? { parameters } : undefined;
+};
+function removeBodyMetadataIfExplicitExists(properties, explicitParams) {
+    const isBodyReflected = some(properties, (p) => p.in === 'body');
+    const isBodyDefinedExplicitly = some(explicitParams, (p) => p.in === 'body');
+    const hasReflectedBodyStandardSchema = some(properties, (p) => p.in === 'body' && !!p.standardSchema);
+    if (isBodyReflected &&
+        isBodyDefinedExplicitly &&
+        !hasReflectedBodyStandardSchema) {
+        return omitBy(properties, (p) => p.in === 'body');
+    }
+    return properties;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/merge-and-uniq.util.js
+
+
+function mergeAndUniq(a = [], b = []) {
+    return uniq_uniq((isEmpty(b) ? a : b));
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-response.explorer.js
+
+
+
+
+
+
+
+
+
+const exploreGlobalApiResponseMetadata = (schemas, responseObjectFactory, globalResponses, metatype, factories) => {
+    const responses = Reflect.getMetadata(DECORATORS.API_RESPONSE, metatype);
+    const mappedGlobalResponsesOrUndefined = globalResponses
+        ? mapResponsesToSwaggerResponses(globalResponses, schemas, responseObjectFactory, undefined, factories)
+        : undefined;
+    const produces = Reflect.getMetadata(DECORATORS.API_PRODUCES, metatype);
+    return responses
+        ? {
+            responses: {
+                ...mappedGlobalResponsesOrUndefined,
+                ...mapResponsesToSwaggerResponses(responses, schemas, responseObjectFactory, produces, factories)
+            }
+        }
+        : mappedGlobalResponsesOrUndefined
+            ? {
+                responses: mappedGlobalResponsesOrUndefined
+            }
+            : undefined;
+};
+const exploreApiResponseMetadata = (schemas, responseObjectFactory, factories, instance, prototype, method, metatype) => {
+    api_response_explorer_applyMetadataFactory(prototype, instance);
+    const responses = Reflect.getMetadata(DECORATORS.API_RESPONSE, method);
+    if (responses) {
+        const classProduces = Reflect.getMetadata(DECORATORS.API_PRODUCES, metatype ?? prototype?.constructor);
+        const methodProduces = Reflect.getMetadata(DECORATORS.API_PRODUCES, method);
+        const produces = mergeAndUniq(classProduces, methodProduces);
+        return mapResponsesToSwaggerResponses(responses, schemas, responseObjectFactory, produces, factories);
+    }
+    const status = getStatusCode(method);
+    if (status) {
+        return { [status]: { description: '' } };
+    }
+    return undefined;
+};
+const getStatusCode = (method) => {
+    const status = Reflect.getMetadata(constants/* HTTP_CODE_METADATA */.Tz, method);
+    if (status) {
+        return status;
+    }
+    const requestMethod = Reflect.getMetadata(constants/* METHOD_METADATA */.E$, method);
+    switch (requestMethod) {
+        case common.RequestMethod.POST:
+            return common.HttpStatus.CREATED;
+        default:
+            return common.HttpStatus.OK;
+    }
+};
+const omitParamType = (param) => omit(param, 'type');
+const mapResponsesToSwaggerResponses = (responses, schemas, responseObjectFactory, produces = ['application/json'], factories) => {
+    produces = (0,shared_utils/* isEmpty */.Im)(produces) ? ['application/json'] : produces;
+    const openApiResponses = mapValues_mapValues(responses, (response) => responseObjectFactory.create(response, produces, schemas, factories));
+    return mapValues_mapValues(openApiResponses, omitParamType);
+};
+const hasSuccessResponse = (responses) => Object.keys(responses ?? {}).some((status) => isNaN(Number(status)) || Number(status) < 400);
+function api_response_explorer_applyMetadataFactory(prototype, instance) {
+    do {
+        if (!prototype.constructor) {
+            return;
+        }
+        if (!Object.prototype.hasOwnProperty.call(prototype.constructor, METADATA_FACTORY_NAME)) {
+            continue;
+        }
+        const metadata = prototype.constructor[METADATA_FACTORY_NAME]();
+        const methodKeys = Object.keys(metadata).filter((key) => typeof instance[key] === 'function' &&
+            Object.prototype.hasOwnProperty.call(prototype, key));
+        methodKeys.forEach((key) => {
+            const { summary, deprecated, tags, description, responses = [], ...meta } = metadata[key];
+            if (Object.keys(meta).length === 0 && responses.length === 0) {
+                return;
+            }
+            if (meta.status === undefined) {
+                meta.status = getStatusCode(prototype[key]);
+            }
+            const descriptor = Object.getOwnPropertyDescriptor(prototype, key);
+            const existing = Reflect.getMetadata(DECORATORS.API_RESPONSE, descriptor?.value ?? prototype);
+            if (hasSuccessResponse(existing)) {
+                return;
+            }
+            [meta, ...responses]
+                .filter((response) => !existing?.[response.status])
+                .forEach((response) => ApiResponse(response)(prototype, key, descriptor));
+        });
+    } while ((prototype = Reflect.getPrototypeOf(prototype)) &&
+        prototype !== Object.prototype &&
+        prototype);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-security.explorer.js
+
+const exploreGlobalApiSecurityMetadata = (metatype) => {
+    const security = Reflect.getMetadata(DECORATORS.API_SECURITY, metatype);
+    return security ? { security } : undefined;
+};
+const exploreApiSecurityMetadata = (instance, prototype, method) => {
+    return Reflect.getMetadata(DECORATORS.API_SECURITY, method);
+};
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/explorers/api-use-tags.explorer.js
+
+const exploreGlobalApiTagsMetadata = (autoTagControllers) => (metatype) => {
+    const decoratorTags = Reflect.getMetadata(DECORATORS.API_TAGS, metatype);
+    const isEmpty = !decoratorTags || decoratorTags.length === 0;
+    if (isEmpty && autoTagControllers) {
+        const defaultTag = metatype.name.replace(/Controller$/, '');
+        return {
+            tags: [defaultTag]
+        };
+    }
+    return isEmpty ? undefined : { tags: decoratorTags };
+};
+const exploreApiTagsMetadata = (instance, prototype, method) => Reflect.getMetadata(DECORATORS.API_TAGS, method);
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/remove-undefined-keys.js
+function removeUndefinedKeys(obj) {
+    Object.entries(obj).forEach(([key, value]) => {
+        if (value === undefined) {
+            delete obj[key];
+        }
+    });
+    return obj;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/mimetype-content-wrapper.js
+
+
+class MimetypeContentWrapper {
+    wrap(mimetype, obj) {
+        const content = mimetype.reduce((acc, item) => ({ ...acc, [item]: removeUndefinedKeys(cloneDeep(obj)) }), {});
+        return { content };
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/response-object-mapper.js
+
+
+
+
+
+class ResponseObjectMapper {
+    constructor() {
+        this.mimetypeContentWrapper = new MimetypeContentWrapper();
+    }
+    toArrayRefObject(response, name, produces) {
+        const exampleKeys = ['example', 'examples'];
+        const arraySchema = {
+            type: 'array',
+            items: { $ref: getSchemaPath(name) }
+        };
+        const schema = response.nullable
+            ? { ...arraySchema, nullable: true }
+            : arraySchema;
+        return {
+            ...omit(response, [...exampleKeys, 'nullable']),
+            ...this.mimetypeContentWrapper.wrap(produces, {
+                schema,
+                ...pick_pick(response, exampleKeys)
+            })
+        };
+    }
+    toRefObject(response, name, produces) {
+        const exampleKeys = ['example', 'examples'];
+        const ref = { $ref: getSchemaPath(name) };
+        const schema = response.nullable ? this.toNullableSchema(ref) : ref;
+        return {
+            ...omit(response, [...exampleKeys, 'nullable']),
+            ...this.mimetypeContentWrapper.wrap(produces, {
+                schema,
+                ...pick_pick(response, exampleKeys)
+            })
+        };
+    }
+    wrapSchemaWithContent(response, produces, schemas) {
+        if (!response.schema &&
+            !('example' in response) &&
+            !('examples' in response)) {
+            return omit(response, ['nullable']);
+        }
+        const exampleKeys = ['example', 'examples'];
+        const content = this.mimetypeContentWrapper.wrap(produces, {
+            schema: response.nullable && response.schema
+                ? this.toNullableSchema(response.schema, schemas)
+                : response.schema,
+            ...pick_pick(response, exampleKeys)
+        });
+        const keysToOmit = [...exampleKeys, 'schema', 'nullable'];
+        return {
+            ...omit(response, keysToOmit),
+            ...content
+        };
+    }
+    toNullableSchema(schema, schemas) {
+        if (!('$ref' in schema)) {
+            return { ...schema, nullable: true };
+        }
+        const wrapped = wrapRefInAllOf({
+            ...schema,
+            nullable: true
+        });
+        if (wrapped.type !== undefined ||
+            !this.mayBeObjectRef(schema.$ref, schemas)) {
+            return wrapped;
+        }
+        const { allOf, ...rest } = wrapped;
+        return { ...rest, type: 'object', allOf };
+    }
+    mayBeObjectRef($ref, schemas) {
+        const prefix = getSchemaPath('');
+        const target = $ref.startsWith(prefix)
+            ? schemas?.[$ref.slice(prefix.length)]
+            : undefined;
+        return !target || target.type === 'object';
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/services/response-object-factory.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+class ResponseObjectFactory {
+    constructor(standardSchemaConverter) {
+        this.standardSchemaConverter = standardSchemaConverter;
+        this.mimetypeContentWrapper = new MimetypeContentWrapper();
+        this.modelPropertiesAccessor = new ModelPropertiesAccessor();
+        this.swaggerTypesMapper = new SwaggerTypesMapper();
+        this.standardSchemaOpenApiConverter = new StandardSchemaOpenApiConverter(this.standardSchemaConverter);
+        this.schemaObjectFactory = new SchemaObjectFactory(this.modelPropertiesAccessor, this.swaggerTypesMapper, this.standardSchemaConverter);
+        this.responseObjectMapper = new ResponseObjectMapper();
+    }
+    create(response, produces, schemas, factories) {
+        const { type, isArray } = response;
+        const schemaOverride = this.getSchemaOverride(response, schemas);
+        response = omit(response, ['isArray', 'standardSchema']);
+        if (schemaOverride) {
+            return this.responseObjectMapper.wrapSchemaWithContent({
+                ...omit(response, ['type']),
+                schema: isArray
+                    ? { type: 'array', items: schemaOverride }
+                    : schemaOverride
+            }, produces, schemas);
+        }
+        if (!type) {
+            return this.responseObjectMapper.wrapSchemaWithContent(response, produces, schemas);
+        }
+        if (isBuiltInType(type) ||
+            isDateCtor(type) ||
+            type === BigInt) {
+            const itemSchema = this.getBuiltInTypeSchema(type);
+            const exampleKeys = ['example', 'examples'];
+            const baseSchema = isArray
+                ? { type: 'array', items: itemSchema }
+                : itemSchema;
+            const schema = response.nullable
+                ? { ...baseSchema, nullable: true }
+                : baseSchema;
+            const content = this.mimetypeContentWrapper.wrap(produces, {
+                schema,
+                ...pick_pick(response, exampleKeys)
+            });
+            return {
+                ...omit(response, [...exampleKeys, 'nullable']),
+                ...content
+            };
+        }
+        const name = this.schemaObjectFactory.exploreModelSchema(type, schemas);
+        if (isFunction(type) && type.prototype) {
+            const { prototype } = type;
+            const links = {};
+            const properties = this.modelPropertiesAccessor.getModelProperties(prototype);
+            const generateLink = (controllerPrototype, method, parameter, field) => {
+                if (!factories) {
+                    return;
+                }
+                const linkName = factories.linkName(controllerPrototype.constructor.name, method.name, field);
+                const { operationId } = Reflect.getMetadata(DECORATORS.API_OPERATION, method) ?? {};
+                links[linkName] = {
+                    operationId: operationId ??
+                        factories.operationId(controllerPrototype.constructor.name, method.name),
+                    parameters: {
+                        [parameter]: `$response.body#/${field}`
+                    }
+                };
+            };
+            for (const key of properties) {
+                const metadata = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, prototype, key) ?? {};
+                if (!metadata.link) {
+                    continue;
+                }
+                const linkedType = metadata.link();
+                const linkedGetterInfo = Reflect.getMetadata(DECORATORS.API_DEFAULT_GETTER, linkedType.prototype);
+                if (!linkedGetterInfo) {
+                    continue;
+                }
+                const { getter, parameter, prototype: controllerPrototype } = linkedGetterInfo;
+                generateLink(controllerPrototype, getter, parameter, key);
+            }
+            const customLinks = Reflect.getMetadata(DECORATORS.API_LINK, prototype);
+            for (const customLink of customLinks ?? []) {
+                const { method, parameter, field, prototype: controllerPrototype } = customLink;
+                generateLink(controllerPrototype, method, parameter, field);
+            }
+            if (!isEmpty(links)) {
+                response.links = Object.assign(links, response.links);
+            }
+        }
+        if (isArray) {
+            return this.responseObjectMapper.toArrayRefObject(response, name, produces);
+        }
+        return this.responseObjectMapper.toRefObject(response, name, produces);
+    }
+    getBuiltInTypeSchema(type) {
+        if (isDateCtor(type)) {
+            return { type: 'string', format: 'date-time' };
+        }
+        if (type === BigInt) {
+            return { type: 'integer', format: 'int64' };
+        }
+        const typeName = isFunction(type) ? type.name : type;
+        return { type: this.swaggerTypesMapper.mapTypeToOpenAPIType(typeName) };
+    }
+    getSchemaOverride(response, schemas) {
+        return this.standardSchemaOpenApiConverter.convertInto(response.standardSchema, schemas, 'output');
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/swagger-explorer.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class SwaggerExplorer {
+    constructor(schemaObjectFactory, options = {}) {
+        this.schemaObjectFactory = schemaObjectFactory;
+        this.options = options;
+        this.mimetypeContentWrapper = new MimetypeContentWrapper();
+        this.metadataScanner = new core.MetadataScanner();
+        this.schemas = {};
+        this.operationIdFactory = (controllerKey, methodKey, version) => version
+            ? controllerKey
+                ? `${controllerKey}_${methodKey}_${version}`
+                : `${methodKey}_${version}`
+            : controllerKey
+                ? `${controllerKey}_${methodKey}`
+                : methodKey;
+        this.linkNameFactory = (controllerKey, methodKey, fieldKey) => controllerKey
+            ? `${controllerKey}_${methodKey}_from_${fieldKey}`
+            : `${methodKey}_from_${fieldKey}`;
+        this.responseObjectFactory = new ResponseObjectFactory(this.options.standardSchemaConverter);
+    }
+    exploreController(wrapper, applicationConfig, options) {
+        const { operationIdFactory, linkNameFactory } = options;
+        this.routePathFactory = new route_path_factory/* RoutePathFactory */.J(applicationConfig);
+        if (operationIdFactory) {
+            this.operationIdFactory = operationIdFactory;
+        }
+        if (linkNameFactory) {
+            this.linkNameFactory = linkNameFactory;
+        }
+        const { instance, metatype } = wrapper;
+        const prototype = Object.getPrototypeOf(instance);
+        const documentResolvers = {
+            root: [
+                this.exploreRoutePathAndMethod,
+                exploreApiOperationMetadata,
+                exploreApiParametersMetadata.bind(null, this.schemas, this.schemaObjectFactory, this.options.globalParameters ?? [])
+            ],
+            security: [exploreApiSecurityMetadata],
+            tags: [exploreApiTagsMetadata],
+            callbacks: [
+                exploreApiCallbacksMetadata.bind(null, this.schemas, this.schemaObjectFactory)
+            ],
+            responses: [
+                exploreApiResponseMetadata.bind(null, this.schemas, this.responseObjectFactory, {
+                    operationId: this.operationIdFactory,
+                    linkName: this.linkNameFactory
+                })
+            ]
+        };
+        return this.generateDenormalizedDocument(metatype, prototype, instance, documentResolvers, applicationConfig, options);
+    }
+    getSchemas() {
+        return this.schemas;
+    }
+    generateDenormalizedDocument(metatype, prototype, instance, documentResolvers, applicationConfig, options) {
+        const self = this;
+        const excludeController = exploreApiExcludeControllerMetadata(metatype);
+        if (excludeController) {
+            return [];
+        }
+        const methodNames = this.metadataScanner
+            .getAllMethodNames(prototype)
+            .filter((name) => this.isEndpointIncluded(instance, prototype, prototype[name], options));
+        if (isEmpty(methodNames)) {
+            return [];
+        }
+        const globalMetadata = this.exploreGlobalMetadata(metatype, {
+            autoTagControllers: options.autoTagControllers
+        });
+        const ctrlExtraModels = exploreGlobalApiExtraModelsMetadata(metatype);
+        this.registerExtraModels(ctrlExtraModels);
+        const denormalizedPaths = methodNames.map((name) => {
+            const targetCallback = prototype[name];
+            const ctrlExtraModels = exploreApiExtraModelsMetadata(instance, prototype, targetCallback);
+            this.registerExtraModels(ctrlExtraModels);
+            const methodMetadata = mapValues_mapValues(documentResolvers, (explorers) => explorers.reduce((metadata, fn) => {
+                const exploredMetadata = fn.call(self, instance, prototype, targetCallback, metatype, options.globalPrefix, options.modulePath, applicationConfig, options.autoTagControllers);
+                if (!exploredMetadata) {
+                    return metadata;
+                }
+                if (!isArray(exploredMetadata)) {
+                    if (Array.isArray(metadata)) {
+                        return metadata.map((item) => ({
+                            ...item,
+                            ...exploredMetadata
+                        }));
+                    }
+                    return { ...metadata, ...exploredMetadata };
+                }
+                return isArray(metadata)
+                    ? [...metadata, ...exploredMetadata]
+                    : exploredMetadata;
+            }, {}));
+            if (Array.isArray(methodMetadata.root)) {
+                return methodMetadata.root.map((endpointMetadata) => {
+                    endpointMetadata = cloneDeep({
+                        ...methodMetadata,
+                        root: endpointMetadata
+                    });
+                    const controllerMetadata = cloneDeep(globalMetadata);
+                    const mergedMethodMetadata = this.mergeMetadata(controllerMetadata, omitBy(endpointMetadata, isEmpty));
+                    return this.migrateOperationSchema({
+                        responses: {},
+                        ...omit(controllerMetadata, 'chunks'),
+                        ...mergedMethodMetadata
+                    }, prototype, targetCallback, metatype);
+                });
+            }
+            const mergedMethodMetadata = this.mergeMetadata(globalMetadata, omitBy(methodMetadata, isEmpty));
+            return [
+                this.migrateOperationSchema({
+                    responses: {},
+                    ...omit(globalMetadata, 'chunks'),
+                    ...mergedMethodMetadata
+                }, prototype, targetCallback, metatype)
+            ];
+        });
+        return flatten(denormalizedPaths).filter((path) => path.root?.path);
+    }
+    isEndpointIncluded(instance, prototype, method, options) {
+        if ((0,shared_utils/* isUndefined */.b0)(Reflect.getMetadata(constants/* PATH_METADATA */.yx, method))) {
+            return false;
+        }
+        const includeEndpoint = exploreApiIncludeEndpointMetadata(instance, prototype, method);
+        if (options.onlyIncludeDecoratedEndpoints && !includeEndpoint?.disable) {
+            return false;
+        }
+        const excludeEndpoint = exploreApiExcludeEndpointMetadata(instance, prototype, method);
+        return !(excludeEndpoint && excludeEndpoint.disable);
+    }
+    exploreGlobalMetadata(metatype, options) {
+        const globalExplorers = [
+            exploreGlobalApiTagsMetadata(options.autoTagControllers),
+            exploreGlobalApiSecurityMetadata,
+            exploreGlobalApiResponseMetadata.bind(null, this.schemas, this.responseObjectFactory, this.options.globalResponses ?? {}),
+            exploreGlobalApiHeaderMetadata
+        ];
+        const globalMetadata = globalExplorers
+            .map((explorer) => explorer.call(explorer, metatype))
+            .filter((val) => !(0,shared_utils/* isUndefined */.b0)(val))
+            .reduce((curr, next) => {
+            if (next.depth) {
+                return {
+                    ...curr,
+                    chunks: (curr.chunks || []).concat(next)
+                };
+            }
+            return { ...curr, ...next };
+        }, {});
+        return globalMetadata;
+    }
+    exploreRoutePathAndMethod(instance, prototype, method, metatype, globalPrefix, modulePath, applicationConfig) {
+        const methodPath = Reflect.getMetadata(constants/* PATH_METADATA */.yx, method);
+        if ((0,shared_utils/* isUndefined */.b0)(methodPath)) {
+            return undefined;
+        }
+        const requestMethod = Reflect.getMetadata(constants/* METHOD_METADATA */.E$, method);
+        const webhookMetadata = Reflect.getMetadata(DECORATORS.API_WEBHOOK, method);
+        const isWebhook = Boolean(webhookMetadata);
+        const methodVersion = Reflect.getMetadata(constants/* VERSION_METADATA */.v7, method);
+        const versioningOptions = applicationConfig.getVersioning();
+        const controllerVersion = this.getVersionMetadata(metatype, versioningOptions);
+        const versionOrVersions = methodVersion ?? controllerVersion;
+        const versions = this.getRoutePathVersions(versionOrVersions, versioningOptions);
+        const allRoutePaths = this.routePathFactory.create({
+            methodPath,
+            methodVersion,
+            modulePath,
+            globalPrefix,
+            controllerVersion,
+            ctrlPath: this.reflectControllerPath(metatype),
+            versioningOptions: applicationConfig.getVersioning()
+        }, requestMethod);
+        return flatten(allRoutePaths.map((routePath, index) => {
+            const fullPath = this.validateRoutePath(routePath);
+            const apiExtension = Reflect.getMetadata(DECORATORS.API_EXTENSION, method);
+            if (requestMethod === common.RequestMethod.ALL) {
+                const validMethods = [
+                    'get',
+                    'post',
+                    'put',
+                    'delete',
+                    'patch',
+                    'options',
+                    'head',
+                    'search',
+                    'query'
+                ];
+                return validMethods.map((requestMethod) => ({
+                    method: requestMethod,
+                    path: fullPath === '' ? '/' : fullPath,
+                    ...(isWebhook
+                        ? {
+                            isWebhook: true,
+                            webhookName: typeof webhookMetadata === 'string'
+                                ? webhookMetadata
+                                : method.name
+                        }
+                        : {}),
+                    operationId: `${this.getOperationId(instance, method.name)}_${requestMethod.toLowerCase()}`,
+                    ...apiExtension
+                }));
+            }
+            const pathVersion = versions.find((v) => fullPath.includes(`/${v}/`) || fullPath.endsWith(`/${v}`));
+            const isAlias = allRoutePaths.length > 1 && allRoutePaths.length !== versions.length;
+            const methodKey = isAlias ? `${method.name}[${index}]` : method.name;
+            const nonPathVersion = this.getNonPathVersion(methodVersion, metatype, versioningOptions);
+            const operationVersion = pathVersion ?? nonPathVersion;
+            return {
+                method: common.RequestMethod[requestMethod].toLowerCase(),
+                path: fullPath === '' ? '/' : fullPath,
+                ...(isWebhook
+                    ? {
+                        isWebhook: true,
+                        webhookName: typeof webhookMetadata === 'string'
+                            ? webhookMetadata
+                            : method.name
+                    }
+                    : {}),
+                operationId: this.getOperationId(instance, methodKey, operationVersion),
+                ...apiExtension
+            };
+        }));
+    }
+    getOperationId(instance, methodKey, version) {
+        return this.operationIdFactory(instance.constructor?.name || '', methodKey, version);
+    }
+    getRoutePathVersions(versionValue, versioningOptions) {
+        let versions = [];
+        if (!versionValue || versioningOptions?.type !== common.VersioningType.URI) {
+            return versions;
+        }
+        if (Array.isArray(versionValue)) {
+            versions = versionValue.filter((v) => v !== interfaces/* VERSION_NEUTRAL */.t);
+        }
+        else if (versionValue !== interfaces/* VERSION_NEUTRAL */.t) {
+            versions = [versionValue];
+        }
+        const prefix = this.routePathFactory.getVersionPrefix(versioningOptions);
+        versions = versions.map((v) => `${prefix}${v}`);
+        return versions;
+    }
+    reflectControllerPath(metatype) {
+        return Reflect.getMetadata(constants/* PATH_METADATA */.yx, metatype);
+    }
+    validateRoutePath(path) {
+        if ((0,shared_utils/* isUndefined */.b0)(path)) {
+            return '';
+        }
+        if (Array.isArray(path)) {
+            path = head_head(path);
+        }
+        let pathWithParams = '';
+        try {
+            let normalizedPath = legacy_route_converter/* LegacyRouteConverter */.t.tryConvert(path, {
+                logs: this.options.httpAdapterType !== 'fastify'
+            });
+            normalizedPath = normalizedPath.replace(/::/g, '\\:');
+            normalizedPath = normalizedPath.replace(/\[:\]/g, '\\:');
+            normalizedPath = normalizedPath.replace(/\(\^([^)]+)\)/g, '');
+            const { tokens } = (0,dist/* parse */.qg)(normalizedPath);
+            for (const item of tokens) {
+                if (item.type === 'text') {
+                    pathWithParams += item.value;
+                }
+                else if (item.type === 'param') {
+                    pathWithParams += `{${item.name}}`;
+                }
+                else if (item.type === 'wildcard') {
+                    pathWithParams += `{${item.name}}`;
+                }
+                else if (item.type === 'group') {
+                    pathWithParams += item.tokens.reduce((acc, item) => acc +
+                        (item.type === 'text'
+                            ? item.value
+                            : `{${item.name}}`), '');
+                }
+            }
+        }
+        catch (err) {
+            if (err instanceof TypeError) {
+                legacy_route_converter/* LegacyRouteConverter */.t.printError(path);
+            }
+            throw err;
+        }
+        return pathWithParams === '/' ? '' : (0,shared_utils/* addLeadingSlash */.tb)(pathWithParams);
+    }
+    mergeMetadata(globalMetadata, methodMetadata) {
+        if (methodMetadata.root && !methodMetadata.root.parameters) {
+            methodMetadata.root.parameters = [];
+        }
+        const deepMerge = (metadata) => (value, key) => {
+            if (!metadata[key]) {
+                return value;
+            }
+            const globalValue = metadata[key];
+            if (metadata.depth) {
+                return this.deepMergeMetadata(globalValue, value, metadata.depth);
+            }
+            return this.mergeValues(globalValue, value);
+        };
+        if (globalMetadata.chunks) {
+            const { chunks } = globalMetadata;
+            chunks.forEach((chunk) => {
+                methodMetadata = mapValues_mapValues(methodMetadata, deepMerge(chunk));
+            });
+        }
+        return mapValues_mapValues(methodMetadata, deepMerge(globalMetadata));
+    }
+    deepMergeMetadata(globalValue, methodValue, maxDepth, currentDepthLevel = 0) {
+        if (currentDepthLevel === maxDepth) {
+            return this.mergeValues(globalValue, methodValue);
+        }
+        return mapValues_mapValues(methodValue, (value, key) => {
+            if (key in globalValue) {
+                if (key === 'parameters') {
+                    return this.mergeParameters(globalValue[key], value);
+                }
+                return this.deepMergeMetadata(globalValue[key], methodValue[key], maxDepth, currentDepthLevel + 1);
+            }
+            return value;
+        });
+    }
+    mergeParameters(controllerParameters, methodParameters) {
+        const inherited = [...controllerParameters];
+        const merged = methodParameters.map((param) => {
+            const index = inherited.findIndex((controllerParameter) => isSameParameter(controllerParameter, param));
+            if (index < 0) {
+                return param;
+            }
+            const [controllerParameter] = inherited.splice(index, 1);
+            return this.mergeParameter(controllerParameter, param);
+        });
+        return [...inherited, ...merged];
+    }
+    mergeParameter(controllerParameter, methodParameter) {
+        const parameter = { ...controllerParameter, ...methodParameter };
+        if (methodParameter.content) {
+            delete parameter.schema;
+        }
+        else if (methodParameter.schema) {
+            delete parameter.content;
+            parameter.schema = {
+                ...controllerParameter.schema,
+                ...methodParameter.schema
+            };
+        }
+        return parameter;
+    }
+    mergeValues(globalValue, methodValue) {
+        if (!isArray(globalValue)) {
+            return { ...globalValue, ...methodValue };
+        }
+        return [...globalValue, ...methodValue];
+    }
+    migrateOperationSchema(document, prototype, method, metatype) {
+        const parametersObject = get(document, 'root.parameters');
+        const requestBodyIndex = (parametersObject || []).findIndex(isBodyParameter);
+        if (requestBodyIndex < 0) {
+            return document;
+        }
+        const requestBody = parametersObject[requestBodyIndex];
+        parametersObject.splice(requestBodyIndex, 1);
+        const classConsumes = Reflect.getMetadata(DECORATORS.API_CONSUMES, metatype ?? prototype?.constructor);
+        const methodConsumes = Reflect.getMetadata(DECORATORS.API_CONSUMES, method);
+        let consumes = mergeAndUniq(classConsumes, methodConsumes);
+        consumes = isEmpty(consumes) ? ['application/json'] : consumes;
+        const keysToRemove = ['schema', 'in', 'name', 'examples', 'encoding'];
+        document.root.requestBody = {
+            ...omit(requestBody, keysToRemove),
+            ...this.mimetypeContentWrapper.wrap(consumes, pick_pick(requestBody, ['schema', 'examples', 'encoding']))
+        };
+        return document;
+    }
+    registerExtraModels(extraModels) {
+        extraModels.forEach((item) => this.schemaObjectFactory.exploreModelSchema(item, this.schemas));
+    }
+    getVersionMetadata(metatype, versioningOptions) {
+        if (versioningOptions?.type === common.VersioningType.URI) {
+            return (Reflect.getMetadata(constants/* VERSION_METADATA */.v7, metatype) ??
+                versioningOptions.defaultVersion);
+        }
+    }
+    getNonPathVersion(methodVersion, metatype, versioningOptions) {
+        if (!versioningOptions || versioningOptions.type === common.VersioningType.URI) {
+            return undefined;
+        }
+        const version = methodVersion ??
+            Reflect.getMetadata(constants/* VERSION_METADATA */.v7, metatype) ??
+            versioningOptions.defaultVersion;
+        if (!version || version === interfaces/* VERSION_NEUTRAL */.t) {
+            return undefined;
+        }
+        if (Array.isArray(version)) {
+            const filtered = version.filter((v) => v !== interfaces/* VERSION_NEUTRAL */.t);
+            return filtered.length > 0 ? filtered[0] : undefined;
+        }
+        return version;
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/objectValues.mjs
+// src/compat/_internal/objectValues.ts
+function objectValues(object) {
+	const keys = Object.keys(object);
+	const result = new Array(keys.length);
+	for (let i = 0; i < keys.length; i++) result[i] = object[keys[i]];
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/groupBy.mjs
+
+
+
+
+
+
+// src/compat/array/groupBy.ts
+/**
+* Groups the elements of an array or object based on a provided key-generating function.
+*
+* This function takes an array or object and a function that generates a key from each element or value.
+* It returns an object where the keys are the generated keys and the values are arrays of elements that
+* share the same key.
+*
+* @template T - The type of elements in the array or values in the object.
+* @template K - The type of keys.
+* @param source - The collection to group.
+* @param [_getKeyFromItem=identity] - The iteratee to transform keys.
+*   - If a function is provided, it's invoked for each element in the collection.
+*   - If a property name (string) is provided, that property of each element is used as the key.
+*   - If a property-value pair (array) is provided, elements with matching property values are used.
+*   - If a partial object is provided, elements with matching properties are used.
+* @returns An object where each key is associated with an array of elements that
+* share that key.
+*
+* @example
+* // Using an array
+* const array = [6.1, 4.2, 6.3];
+* const result = groupBy(array, Math.floor);
+* // => { 4: [4.2], 6: [6.1, 6.3] }
+*
+* @example
+* // Using a property name
+* const array = ['one', 'two', 'three'];
+* const result = groupBy(array, 'length');
+* // => { 3: ['one', 'two'], 5: ['three'] }
+*/
+function groupBy(source, _getKeyFromItem = identity) {
+	if (source == null) return {};
+	const items = isArrayLike(source) ? toArray(source) : objectValues(source);
+	const getKeyFromItem = iteratee(_getKeyFromItem);
+	const result = {};
+	for (let i = 0; i < items.length; i++) {
+		const item = items[i];
+		const key = getKeyFromItem(item);
+		if (!hasOwn(result, key)) result[key] = [];
+		result[key].push(item);
+	}
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/array/uniqWith.mjs
+
+
+
+// src/compat/array/uniqWith.ts
+/**
+* This method is like `uniq`, except that it accepts a `comparator` which is used to determine the equality of elements.
+*
+* It creates a duplicate-free version of an array, in which only the first occurrence of each element is kept.
+* If a `comparator` is provided, it will be invoked with two arguments: `(arrVal, othVal)` to compare elements.
+* If no comparator is provided, shallow equality is used.
+*
+* The order of result values is determined by the order they appear in the input array.
+*
+* @template T - The type of elements in the array.
+* @param arr  - The array to process.
+* @param [comparator] - Optional function to compare elements for equality.
+* @returns A new array with only unique values based on the comparator.
+*
+* @example
+* const array = [1, 2, 2, 3];
+* const result = uniqWith(array);
+* // result will be [1, 2, 3]
+*
+* const array = [1, 2, 3];
+* const result = uniqWith(array, (a, b) => a % 2 === b % 2)
+* // result will be [1, 2]
+*/
+function uniqWith_uniqWith(arr, comparator) {
+	if (!isArrayLike(arr)) return [];
+	if (typeof comparator !== "function") return uniq_uniq(Array.from(arr));
+	return uniqWith(Array.from(arr), (kept, candidate) => comparator(candidate, kept));
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/sort-object-lexicographically.js
+function sortObjectLexicographically(obj) {
+    const sortedKeys = Object.keys(obj).sort();
+    const sortedObj = {};
+    for (const key of sortedKeys) {
+        sortedObj[key] = obj[key];
+    }
+    return sortedObj;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/swagger-transformer.js
+
+
+
+
+
+
+
+class SwaggerTransformer {
+    normalizePaths(denormalizedDoc) {
+        const roots = denormalizedDoc.filter((doc) => Boolean(doc.root));
+        const webhookRoots = roots.filter(({ root }) => Boolean(root.isWebhook));
+        const pathRoots = roots.filter(({ root }) => !root.isWebhook);
+        const groupedByPath = groupBy(pathRoots, ({ root }) => root.path);
+        const paths = mapValues_mapValues(groupedByPath, (routes) => this.normalizeOperations(routes));
+        const groupedByWebhookName = groupBy(webhookRoots, ({ root }) => root.webhookName || root.path);
+        const webhooks = mapValues_mapValues(groupedByWebhookName, (routes) => this.normalizeOperations(routes));
+        const groupedByWebhookPath = groupBy(webhookRoots, ({ root }) => root.path);
+        const webhookPaths = mapValues_mapValues(groupedByWebhookPath, (routes) => this.normalizeOperations(routes));
+        return {
+            paths,
+            ...(Object.keys(webhooks).length > 0 ? { webhooks } : {}),
+            ...(Object.keys(webhookPaths).length > 0 ? { webhookPaths } : {})
+        };
+    }
+    normalizeOperations(routes) {
+        const keyByMethod = keyBy(routes, ({ root }) => root.method);
+        return mapValues_mapValues(keyByMethod, (route) => {
+            const mergedDefinition = {
+                ...omit(route, 'root'),
+                ...omit(route.root, ['method', 'path', 'isWebhook', 'webhookName'])
+            };
+            const handlers = routes.filter(({ root }) => root.method === route.root.method);
+            if (handlers.length > 1) {
+                const security = uniqWith_uniqWith(handlers.flatMap((handler) => handler.root.security ?? handler.security ?? []), isEqual);
+                if (security.length > 0) {
+                    mergedDefinition.security = security;
+                }
+            }
+            return sortObjectLexicographically(mergedDefinition);
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/apply-example-max-depth.util.js
+function applyExampleMaxDepth(schemas, globalMaxDepth) {
+    for (const schema of Object.values(schemas)) {
+        walkSchema(schema, globalMaxDepth);
+    }
+}
+function walkSchema(schema, globalMaxDepth) {
+    if (!schema || typeof schema !== 'object') {
+        return;
+    }
+    const perPropOverride = typeof schema.exampleMaxDepth === 'number'
+        ? schema.exampleMaxDepth
+        : undefined;
+    const effectiveMax = perPropOverride !== undefined ? perPropOverride : globalMaxDepth;
+    if (effectiveMax !== undefined) {
+        if ('example' in schema) {
+            schema.example = trimExampleValue(schema.example, effectiveMax);
+        }
+        if ('examples' in schema && Array.isArray(schema.examples)) {
+            schema.examples = schema.examples.map((entry) => trimExampleValue(entry, effectiveMax));
+        }
+    }
+    if ('exampleMaxDepth' in schema) {
+        delete schema.exampleMaxDepth;
+    }
+    if (schema.properties && typeof schema.properties === 'object') {
+        for (const prop of Object.values(schema.properties)) {
+            walkSchema(prop, globalMaxDepth);
+        }
+    }
+    if (schema.items) {
+        walkSchema(schema.items, globalMaxDepth);
+    }
+    for (const key of ['allOf', 'oneOf', 'anyOf']) {
+        const combinator = schema[key];
+        if (Array.isArray(combinator)) {
+            for (const sub of combinator) {
+                walkSchema(sub, globalMaxDepth);
+            }
+        }
+    }
+    if (schema.additionalProperties &&
+        typeof schema.additionalProperties === 'object') {
+        walkSchema(schema.additionalProperties, globalMaxDepth);
+    }
+}
+function trimExampleValue(value, remainingDepth, path = new WeakSet()) {
+    if (value === null || typeof value !== 'object') {
+        return value;
+    }
+    const isArray = Array.isArray(value);
+    if (!isArray && value.constructor !== Object) {
+        return value;
+    }
+    if (remainingDepth <= 0) {
+        return isArray ? [] : {};
+    }
+    if (path.has(value)) {
+        return isArray ? [] : {};
+    }
+    path.add(value);
+    try {
+        if (isArray) {
+            return value.map((entry) => trimExampleValue(entry, remainingDepth - 1, path));
+        }
+        const trimmed = {};
+        for (const [key, child] of Object.entries(value)) {
+            trimmed[key] = trimExampleValue(child, remainingDepth - 1, path);
+        }
+        return trimmed;
+    }
+    finally {
+        path.delete(value);
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/get-global-prefix.js
+function getGlobalPrefix(app) {
+    const internalConfigRef = app.config;
+    return (internalConfigRef && internalConfigRef.getGlobalPrefix()) || '';
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/strip-dynamic-defaults.util.js
+function isDynamicDefault(value) {
+    if (value === null ||
+        value === undefined ||
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean') {
+        return false;
+    }
+    if (typeof value === 'function') {
+        return true;
+    }
+    if (Array.isArray(value)) {
+        return false;
+    }
+    if (typeof value === 'object' && value.constructor === Object) {
+        return false;
+    }
+    return true;
+}
+function stripDynamicDefaults(schemas) {
+    for (const schema of Object.values(schemas)) {
+        stripFromSchema(schema);
+    }
+}
+function stripDynamicOperationDefaults(route) {
+    const { root, responses } = route;
+    for (const parameter of (root?.parameters ?? [])) {
+        stripFromSchema(parameter.schema);
+        stripFromContent(parameter.content);
+    }
+    stripFromContent(root?.requestBody?.content);
+    stripFromResponses(root?.responses);
+    stripFromResponses(responses);
+}
+function stripFromResponses(responses) {
+    for (const response of Object.values(responses ?? {})) {
+        stripFromContent(response?.content);
+        for (const header of Object.values(response?.headers ?? {})) {
+            stripFromSchema(header?.schema);
+        }
+    }
+}
+function stripFromContent(content) {
+    for (const mediaType of Object.values(content ?? {})) {
+        stripFromSchema(mediaType?.schema);
+    }
+}
+function stripFromSchema(schema) {
+    if (!schema || typeof schema !== 'object') {
+        return;
+    }
+    if ('default' in schema && isDynamicDefault(schema.default)) {
+        delete schema.default;
+    }
+    if (schema.properties) {
+        for (const prop of Object.values(schema.properties)) {
+            stripFromSchema(prop);
+        }
+    }
+    if (schema.items) {
+        stripFromSchema(schema.items);
+    }
+    if (schema.additionalProperties) {
+        stripFromSchema(schema.additionalProperties);
+    }
+    for (const key of ['allOf', 'oneOf', 'anyOf']) {
+        if (schema[key]) {
+            for (const sub of schema[key]) {
+                stripFromSchema(sub);
+            }
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/strip-last-slash.util.js
+function stripLastSlash(path) {
+    return path && path[path.length - 1] === '/'
+        ? path.slice(0, path.length - 1)
+        : path;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/swagger-scanner.js
+
+
+
+
+
+
+
+
+
+
+
+
+class SwaggerScanner {
+    constructor() {
+        this.transformer = new SwaggerTransformer();
+        this.modelPropertiesAccessor = new ModelPropertiesAccessor();
+        this.swaggerTypesMapper = new SwaggerTypesMapper();
+        this.schemaObjectFactory = new SchemaObjectFactory(this.modelPropertiesAccessor, this.swaggerTypesMapper);
+    }
+    scanApplication(app, options, globalMetadata = {}) {
+        const { deepScanRoutes, include: includedModules = [], extraModels = [], ignoreGlobalPrefix = false, operationIdFactory, linkNameFactory, autoTagControllers = true, onlyIncludeDecoratedEndpoints = false, excludeDynamicDefaults = false, exampleMaxDepth, standardSchemaConverter } = options;
+        this.schemaObjectFactory = new SchemaObjectFactory(this.modelPropertiesAccessor, this.swaggerTypesMapper, standardSchemaConverter);
+        const untypedApp = app;
+        const container = untypedApp.container;
+        const internalConfigRef = untypedApp.config;
+        const httpAdapterType = app.getHttpAdapter().getType();
+        this.initializeSwaggerExplorer(httpAdapterType, standardSchemaConverter, globalMetadata);
+        const modules = this.getModules(container.getModules(), includedModules);
+        const globalPrefix = !ignoreGlobalPrefix
+            ? stripLastSlash(getGlobalPrefix(app))
+            : '';
+        const denormalizedPaths = modules.map((module) => {
+            const { controllers, metatype, imports } = module;
+            let result = [];
+            if (deepScanRoutes) {
+                const explicitGlobalTokens = this.getExplicitlyImportedGlobalModuleTokens(container, module);
+                Array.from(imports.values())
+                    .filter((importedModule) => !importedModule.isGlobal ||
+                    explicitGlobalTokens === undefined ||
+                    explicitGlobalTokens.has(importedModule.token))
+                    .forEach(({ metatype, controllers }) => {
+                    const modulePath = this.getModulePathMetadata(container, metatype);
+                    result = result.concat(this.scanModuleControllers(controllers, internalConfigRef, {
+                        modulePath,
+                        globalPrefix,
+                        operationIdFactory,
+                        linkNameFactory,
+                        autoTagControllers,
+                        onlyIncludeDecoratedEndpoints
+                    }));
+                });
+            }
+            const modulePath = this.getModulePathMetadata(container, metatype);
+            return result.concat(this.scanModuleControllers(controllers, internalConfigRef, {
+                modulePath,
+                globalPrefix,
+                operationIdFactory,
+                linkNameFactory,
+                autoTagControllers,
+                onlyIncludeDecoratedEndpoints
+            }));
+        });
+        const routes = flatten(denormalizedPaths);
+        const schemas = this.explorer.getSchemas();
+        this.addExtraModels(schemas, extraModels);
+        if (excludeDynamicDefaults) {
+            stripDynamicDefaults(schemas);
+            for (const route of routes) {
+                stripDynamicOperationDefaults(route);
+            }
+        }
+        applyExampleMaxDepth(schemas, exampleMaxDepth);
+        return {
+            ...this.transformer.normalizePaths(routes),
+            components: {
+                schemas: schemas
+            }
+        };
+    }
+    getExplicitlyImportedGlobalModuleTokens(container, module) {
+        const tokenFactory = container.getModuleTokenFactory();
+        const staticImports = Reflect.getMetadata(constants/* MODULE_METADATA */.Jj.IMPORTS, module.metatype) || [];
+        const dynamicImports = container.getDynamicMetadataByToken(module.token, 'imports') || [];
+        const tokens = new Set();
+        for (const importedModule of [...staticImports, ...dynamicImports]) {
+            const token = this.getModuleToken(importedModule, tokenFactory);
+            if (token === undefined || !container.getModules().has(token)) {
+                return undefined;
+            }
+            tokens.add(token);
+        }
+        return tokens;
+    }
+    getModuleToken(moduleReference, tokenFactory) {
+        let reference = moduleReference;
+        if ('forwardRef' in reference &&
+            typeof reference.forwardRef === 'function') {
+            reference = reference.forwardRef();
+        }
+        if (!reference || reference instanceof Promise) {
+            return undefined;
+        }
+        if ('module' in reference) {
+            const { module: metatype, ...dynamicMetadata } = reference;
+            return tokenFactory.createForDynamic(metatype, dynamicMetadata, reference);
+        }
+        return tokenFactory.createForStatic(reference, reference);
+    }
+    scanModuleControllers(controller, applicationConfig, options) {
+        const denormalizedArray = [...controller.values()].map((ctrl) => this.explorer.exploreController(ctrl, applicationConfig, options));
+        return flatten(denormalizedArray);
+    }
+    getModules(modulesContainer, include) {
+        if (!include || isEmpty(include)) {
+            return [...modulesContainer.values()];
+        }
+        return [...modulesContainer.values()].filter(({ metatype }) => include.some((item) => item === metatype));
+    }
+    addExtraModels(schemas, extraModels) {
+        extraModels.forEach((item) => {
+            this.schemaObjectFactory.exploreModelSchema(item, schemas);
+        });
+    }
+    getModulePathMetadata(container, metatype) {
+        const modulesContainer = container.getModules();
+        const modulePath = Reflect.getMetadata(constants/* MODULE_PATH */.p0 + modulesContainer.applicationId, metatype);
+        return modulePath ?? Reflect.getMetadata(constants/* MODULE_PATH */.p0, metatype);
+    }
+    initializeSwaggerExplorer(httpAdapterType, standardSchemaConverter, globalMetadata) {
+        this.explorer = new SwaggerExplorer(this.schemaObjectFactory, {
+            httpAdapterType,
+            standardSchemaConverter,
+            ...globalMetadata
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/swagger-ui/constants.js
+const favIconHtml = '<link rel="icon" type="image/png" href="<% baseUrl %>favicon-32x32.png" sizes="32x32" />' +
+    '<link rel="icon" type="image/png" href="<% baseUrl %>favicon-16x16.png" sizes="16x16" />';
+const htmlTemplateString = `
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><% title %></title>
+  <link rel="stylesheet" type="text/css" href="<% baseUrl %>swagger-ui.css" >
+  <% favIconString %>
+  <style>
+    html
+    {
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
+    }
+    *,
+    *:before,
+    *:after
+    {
+      box-sizing: inherit;
+    }
+
+    body {
+      margin:0;
+      background: #fafafa;
+    }
+  </style>
+</head>
+
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute;width:0;height:0">
+  <defs>
+    <symbol viewBox="0 0 20 20" id="unlocked">
+      <path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8z"></path>
+    </symbol>
+
+    <symbol viewBox="0 0 20 20" id="locked">
+      <path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8zM12 8H8V5.199C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8z"/>
+    </symbol>
+
+    <symbol viewBox="0 0 20 20" id="close">
+      <path d="M14.348 14.849c-.469.469-1.229.469-1.697 0L10 11.819l-2.651 3.029c-.469.469-1.229.469-1.697 0-.469-.469-.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-.469-.469-.469-1.228 0-1.697.469-.469 1.228-.469 1.697 0L10 8.183l2.651-3.031c.469-.469 1.228-.469 1.697 0 .469.469.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c.469.469.469 1.229 0 1.698z"/>
+    </symbol>
+
+    <symbol viewBox="0 0 20 20" id="large-arrow">
+      <path d="M13.25 10L6.109 2.58c-.268-.27-.268-.707 0-.979.268-.27.701-.27.969 0l7.83 7.908c.268.271.268.709 0 .979l-7.83 7.908c-.268.271-.701.27-.969 0-.268-.269-.268-.707 0-.979L13.25 10z"/>
+    </symbol>
+
+    <symbol viewBox="0 0 20 20" id="large-arrow-down">
+      <path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"/>
+    </symbol>
+
+
+    <symbol viewBox="0 0 24 24" id="jump-to">
+      <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z"/>
+    </symbol>
+
+    <symbol viewBox="0 0 24 24" id="expand">
+      <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+    </symbol>
+
+  </defs>
+</svg>
+
+<div id="swagger-ui"></div>
+
+<script src="<% baseUrl %>swagger-ui-bundle.js"> </script>
+<script src="<% baseUrl %>swagger-ui-standalone-preset.js"> </script>
+<script src="<% baseUrl %>swagger-ui-init.js"> </script>
+<% customJs %>
+<% customJsStr %>
+<% customCssUrl %>
+<style>
+  <% customCss %>
+  <% explorerCss %>
+</style>
+</body>
+
+</html>
+`;
+const jsTemplateString = `
+window.onload = function() {
+  // Build a system
+  <% swaggerOptions %>
+  let url = options.swaggerUrl || window.location.origin
+  let urls = options.swaggerUrls
+  let customOptions = options.customOptions
+  let spec1 = options.swaggerDoc
+  let swaggerOptions = {
+    spec: spec1,
+    url: url,
+    urls: urls,
+    dom_id: '#swagger-ui',
+    deepLinking: true,
+    presets: [
+      SwaggerUIBundle.presets.apis,
+      SwaggerUIStandalonePreset
+    ],
+    plugins: [
+      SwaggerUIBundle.plugins.DownloadUrl
+    ],
+    layout: "StandaloneLayout"
+  }
+  for (let attrname in customOptions) {
+    swaggerOptions[attrname] = customOptions[attrname];
+  }
+  let ui = SwaggerUIBundle(swaggerOptions)
+
+  if (customOptions.initOAuth) {
+    ui.initOAuth(customOptions.initOAuth)
+  }
+
+  if (customOptions.authAction) {
+    ui.authActions.authorize(customOptions.authAction)
+  }
+  
+  window.ui = ui
+}
+`;
+
+// EXTERNAL MODULE: external "crypto"
+var external_crypto_ = __nccwpck_require__(76982);
+;// CONCATENATED MODULE: external "vm"
+const external_vm_namespaceObject = require("vm");
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/swagger-ui/helpers.js
+
+
+function serializeFunction(fn) {
+    const source = fn.toString();
+    try {
+        new external_vm_namespaceObject.Script(`(${source})`);
+        return source;
+    }
+    catch (err) {
+        if (!(err instanceof SyntaxError)) {
+            return source;
+        }
+        return `({ ${source} })[${JSON.stringify(fn.name)}]`;
+    }
+}
+function buildJSInitOptions(initOptions) {
+    const fns = [];
+    const placeholders = [];
+    let json = JSON.stringify(initOptions, (key, value) => {
+        if (typeof value === 'function') {
+            const placeholder = (0,external_crypto_.randomUUID)();
+            fns.push(value);
+            placeholders.push(placeholder);
+            return placeholder;
+        }
+        return value;
+    }, 2);
+    placeholders.forEach((placeholder, i) => {
+        json = json.replace(`"${placeholder}"`, () => serializeFunction(fns[i]));
+    });
+    return `let options = ${json};`;
+}
+
+// EXTERNAL MODULE: external "node:module"
+var external_node_module_ = __nccwpck_require__(98995);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/swagger-ui/swagger-ui.js
+
+
+
+const swagger_ui_require = (0,external_node_module_.createRequire)(require('url').pathToFileURL(__filename).href);
+function buildSwaggerInitJS(swaggerDoc, customOptions = {}) {
+    const { swaggerOptions = {}, swaggerUrl } = customOptions;
+    const swaggerInitOptions = {
+        swaggerDoc,
+        swaggerUrl,
+        customOptions: swaggerOptions
+    };
+    const jsInitOptions = buildJSInitOptions(swaggerInitOptions);
+    return jsTemplateString.replace('<% swaggerOptions %>', () => jsInitOptions);
+}
+let swaggerAssetsAbsoluteFSPath;
+function getSwaggerAssetsAbsoluteFSPath() {
+    if (!swaggerAssetsAbsoluteFSPath) {
+        swaggerAssetsAbsoluteFSPath = swagger_ui_require('swagger-ui-dist/absolute-path.js')();
+    }
+    return swaggerAssetsAbsoluteFSPath;
+}
+function toExternalScriptTag(url) {
+    return `<script src='${url}'></script>`;
+}
+function toInlineScriptTag(jsCode) {
+    return `<script>${jsCode}</script>`;
+}
+function toExternalStylesheetTag(url) {
+    return `<link href='${url}' rel='stylesheet'>`;
+}
+function toTags(customCode, toScript) {
+    if (!customCode) {
+        return '';
+    }
+    if (typeof customCode === 'string') {
+        return toScript(customCode);
+    }
+    else {
+        return customCode.map(toScript).join('\n');
+    }
+}
+function buildSwaggerHTML(baseUrl, customOptions = {}) {
+    const { customCss = '', customJs = '', customJsStr = '', customfavIcon = false, customSiteTitle = 'Swagger UI', customCssUrl = '', explorer = false } = customOptions;
+    const favIconString = customfavIcon
+        ? `<link rel='icon' href='${customfavIcon}' />`
+        : favIconHtml;
+    const explorerCss = explorer
+        ? ''
+        : '.swagger-ui .topbar .download-url-wrapper { display: none }';
+    return htmlTemplateString
+        .replace('<% customCss %>', () => customCss)
+        .replace('<% explorerCss %>', () => explorerCss)
+        .replace('<% favIconString %>', () => favIconString)
+        .replace(/<% baseUrl %>/g, () => baseUrl)
+        .replace('<% customJs %>', () => toTags(customJs, toExternalScriptTag))
+        .replace('<% customJsStr %>', () => toTags(customJsStr, toInlineScriptTag))
+        .replace('<% customCssUrl %>', () => toTags(customCssUrl, toExternalStylesheetTag))
+        .replace('<% title %>', () => customSiteTitle);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/swagger-ui/index.js
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/assign-two-levels-deep.js
+function assignTwoLevelsDeep(_dest, ...args) {
+    const dest = _dest;
+    for (const arg of args) {
+        for (const [key, value] of Object.entries(arg ?? {})) {
+            dest[key] = { ...dest[key], ...value };
+        }
+    }
+    return dest;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/is-oas-version-at-least.util.js
+function isOasVersionAtLeast(openApiVersion, minMajor, minMinor) {
+    const [major, minor] = openApiVersion.split('.').map((part) => Number(part));
+    const safeMajor = Number.isNaN(major) ? 0 : major;
+    const safeMinor = Number.isNaN(minor) ? 0 : minor;
+    return (safeMajor > minMajor || (safeMajor === minMajor && safeMinor >= minMinor));
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/is-oas31-or-later.util.js
+
+function isOas31OrLater(openApiVersion) {
+    return isOasVersionAtLeast(openApiVersion, 3, 1);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/is-oas32-or-later.util.js
+
+function isOas32OrLater(openApiVersion) {
+    return isOasVersionAtLeast(openApiVersion, 3, 2);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/normalize-rel-path.js
+function normalizeRelPath(input) {
+    const output = input.replace(/\/\/+/g, '/');
+    return output;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/nullable-to-oas31.util.js
+const COMBINATOR_KEYS = ['allOf', 'oneOf', 'anyOf'];
+const EXCLUSIVE_BOUND_KEYS = [
+    ['exclusiveMinimum', 'minimum'],
+    ['exclusiveMaximum', 'maximum']
+];
+const DATA_KEYS = new Set(['example', 'examples', 'default', 'const', 'enum']);
+const NAME_KEYED_MAPS = new Set([
+    'properties',
+    'patternProperties',
+    '$defs',
+    'schemas',
+    'headers',
+    'responses',
+    'requestBodies',
+    'parameters',
+    'callbacks',
+    'pathItems',
+    'webhooks',
+    'encoding'
+]);
+function convertNullableToOas31(document) {
+    walk(document);
+}
+function walk(node) {
+    if (Array.isArray(node)) {
+        node.forEach(walk);
+        return;
+    }
+    if (!nullable_to_oas31_util_isObject(node)) {
+        return;
+    }
+    for (const [key, value] of Object.entries(node)) {
+        if (DATA_KEYS.has(key) || key.startsWith('x-')) {
+            continue;
+        }
+        if (NAME_KEYED_MAPS.has(key) && nullable_to_oas31_util_isObject(value)) {
+            for (const [name, entry] of Object.entries(value)) {
+                if (key === 'responses' && name.startsWith('x-')) {
+                    continue;
+                }
+                walk(entry);
+            }
+        }
+        else {
+            walk(value);
+        }
+    }
+    convertSchema(node);
+    convertExclusiveBounds(node);
+}
+function convertSchema(schema) {
+    if (typeof schema.nullable !== 'boolean') {
+        return;
+    }
+    const isNullable = schema.nullable;
+    delete schema.nullable;
+    if (!isNullable) {
+        return;
+    }
+    const combinator = COMBINATOR_KEYS.find((key) => Array.isArray(schema[key]));
+    if ('$ref' in schema || combinator) {
+        schema.anyOf = [extractInnerSchema(schema, combinator), { type: 'null' }];
+        return;
+    }
+    if (schema.type !== undefined) {
+        const types = Array.isArray(schema.type)
+            ? schema.type
+            : [schema.type];
+        schema.type = types.includes('null') ? types : [...types, 'null'];
+    }
+    if (Array.isArray(schema.enum) && !schema.enum.includes(null)) {
+        schema.enum = [...schema.enum, null];
+    }
+}
+function convertExclusiveBounds(schema) {
+    for (const [exclusiveKey, boundKey] of EXCLUSIVE_BOUND_KEYS) {
+        if (typeof schema[exclusiveKey] !== 'boolean') {
+            continue;
+        }
+        if (schema[exclusiveKey] && typeof schema[boundKey] === 'number') {
+            schema[exclusiveKey] = schema[boundKey];
+            delete schema[boundKey];
+        }
+        else {
+            delete schema[exclusiveKey];
+        }
+    }
+}
+function extractInnerSchema(schema, combinator) {
+    const inner = {};
+    if ('$ref' in schema) {
+        inner.$ref = schema.$ref;
+        delete schema.$ref;
+    }
+    if (combinator) {
+        const members = schema[combinator];
+        delete schema[combinator];
+        if (schema.type === 'object' && !('properties' in schema)) {
+            delete schema.type;
+        }
+        if (!('$ref' in inner) && combinator === 'allOf' && members.length === 1) {
+            Object.assign(inner, members[0]);
+        }
+        else {
+            inner[combinator] = members;
+        }
+    }
+    return inner;
+}
+function nullable_to_oas31_util_isObject(value) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/remove-dangling-links.util.js
+function getOperations(pathItem) {
+    const operations = Object.values(pathItem ?? {}).filter((value) => !!value && typeof value === 'object' && 'responses' in value);
+    return [
+        ...operations,
+        ...Object.values(pathItem?.additionalOperations ?? {})
+    ];
+}
+function removeDanglingLinks(document) {
+    const operations = [
+        ...Object.values(document.paths ?? {}),
+        ...Object.values(document.webhooks ?? {})
+    ].flatMap((pathItem) => getOperations(pathItem));
+    const operationIds = new Set(operations.map((operation) => operation.operationId));
+    for (const operation of operations) {
+        for (const response of Object.values(operation.responses ?? {})) {
+            const { links } = response;
+            if (!links) {
+                continue;
+            }
+            for (const [name, link] of Object.entries(links)) {
+                if ('operationId' in link &&
+                    link.operationId &&
+                    !operationIds.has(link.operationId)) {
+                    delete links[name];
+                }
+            }
+            if (Object.keys(links).length === 0) {
+                delete response.links;
+            }
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/resolve-path.util.js
+
+function resolvePath(path) {
+    return path ? external_path_.resolve(path) : path;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/validate-global-prefix.util.js
+const validateGlobalPrefix = (globalPrefix) => globalPrefix && !globalPrefix.match(/^(\/?)$/);
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/utils/validate-path.util.js
+const validatePath = (inputPath) => inputPath.charAt(0) !== '/' ? '/' + inputPath : inputPath;
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/swagger-module.js
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const isRoutePattern = (segment) => /[:*]/.test(segment);
+function isStockSwaggerUiFile(pathname) {
+    let decodedPathname;
+    try {
+        decodedPathname = decodeURIComponent(pathname);
+    }
+    catch {
+        return false;
+    }
+    const normalizedPathname = external_path_.posix
+        .normalize(`/${decodedPathname}`)
+        .toLowerCase();
+    return (normalizedPathname === '/index.html' || normalizedPathname === '/license');
+}
+const FIXED_PATH_ITEM_METHODS = [
+    'get',
+    'put',
+    'post',
+    'delete',
+    'options',
+    'head',
+    'patch',
+    'trace'
+];
+const NON_STANDARD_HTTP_METHODS = new Set(Object.values(common.RequestMethod)
+    .filter((method) => typeof method === 'string')
+    .map((method) => method.toLowerCase())
+    .filter((method) => method !== 'all' && !FIXED_PATH_ITEM_METHODS.includes(method)));
+class SwaggerModule {
+    static mergeWebhooks(configWebhooks, scannedWebhooks) {
+        if (!configWebhooks && !scannedWebhooks) {
+            return undefined;
+        }
+        return assignTwoLevelsDeep({}, configWebhooks || {}, scannedWebhooks || {});
+    }
+    static normalizeNonStandardOperations(pathItems, isOas32) {
+        const isNonStandard = (field) => NON_STANDARD_HTTP_METHODS.has(field) && !(isOas32 && field === 'query');
+        const result = {};
+        for (const [key, pathItem] of Object.entries(pathItems)) {
+            if (!pathItem || !Object.keys(pathItem).some(isNonStandard)) {
+                result[key] = pathItem;
+                continue;
+            }
+            const rest = {};
+            const additionalOperations = {
+                ...pathItem.additionalOperations
+            };
+            for (const [field, value] of Object.entries(pathItem)) {
+                if (!isNonStandard(field)) {
+                    rest[field] = value;
+                }
+                else if (isOas32) {
+                    additionalOperations[field.toUpperCase()] = value;
+                }
+            }
+            if (isOas32) {
+                rest.additionalOperations = additionalOperations;
+            }
+            if (Object.keys(rest).length > 0) {
+                result[key] = rest;
+            }
+        }
+        return result;
+    }
+    static createDocument(app, config, options = {}) {
+        const { webhooks: configWebhooks, [GLOBAL_PARAMETERS]: globalParameters, [GLOBAL_RESPONSES]: globalResponses, ...configWithoutWebhooks } = config;
+        const swaggerScanner = new SwaggerScanner();
+        const document = swaggerScanner.scanApplication(app, options, {
+            globalParameters,
+            globalResponses
+        });
+        document.components = assignTwoLevelsDeep({}, config.components, document.components);
+        const { webhooks: scannedWebhooks, webhookPaths, ...documentWithoutWebhooks } = document;
+        const mergedWebhooks = SwaggerModule.mergeWebhooks(configWebhooks, scannedWebhooks);
+        const openApiVersion = config.openapi ?? '3.0.0';
+        const isOas31 = isOas31OrLater(openApiVersion);
+        const baseDocument = {
+            openapi: '3.0.0',
+            paths: {},
+            ...configWithoutWebhooks,
+            ...documentWithoutWebhooks
+        };
+        if (!isOas31 && webhookPaths) {
+            for (const [path, webhookPathItem] of Object.entries(webhookPaths)) {
+                for (const method of Object.keys(webhookPathItem)) {
+                    if (baseDocument.paths?.[path]?.[method]) {
+                        new common.Logger(SwaggerModule.name).warn(`Webhook "${method.toUpperCase()} ${path}" shares its path and method with a route, so it is left out of the OpenAPI ${openApiVersion} document. Use OpenAPI 3.1 or later to document both.`);
+                    }
+                }
+            }
+        }
+        const finalDocument = isOas31
+            ? {
+                ...baseDocument,
+                ...(mergedWebhooks ? { webhooks: mergedWebhooks } : {})
+            }
+            : {
+                ...baseDocument,
+                paths: webhookPaths
+                    ? assignTwoLevelsDeep({}, baseDocument.paths || {}, webhookPaths, baseDocument.paths || {})
+                    : baseDocument.paths
+            };
+        if (isOas31) {
+            convertNullableToOas31(finalDocument);
+        }
+        const isOas32 = isOas32OrLater(openApiVersion);
+        finalDocument.paths = SwaggerModule.normalizeNonStandardOperations(finalDocument.paths, isOas32);
+        if (finalDocument.webhooks) {
+            finalDocument.webhooks = SwaggerModule.normalizeNonStandardOperations(finalDocument.webhooks, isOas32);
+        }
+        removeDanglingLinks(finalDocument);
+        return finalDocument;
+    }
+    static async loadPluginMetadata(metadataFn) {
+        const metadata = await metadataFn();
+        return this.metadataLoader.load(metadata);
+    }
+    static serveStatic(finalPath, app, customStaticPath) {
+        const httpAdapter = app.getHttpAdapter();
+        const swaggerAssetsPath = customStaticPath
+            ? resolvePath(customStaticPath)
+            : getSwaggerAssetsAbsoluteFSPath();
+        if (httpAdapter && httpAdapter.getType() === 'fastify') {
+            httpAdapter.getInstance().register(async (instance) => {
+                const fastifyStaticModule = await (0,load_package_util/* loadPackage */.HU)('@fastify/static', 'SwaggerModule', () => __nccwpck_require__.e(/* import() */ 167).then(__nccwpck_require__.t.bind(__nccwpck_require__, 6167, 19)));
+                const fastifyStatic = fastifyStaticModule.default ?? fastifyStaticModule;
+                instance.register(fastifyStatic, {
+                    root: swaggerAssetsPath,
+                    prefix: finalPath,
+                    decorateReply: false,
+                    index: false,
+                    allowedPath: (pathname) => !isStockSwaggerUiFile(pathname)
+                });
+            });
+        }
+        else {
+            app.use(finalPath, (req, res, next) => isStockSwaggerUiFile(req.path) ? next(new common.NotFoundException()) : next());
+            app.useStaticAssets(swaggerAssetsPath, {
+                prefix: finalPath,
+                index: false
+            });
+        }
+    }
+    static serveDocuments(finalPath, urlLastSubdirectory, httpAdapter, documentOrFactory, options) {
+        let document;
+        const getBuiltDocument = () => {
+            if (!document) {
+                document =
+                    typeof documentOrFactory === 'function'
+                        ? documentOrFactory()
+                        : documentOrFactory;
+            }
+            return document;
+        };
+        if (options.ui) {
+            this.serveSwaggerUi(finalPath, urlLastSubdirectory, httpAdapter, getBuiltDocument, options.swaggerOptions);
+        }
+        if (options.raw === true ||
+            (Array.isArray(options.raw) && options.raw.length > 0)) {
+            const serveJson = options.raw === true || options.raw.includes('json');
+            const serveYaml = options.raw === true || options.raw.includes('yaml');
+            this.serveDefinitions(httpAdapter, getBuiltDocument, options, {
+                serveJson,
+                serveYaml
+            });
+        }
+    }
+    static serveSwaggerUi(finalPath, urlLastSubdirectory, httpAdapter, getBuiltDocument, swaggerOptions) {
+        const baseUrlForSwaggerUI = normalizeRelPath(`./${urlLastSubdirectory}/`);
+        let swaggerUiHtml;
+        let swaggerUiHtmlForTrailingSlash;
+        let swaggerUiInitJS;
+        async function serveSwaggerInitJs(req, res) {
+            res.type('application/javascript');
+            const document = getBuiltDocument();
+            if (swaggerOptions.patchDocumentOnRequest) {
+                const documentToSerialize = await Promise.resolve(swaggerOptions.patchDocumentOnRequest(req, res, document));
+                const swaggerInitJsPerRequest = buildSwaggerInitJS(documentToSerialize, swaggerOptions);
+                return res.send(swaggerInitJsPerRequest);
+            }
+            if (!swaggerUiInitJS) {
+                swaggerUiInitJS = buildSwaggerInitJS(document, swaggerOptions);
+            }
+            return res.send(swaggerUiInitJS);
+        }
+        httpAdapter.get(normalizeRelPath(`${finalPath}/swagger-ui-init.js`), serveSwaggerInitJs);
+        if (!isRoutePattern(urlLastSubdirectory)) {
+            try {
+                httpAdapter.get(normalizeRelPath(`${finalPath}/${urlLastSubdirectory}/swagger-ui-init.js`), serveSwaggerInitJs);
+            }
+            catch {
+            }
+        }
+        const getSwaggerHtml = () => {
+            if (!swaggerUiHtml) {
+                swaggerUiHtml = buildSwaggerHTML(baseUrlForSwaggerUI, swaggerOptions);
+            }
+            return swaggerUiHtml;
+        };
+        const getTrailingSlashSwaggerHtml = () => {
+            if (!swaggerUiHtmlForTrailingSlash) {
+                swaggerUiHtmlForTrailingSlash = buildSwaggerHTML('./', swaggerOptions);
+            }
+            return swaggerUiHtmlForTrailingSlash;
+        };
+        function serveSwaggerHtml(req, res) {
+            res.type('text/html');
+            const [pathname] = httpAdapter.getRequestUrl(req).split('?');
+            const isFolderUrl = pathname.endsWith('/') || pathname.endsWith('/index.html');
+            const swaggerUiHtml = isFolderUrl
+                ? getTrailingSlashSwaggerHtml()
+                : getSwaggerHtml();
+            res.send(swaggerUiHtml);
+        }
+        httpAdapter.get(finalPath, serveSwaggerHtml);
+        httpAdapter.get(`${finalPath}/index.html`, serveSwaggerHtml);
+        httpAdapter.get(`${finalPath}/LICENSE`, () => {
+            throw new common.NotFoundException();
+        });
+        try {
+            httpAdapter.get(normalizeRelPath(`${finalPath}/`), serveSwaggerHtml);
+        }
+        catch {
+        }
+    }
+    static serveDefinitions(httpAdapter, getBuiltDocument, options, serveOptions) {
+        if (serveOptions.serveJson) {
+            httpAdapter.get(normalizeRelPath(options.jsonDocumentUrl), async (req, res) => {
+                res.type('application/json');
+                const document = getBuiltDocument();
+                const documentToSerialize = options.swaggerOptions
+                    .patchDocumentOnRequest
+                    ? await Promise.resolve(options.swaggerOptions.patchDocumentOnRequest(req, res, document))
+                    : document;
+                return res.send(JSON.stringify(documentToSerialize));
+            });
+        }
+        if (serveOptions.serveYaml) {
+            httpAdapter.get(normalizeRelPath(options.yamlDocumentUrl), async (req, res) => {
+                res.type('text/yaml');
+                const document = getBuiltDocument();
+                const documentToSerialize = options.swaggerOptions
+                    .patchDocumentOnRequest
+                    ? await Promise.resolve(options.swaggerOptions.patchDocumentOnRequest(req, res, document))
+                    : document;
+                const yamlDocument = dump(documentToSerialize, {
+                    skipInvalid: true,
+                    noRefs: true
+                });
+                return res.send(yamlDocument);
+            });
+        }
+    }
+    static setup(path, app, documentOrFactory, options) {
+        const globalPrefix = stripLastSlash(getGlobalPrefix(app));
+        const finalPath = validatePath(options?.useGlobalPrefix && validateGlobalPrefix(globalPrefix)
+            ? `${globalPrefix}${validatePath(path)}`
+            : path);
+        const urlLastSubdirectory = finalPath.split('/').slice(-1).pop() || '';
+        const validatedGlobalPrefix = options?.useGlobalPrefix && validateGlobalPrefix(globalPrefix)
+            ? validatePath(globalPrefix)
+            : '';
+        const finalJSONDocumentPath = options?.jsonDocumentUrl
+            ? `${validatedGlobalPrefix}${validatePath(options.jsonDocumentUrl)}`
+            : `${finalPath}-json`;
+        const finalYAMLDocumentPath = options?.yamlDocumentUrl
+            ? `${validatedGlobalPrefix}${validatePath(options.yamlDocumentUrl)}`
+            : `${finalPath}-yaml`;
+        const ui = options?.ui ?? options?.swaggerUiEnabled ?? true;
+        const raw = options?.raw ?? true;
+        const httpAdapter = app.getHttpAdapter();
+        SwaggerModule.serveDocuments(finalPath, urlLastSubdirectory, httpAdapter, documentOrFactory, {
+            ui,
+            raw,
+            jsonDocumentUrl: finalJSONDocumentPath,
+            yamlDocumentUrl: finalYAMLDocumentPath,
+            swaggerOptions: options || {}
+        });
+        if (ui) {
+            SwaggerModule.serveStatic(finalPath, app, options?.customSwaggerUiPath);
+            if (isRoutePattern(urlLastSubdirectory) ||
+                finalPath === `/${urlLastSubdirectory}`) {
+                return;
+            }
+            const serveStaticSlashEndingPath = `${finalPath}/${urlLastSubdirectory}`;
+            SwaggerModule.serveStatic(serveStaticSlashEndingPath, app, options?.customSwaggerUiPath);
+        }
+    }
+}
+SwaggerModule.metadataLoader = new MetadataLoader();
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+mapped-types@12.0.1_564baacab6ce472bc512721f23bf00fc/node_modules/@nestjs/mapped-types/dist/type-helpers.utils.js
+
+
+const type_helpers_utils_require = (0,external_node_module_.createRequire)(require('url').pathToFileURL(__filename).href);
+const type_helpers_utils_logger = new common.Logger('MappedTypes');
+function type_helpers_utils_applyIsOptionalDecorator(targetClass, propertyKey) {
+    if (!isClassValidatorAvailable()) {
+        return;
+    }
+    const classValidator = type_helpers_utils_require('class-validator');
+    const decoratorFactory = classValidator.IsOptional();
+    decoratorFactory(targetClass.prototype, propertyKey);
+}
+function type_helpers_utils_applyValidateIfDefinedDecorator(targetClass, propertyKey) {
+    if (!isClassValidatorAvailable()) {
+        return;
+    }
+    const classValidator = type_helpers_utils_require('class-validator');
+    const decoratorFactory = classValidator.ValidateIf((_, value) => value !== undefined);
+    decoratorFactory(targetClass.prototype, propertyKey);
+}
+function type_helpers_utils_inheritValidationMetadata(parentClass, targetClass, isPropertyInherited) {
+    if (!isClassValidatorAvailable()) {
+        return;
+    }
+    try {
+        const classValidator = type_helpers_utils_require('class-validator');
+        const metadataStorage = classValidator.getMetadataStorage
+            ? classValidator.getMetadataStorage()
+            : classValidator.getFromContainer(classValidator.MetadataStorage);
+        const getTargetValidationMetadatasArgs = [parentClass, null, false, false];
+        const targetMetadata = metadataStorage.getTargetValidationMetadatas(...getTargetValidationMetadatasArgs);
+        return targetMetadata
+            .filter(({ propertyName }) => !isPropertyInherited || isPropertyInherited(propertyName))
+            .map((value) => {
+            const originalType = Reflect.getMetadata('design:type', parentClass.prototype, value.propertyName);
+            if (originalType) {
+                Reflect.defineMetadata('design:type', originalType, targetClass.prototype, value.propertyName);
+            }
+            metadataStorage.addValidationMetadata({
+                ...value,
+                target: targetClass,
+            });
+            return value.propertyName;
+        });
+    }
+    catch (err) {
+        type_helpers_utils_logger.error(`Validation ("class-validator") metadata cannot be inherited for "${parentClass.name}" class.`);
+        type_helpers_utils_logger.error(err);
+    }
+}
+function type_helpers_utils_inheritTransformationMetadata(parentClass, targetClass, isPropertyInherited, stackDecorators = true) {
+    if (!isClassTransformerAvailable()) {
+        return;
+    }
+    try {
+        const transformMetadataKeys = [
+            '_excludeMetadatas',
+            '_exposeMetadatas',
+            '_transformMetadatas',
+            '_typeMetadatas',
+        ];
+        transformMetadataKeys.forEach((key) => inheritTransformerMetadata(key, parentClass, targetClass, isPropertyInherited, stackDecorators));
+    }
+    catch (err) {
+        type_helpers_utils_logger.error(`Transformer ("class-transformer") metadata cannot be inherited for "${parentClass.name}" class.`);
+        type_helpers_utils_logger.error(err);
+    }
+}
+function inheritTransformerMetadata(key, parentClass, targetClass, isPropertyInherited, stackDecorators = true) {
+    let classTransformer;
+    try {
+        classTransformer = type_helpers_utils_require('class-transformer/cjs/storage');
+    }
+    catch {
+        classTransformer = type_helpers_utils_require('class-transformer/storage');
+    }
+    const metadataStorage = classTransformer.defaultMetadataStorage;
+    while (parentClass && parentClass !== Object) {
+        if (metadataStorage[key].has(parentClass)) {
+            const metadataMap = metadataStorage[key];
+            const parentMetadata = metadataMap.get(parentClass);
+            const targetMetadataEntries = Array.from(parentMetadata.entries())
+                .filter(([key]) => !isPropertyInherited || isPropertyInherited(key))
+                .map(([key, metadata]) => {
+                if (Array.isArray(metadata)) {
+                    const targetMetadata = metadata.map((item) => ({
+                        ...item,
+                        target: targetClass,
+                    }));
+                    return [key, targetMetadata];
+                }
+                return [key, { ...metadata, target: targetClass }];
+            });
+            if (metadataMap.has(targetClass)) {
+                const existingRules = metadataMap.get(targetClass).entries();
+                const mergeMap = new Map();
+                [existingRules, targetMetadataEntries].forEach((entries) => {
+                    for (const [valueKey, value] of entries) {
+                        if (mergeMap.has(valueKey) && stackDecorators) {
+                            const parentValue = mergeMap.get(valueKey);
+                            if (Array.isArray(parentValue)) {
+                                parentValue.push(...(Array.isArray(value) ? value : [value]));
+                            }
+                        }
+                        else {
+                            mergeMap.set(valueKey, value);
+                        }
+                    }
+                });
+                metadataMap.set(targetClass, mergeMap);
+            }
+            else {
+                metadataMap.set(targetClass, new Map(targetMetadataEntries));
+            }
+        }
+        parentClass = Object.getPrototypeOf(parentClass);
+    }
+}
+function isClassValidatorAvailable() {
+    try {
+        type_helpers_utils_require('class-validator');
+        return true;
+    }
+    catch {
+        return false;
+    }
+}
+function isClassTransformerAvailable() {
+    try {
+        type_helpers_utils_require('class-transformer');
+        return true;
+    }
+    catch {
+        return false;
+    }
+}
+function type_helpers_utils_inheritPropertyInitializers(target, sourceClass, isPropertyInherited = (key) => true) {
+    try {
+        const tempInstance = new sourceClass();
+        const propertyNames = Object.getOwnPropertyNames(tempInstance);
+        propertyNames
+            .filter((propertyName) => typeof tempInstance[propertyName] !== 'undefined' &&
+            typeof target[propertyName] === 'undefined')
+            .filter((propertyName) => isPropertyInherited(propertyName))
+            .forEach((propertyName) => {
+            target[propertyName] = tempInstance[propertyName];
+        });
+    }
+    catch {
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+mapped-types@12.0.1_564baacab6ce472bc512721f23bf00fc/node_modules/@nestjs/mapped-types/dist/intersection-type.helper.js
+
+function IntersectionType(...classRefs) {
+    class IntersectionClassType {
+        constructor() {
+            classRefs.forEach((classRef) => {
+                inheritPropertyInitializers(this, classRef);
+            });
+        }
+    }
+    classRefs.forEach((classRef) => {
+        inheritValidationMetadata(classRef, IntersectionClassType);
+        inheritTransformationMetadata(classRef, IntersectionClassType, undefined, false);
+    });
+    const intersectedNames = classRefs.reduce((prev, ref) => prev + ref.name, '');
+    Object.defineProperty(IntersectionClassType, 'name', {
+        value: `Intersection${intersectedNames}`,
+    });
+    return IntersectionClassType;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+mapped-types@12.0.1_564baacab6ce472bc512721f23bf00fc/node_modules/@nestjs/mapped-types/dist/omit-type.helper.js
+
+function OmitType(classRef, keys) {
+    const omittedKeys = keys.map((key) => typeof key === 'number' ? String(key) : key);
+    const isInheritedPredicate = (propertyKey) => !omittedKeys.includes(propertyKey);
+    class OmitClassType {
+        constructor() {
+            inheritPropertyInitializers(this, classRef, isInheritedPredicate);
+        }
+    }
+    inheritValidationMetadata(classRef, OmitClassType, isInheritedPredicate);
+    inheritTransformationMetadata(classRef, OmitClassType, isInheritedPredicate);
+    return OmitClassType;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+mapped-types@12.0.1_564baacab6ce472bc512721f23bf00fc/node_modules/@nestjs/mapped-types/dist/partial-type.helper.js
+
+function PartialType(classRef, options = {}) {
+    class PartialClassType {
+        constructor() {
+            inheritPropertyInitializers(this, classRef);
+        }
+    }
+    const propertyKeys = inheritValidationMetadata(classRef, PartialClassType);
+    inheritTransformationMetadata(classRef, PartialClassType);
+    if (propertyKeys) {
+        propertyKeys.forEach((key) => {
+            options.skipNullProperties === false
+                ? applyValidateIfDefinedDecorator(PartialClassType, key)
+                : applyIsOptionalDecorator(PartialClassType, key);
+        });
+    }
+    Object.defineProperty(PartialClassType, 'name', {
+        value: `Partial${classRef.name}`,
+    });
+    return PartialClassType;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+mapped-types@12.0.1_564baacab6ce472bc512721f23bf00fc/node_modules/@nestjs/mapped-types/dist/pick-type.helper.js
+
+function PickType(classRef, keys) {
+    const pickedKeys = keys.map((key) => typeof key === 'number' ? String(key) : key);
+    const isInheritedPredicate = (propertyKey) => pickedKeys.includes(propertyKey);
+    class PickClassType {
+        constructor() {
+            inheritPropertyInitializers(this, classRef, isInheritedPredicate);
+        }
+    }
+    inheritValidationMetadata(classRef, PickClassType, isInheritedPredicate);
+    inheritTransformationMetadata(classRef, PickClassType, isInheritedPredicate);
+    return PickClassType;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+mapped-types@12.0.1_564baacab6ce472bc512721f23bf00fc/node_modules/@nestjs/mapped-types/dist/index.js
+
+
+
+
+
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/type-helpers/mapped-types.utils.js
+
+
+
+
+
+const mapped_types_utils_modelPropertiesAccessor = new ModelPropertiesAccessor();
+function capitalizeFirstLetter(value) {
+    return value.charAt(0).toUpperCase() + value.slice(1);
+}
+function sanitizeTypeNameSegment(value) {
+    return String(value).replace(/[^A-Za-z0-9_$]/g, '_');
+}
+function setMappedTypeClassName(target, prefix, classRef, keys = []) {
+    Object.defineProperty(target, 'name', {
+        configurable: true,
+        get: () => {
+            const parentTypeName = classRef.name || 'Anonymous';
+            const documentedKeys = new Set(mapped_types_utils_modelPropertiesAccessor.getModelProperties(classRef.prototype));
+            const mappedProperties = keys
+                .filter((key) => documentedKeys.has(String(key)))
+                .map((key) => capitalizeFirstLetter(sanitizeTypeNameSegment(key)))
+                .join('');
+            return `${prefix}${parentTypeName}${mappedProperties}`;
+        }
+    });
+}
+function clonePluginMetadataFactory(target, parent, transformFn = identity) {
+    let targetMetadata = {};
+    const classPrototype = parent;
+    do {
+        if (!parent.constructor) {
+            return;
+        }
+        if (!parent.constructor[METADATA_FACTORY_NAME]) {
+            continue;
+        }
+        const parentMetadata = omitBy(parent.constructor[METADATA_FACTORY_NAME](), (_value, key) => mapped_types_utils_modelPropertiesAccessor.isHiddenProperty(classPrototype, key, parent));
+        targetMetadata = {
+            ...parentMetadata,
+            ...targetMetadata
+        };
+    } while ((parent = Reflect.getPrototypeOf(parent)) &&
+        parent !== Object.prototype &&
+        parent);
+    targetMetadata = transformFn(targetMetadata);
+    if (target[METADATA_FACTORY_NAME]) {
+        const originalFactory = target[METADATA_FACTORY_NAME];
+        target[METADATA_FACTORY_NAME] = () => {
+            const originalMetadata = originalFactory();
+            return {
+                ...originalMetadata,
+                ...targetMetadata
+            };
+        };
+    }
+    else {
+        target[METADATA_FACTORY_NAME] = () => targetMetadata;
+    }
+}
+function inheritExplicitApiPropertyOptions(source, target, propertyKey, extraOptions = []) {
+    const explicitOptions = new Set(extraOptions);
+    for (let current = source; current && current !== Object.prototype; current = Reflect.getPrototypeOf(current)) {
+        (Reflect.getOwnMetadata(DECORATORS.API_MODEL_PROPERTY_EXPLICIT_OPTIONS, current, propertyKey) ?? []).forEach((option) => explicitOptions.add(option));
+    }
+    Reflect.defineMetadata(DECORATORS.API_MODEL_PROPERTY_EXPLICIT_OPTIONS, [...explicitOptions], target, propertyKey);
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/type-helpers/deep-partial-type.helper.js
+
+
+
+
+
+
+
+
+const deep_partial_type_helper_modelPropertiesAccessor = new ModelPropertiesAccessor();
+const deepPartialCache = new Map();
+const deepPartialValidateIfDefinedCache = new Map();
+function isDtoClass(typeRef) {
+    if (!typeRef ||
+        typeof typeRef !== 'function' ||
+        typeRef === String ||
+        typeRef === Number ||
+        typeRef === Boolean ||
+        typeRef === Object ||
+        typeRef === Array ||
+        typeRef === Date) {
+        return false;
+    }
+    if (!typeRef.prototype) {
+        return false;
+    }
+    const fields = deep_partial_type_helper_modelPropertiesAccessor.getModelProperties(typeRef.prototype);
+    if (fields.length > 0) {
+        return true;
+    }
+    return (typeof typeRef[METADATA_FACTORY_NAME] === 'function');
+}
+function DeepPartialType(classRef, options = {}) {
+    const validateIfDefined = options.skipNullProperties === false;
+    const cache = validateIfDefined
+        ? deepPartialValidateIfDefinedCache
+        : deepPartialCache;
+    if (cache.has(classRef)) {
+        return cache.get(classRef);
+    }
+    const applyPartialDecoratorFn = validateIfDefined
+        ? type_helpers_utils_applyValidateIfDefinedDecorator
+        : type_helpers_utils_applyIsOptionalDecorator;
+    const fields = deep_partial_type_helper_modelPropertiesAccessor.getModelProperties(classRef.prototype);
+    class DeepPartialTypeClass {
+        constructor() {
+            type_helpers_utils_inheritPropertyInitializers(this, classRef);
+        }
+    }
+    setMappedTypeClassName(DeepPartialTypeClass, 'DeepPartial', classRef);
+    cache.set(classRef, DeepPartialTypeClass);
+    const keysWithValidationConstraints = type_helpers_utils_inheritValidationMetadata(classRef, DeepPartialTypeClass);
+    if (keysWithValidationConstraints) {
+        new Set(keysWithValidationConstraints).forEach((key) => applyPartialDecoratorFn(DeepPartialTypeClass, key));
+    }
+    type_helpers_utils_inheritTransformationMetadata(classRef, DeepPartialTypeClass);
+    function applyFields(fields) {
+        clonePluginMetadataFactory(DeepPartialTypeClass, classRef.prototype, (metadata) => mapValues_mapValues(metadata, (item) => ({ ...item, required: false })));
+        function applyDeepPartialProperty(metadata, key) {
+            let resolvedType = metadata.type;
+            if (typeof resolvedType === 'function' && resolvedType.length === 0) {
+                try {
+                    resolvedType = resolvedType();
+                }
+                catch {
+                    resolvedType = metadata.type;
+                }
+            }
+            let isArray = metadata.isArray === true;
+            if (Array.isArray(resolvedType) && resolvedType.length === 1) {
+                resolvedType = resolvedType[0];
+                isArray = true;
+            }
+            const isNestedDto = isDtoClass(resolvedType);
+            const nestedType = isNestedDto
+                ? DeepPartialType(resolvedType, options)
+                : metadata.type;
+            const decoratorFactory = ApiProperty({
+                ...metadata,
+                type: nestedType,
+                ...(isNestedDto ? { isArray } : {}),
+                required: false
+            });
+            decoratorFactory(DeepPartialTypeClass.prototype, key);
+            inheritExplicitApiPropertyOptions(classRef.prototype, DeepPartialTypeClass.prototype, key, ['required']);
+        }
+        fields.forEach((key) => {
+            const metadata = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, classRef.prototype, key) || {};
+            applyDeepPartialProperty(metadata, key);
+        });
+        if (DeepPartialTypeClass[METADATA_FACTORY_NAME]) {
+            const pluginMetadata = DeepPartialTypeClass[METADATA_FACTORY_NAME]();
+            const pluginFields = Object.keys(pluginMetadata);
+            pluginFields.forEach((key) => {
+                if (!fields.includes(key)) {
+                    applyDeepPartialProperty(pluginMetadata[key], key);
+                }
+            });
+        }
+    }
+    applyFields(fields);
+    MetadataLoader.addRefreshHook(() => {
+        const fields = deep_partial_type_helper_modelPropertiesAccessor.getModelProperties(classRef.prototype);
+        applyFields(fields);
+    });
+    return DeepPartialTypeClass;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/type-helpers/intersection-type.helper.js
+
+
+
+
+
+
+const intersection_type_helper_modelPropertiesAccessor = new ModelPropertiesAccessor();
+function intersection_type_helper_IntersectionType(...classRefs) {
+    class IntersectionClassType {
+        constructor() {
+            classRefs.forEach((classRef) => {
+                type_helpers_utils_inheritPropertyInitializers(this, classRef);
+            });
+        }
+    }
+    classRefs.forEach((classRef) => {
+        const fields = intersection_type_helper_modelPropertiesAccessor.getModelProperties(classRef.prototype);
+        type_helpers_utils_inheritValidationMetadata(classRef, IntersectionClassType);
+        class InheritedClassType {
+        }
+        type_helpers_utils_inheritTransformationMetadata(classRef, InheritedClassType);
+        type_helpers_utils_inheritTransformationMetadata(InheritedClassType, IntersectionClassType, undefined, false);
+        function applyFields(fields) {
+            clonePluginMetadataFactory(IntersectionClassType, classRef.prototype);
+            fields.forEach((propertyKey) => {
+                const metadata = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, classRef.prototype, propertyKey);
+                const decoratorFactory = ApiProperty(metadata);
+                decoratorFactory(IntersectionClassType.prototype, propertyKey);
+                inheritExplicitApiPropertyOptions(classRef.prototype, IntersectionClassType.prototype, propertyKey);
+            });
+        }
+        applyFields(fields);
+        MetadataLoader.addRefreshHook(() => {
+            const fields = intersection_type_helper_modelPropertiesAccessor.getModelProperties(classRef.prototype);
+            applyFields(fields);
+        });
+    });
+    Object.defineProperty(IntersectionClassType, 'name', {
+        configurable: true,
+        get: () => `Intersection${classRefs.reduce((prev, ref) => prev + ref.name, '')}`
+    });
+    return IntersectionClassType;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/type-helpers/omit-type.helper.js
+
+
+
+
+
+
+
+
+const omit_type_helper_modelPropertiesAccessor = new ModelPropertiesAccessor();
+function omit_type_helper_OmitType(classRef, keys) {
+    const omittedKeys = keys.map((key) => typeof key === 'number' ? String(key) : key);
+    const isInheritedPredicate = (propertyKey) => !omittedKeys.includes(propertyKey);
+    const fields = omit_type_helper_modelPropertiesAccessor
+        .getModelProperties(classRef.prototype)
+        .filter(isInheritedPredicate);
+    class OmitTypeClass {
+        constructor() {
+            type_helpers_utils_inheritPropertyInitializers(this, classRef, isInheritedPredicate);
+        }
+    }
+    setMappedTypeClassName(OmitTypeClass, 'Omit', classRef, keys);
+    type_helpers_utils_inheritValidationMetadata(classRef, OmitTypeClass, isInheritedPredicate);
+    type_helpers_utils_inheritTransformationMetadata(classRef, OmitTypeClass, isInheritedPredicate);
+    function applyFields(fields) {
+        clonePluginMetadataFactory(OmitTypeClass, classRef.prototype, (metadata) => omit(metadata, keys));
+        fields.forEach((propertyKey) => {
+            const metadata = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, classRef.prototype, propertyKey);
+            const decoratorFactory = ApiProperty(metadata);
+            decoratorFactory(OmitTypeClass.prototype, propertyKey);
+            inheritExplicitApiPropertyOptions(classRef.prototype, OmitTypeClass.prototype, propertyKey);
+        });
+        if (OmitTypeClass[METADATA_FACTORY_NAME]) {
+            const pluginMetadata = OmitTypeClass[METADATA_FACTORY_NAME]();
+            Object.keys(pluginMetadata).forEach((key) => {
+                if (!fields.includes(key)) {
+                    const decoratorFactory = ApiProperty(pluginMetadata[key]);
+                    decoratorFactory(OmitTypeClass.prototype, key);
+                }
+            });
+        }
+    }
+    applyFields(fields);
+    MetadataLoader.addRefreshHook(() => {
+        const fields = omit_type_helper_modelPropertiesAccessor
+            .getModelProperties(classRef.prototype)
+            .filter(isInheritedPredicate);
+        applyFields(fields);
+    });
+    return OmitTypeClass;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/type-helpers/partial-type.helper.js
+
+
+
+
+
+
+
+
+const partial_type_helper_modelPropertiesAccessor = new ModelPropertiesAccessor();
+function partial_type_helper_PartialType(classRef, options = {}) {
+    const applyPartialDecoratorFn = options.skipNullProperties === false
+        ? type_helpers_utils_applyValidateIfDefinedDecorator
+        : type_helpers_utils_applyIsOptionalDecorator;
+    const fields = partial_type_helper_modelPropertiesAccessor.getModelProperties(classRef.prototype);
+    class PartialTypeClass {
+        constructor() {
+            type_helpers_utils_inheritPropertyInitializers(this, classRef);
+        }
+    }
+    setMappedTypeClassName(PartialTypeClass, 'Partial', classRef);
+    const keysWithValidationConstraints = type_helpers_utils_inheritValidationMetadata(classRef, PartialTypeClass);
+    if (keysWithValidationConstraints) {
+        new Set(keysWithValidationConstraints).forEach((key) => applyPartialDecoratorFn(PartialTypeClass, key));
+    }
+    type_helpers_utils_inheritTransformationMetadata(classRef, PartialTypeClass);
+    function applyFields(fields) {
+        clonePluginMetadataFactory(PartialTypeClass, classRef.prototype, (metadata) => mapValues_mapValues(metadata, (item) => ({ ...item, required: false })));
+        fields.forEach((key) => {
+            const metadata = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, classRef.prototype, key) || {};
+            const decoratorFactory = ApiProperty({
+                ...metadata,
+                required: false
+            });
+            decoratorFactory(PartialTypeClass.prototype, key);
+            inheritExplicitApiPropertyOptions(classRef.prototype, PartialTypeClass.prototype, key, ['required']);
+        });
+        if (PartialTypeClass[METADATA_FACTORY_NAME]) {
+            const pluginMetadata = PartialTypeClass[METADATA_FACTORY_NAME]();
+            const pluginFields = Object.keys(pluginMetadata);
+            pluginFields.forEach((key) => {
+                if (!fields.includes(key)) {
+                    const decoratorFactory = ApiProperty({
+                        ...pluginMetadata[key],
+                        required: false
+                    });
+                    decoratorFactory(PartialTypeClass.prototype, key);
+                }
+            });
+        }
+    }
+    applyFields(fields);
+    MetadataLoader.addRefreshHook(() => {
+        const fields = partial_type_helper_modelPropertiesAccessor.getModelProperties(classRef.prototype);
+        applyFields(fields);
+    });
+    return PartialTypeClass;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/type-helpers/pick-type.helper.js
+
+
+
+
+
+
+
+
+const pick_type_helper_modelPropertiesAccessor = new ModelPropertiesAccessor();
+function pick_type_helper_PickType(classRef, keys) {
+    const pickedKeys = keys.map((key) => typeof key === 'number' ? String(key) : key);
+    const isInheritedPredicate = (propertyKey) => pickedKeys.includes(propertyKey);
+    const fields = pick_type_helper_modelPropertiesAccessor
+        .getModelProperties(classRef.prototype)
+        .filter(isInheritedPredicate);
+    class PickTypeClass {
+        constructor() {
+            type_helpers_utils_inheritPropertyInitializers(this, classRef, isInheritedPredicate);
+        }
+    }
+    setMappedTypeClassName(PickTypeClass, 'Pick', classRef, keys);
+    type_helpers_utils_inheritValidationMetadata(classRef, PickTypeClass, isInheritedPredicate);
+    type_helpers_utils_inheritTransformationMetadata(classRef, PickTypeClass, isInheritedPredicate);
+    function applyFields(fields) {
+        clonePluginMetadataFactory(PickTypeClass, classRef.prototype, (metadata) => pick_pick(metadata, keys));
+        fields.forEach((propertyKey) => {
+            const metadata = Reflect.getMetadata(DECORATORS.API_MODEL_PROPERTIES, classRef.prototype, propertyKey);
+            const decoratorFactory = ApiProperty(metadata);
+            decoratorFactory(PickTypeClass.prototype, propertyKey);
+            inheritExplicitApiPropertyOptions(classRef.prototype, PickTypeClass.prototype, propertyKey);
+        });
+        if (PickTypeClass[METADATA_FACTORY_NAME]) {
+            const pluginMetadata = PickTypeClass[METADATA_FACTORY_NAME]();
+            Object.keys(pluginMetadata).forEach((key) => {
+                if (!fields.includes(key)) {
+                    const decoratorFactory = ApiProperty(pluginMetadata[key]);
+                    decoratorFactory(PickTypeClass.prototype, key);
+                }
+            });
+        }
+    }
+    applyFields(fields);
+    MetadataLoader.addRefreshHook(() => {
+        const fields = pick_type_helper_modelPropertiesAccessor
+            .getModelProperties(classRef.prototype)
+            .filter(isInheritedPredicate);
+        applyFields(fields);
+    });
+    return PickTypeClass;
+}
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/type-helpers/index.js
+
+
+
+
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@nestjs+swagger@12.1.2_@nes_08e2cbf098cd3c11abc9047759c81f69/node_modules/@nestjs/swagger/dist/index.js
+
+
+
+
+
 
 
 
@@ -234379,7 +247180,7 @@ const oidNist = (suffix) => ({
 
 /***/ }),
 
-/***/ 86501:
+/***/ 93476:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -234420,8 +247221,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   UserHasPermission: () => (/* binding */ UserHasPermission)
 });
 
-// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 38 modules
-var common = __nccwpck_require__(76332);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/index.js + 35 modules
+var common = __nccwpck_require__(9147);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/index.js + 18 modules
 var core = __nccwpck_require__(87544);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/set-cookie-parser@3.2.3/node_modules/set-cookie-parser/lib/set-cookie.js
@@ -234955,8 +247756,8 @@ function fromNodeHeaders(nodeHeaders) {
 
 // EXTERNAL MODULE: ./node_modules/.pnpm/@better-auth+core@1.7.27_@b_49675c12c19555397867e4801410f163/node_modules/@better-auth/core/dist/api/index.mjs
 var api = __nccwpck_require__(68110);
-;// CONCATENATED MODULE: external "node:module"
-const external_node_module_namespaceObject = require("node:module");
+// EXTERNAL MODULE: external "node:module"
+var external_node_module_ = __nccwpck_require__(98995);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+common@12.6.0_class_5de3bfad43d55e84c3f9932406e3470d/node_modules/@nestjs/common/utils/shared.utils.js
 var shared_utils = __nccwpck_require__(60701);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@nestjs+core@12.6.0_@nestjs_822e232728348661a93bdbcc7b5f83e8/node_modules/@nestjs/core/middleware/utils.js
@@ -235402,7 +248203,7 @@ const BYTE_UNITS = {
   gb: 1 << 30
 };
 
-const require$2 = (0,external_node_module_namespaceObject.createRequire)(require("url").pathToFileURL(__filename).href);
+const require$2 = (0,external_node_module_.createRequire)(require("url").pathToFileURL(__filename).href);
 let cachedQsParse;
 function resolveFastifyParserType(type, fallback) {
   if (type === void 0) {
@@ -235574,7 +248375,7 @@ function configureFastifyBodyParser(httpAdapter, bodyParserOptions) {
   });
 }
 
-const require$1 = (0,external_node_module_namespaceObject.createRequire)(require("url").pathToFileURL(__filename).href);
+const require$1 = (0,external_node_module_.createRequire)(require("url").pathToFileURL(__filename).href);
 const rawBodyParser = (req, _res, buffer) => {
   if (Buffer.isBuffer(buffer)) {
     req.rawBody = buffer;
@@ -285269,6 +298070,209 @@ const defuArrayFn = createDefu((object, key, currentValue) => {
 
 /***/ }),
 
+/***/ 89530:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   f: () => (/* binding */ toKey)
+/* harmony export */ });
+// src/compat/_internal/toKey.ts
+/**
+* Converts `value` to a string key if it's not a string or symbol.
+*
+* @private
+* @param {unknown} value The value to inspect.
+* @returns {string|symbol} Returns the key.
+*/
+function toKey(value) {
+	var _value$valueOf;
+	if (typeof value === "string" || typeof value === "symbol") return value;
+	if (Object.is(value === null || value === void 0 || (_value$valueOf = value.valueOf) === null || _value$valueOf === void 0 ? void 0 : _value$valueOf.call(value), -0)) return "-0";
+	return String(value);
+}
+
+
+
+/***/ }),
+
+/***/ 53243:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   B: () => (/* binding */ isSymbol)
+/* harmony export */ });
+// src/compat/predicate/isSymbol.ts
+/**
+* Check whether a value is a symbol.
+*
+* This function can also serve as a type predicate in TypeScript, narrowing the type of the argument to `symbol`.
+*
+* @param value The value to check.
+* @returns Returns `true` if `value` is a symbol, else `false`.
+* @example
+* isSymbol(Symbol.iterator);
+* // => true
+*
+* isSymbol('abc');
+* // => false
+*/
+function isSymbol(value) {
+	return typeof value === "symbol" || value instanceof Symbol;
+}
+
+
+
+/***/ }),
+
+/***/ 25326:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+"use strict";
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  b: () => (/* binding */ toPath)
+});
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/toKey.mjs
+var toKey = __nccwpck_require__(89530);
+// EXTERNAL MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/predicate/isSymbol.mjs
+var isSymbol = __nccwpck_require__(53243);
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/_internal/baseToString.mjs
+
+// src/compat/_internal/baseToString.ts
+/**
+* Converts `value` to a string like Lodash's `baseToString`.
+*
+* Unlike `toString`, `null` and `undefined` are not special-cased, so `null` becomes `'null'`.
+*
+* @param value - The value to convert.
+* @returns The converted string.
+*/
+function baseToString(value) {
+	if (typeof value === "string") return value;
+	if (Array.isArray(value)) {
+		let result = "";
+		for (let i = 0; i < value.length; i++) {
+			if (i > 0) result += ",";
+			result += baseToString(value[i]);
+		}
+		return result;
+	}
+	if ((0,isSymbol/* isSymbol */.B)(value)) return value.toString();
+	const result = value + "";
+	if (result === "0" && Object.is(Number(value), -0)) return "-0";
+	return result;
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/toString.mjs
+
+// src/compat/util/toString.ts
+/**
+* Converts `value` to a string.
+*
+* An empty string is returned for `null` and `undefined` values.
+* The sign of `-0` is preserved.
+*
+* @param value - The value to convert.
+* @returns Returns the converted string.
+*
+* @example
+* toString(null) // returns ''
+* toString(undefined) // returns ''
+* toString(-0) // returns '-0'
+* toString([1, 2, -0]) // returns '1,2,-0'
+* toString([Symbol('a'), Symbol('b')]) // returns 'Symbol(a),Symbol(b)'
+*/
+function toString_toString(value) {
+	if (value == null) return "";
+	return baseToString(value);
+}
+
+
+;// CONCATENATED MODULE: ./node_modules/.pnpm/es-toolkit@1.53.1/node_modules/es-toolkit/dist/compat/util/toPath.mjs
+
+
+// src/compat/util/toPath.ts
+/**
+* Converts a deep key string into an array of path segments.
+*
+* This function takes a string representing a deep key (e.g., 'a.b.c' or 'a[b][c]') and breaks it down into an array of strings, each representing a segment of the path.
+*
+* @param deepKey - The deep key string to convert.
+* @returns An array of strings, each representing a segment of the path.
+*
+* Examples:
+*
+* toPath('a.b.c') // Returns ['a', 'b', 'c']
+* toPath('a[b][c]') // Returns ['a', 'b', 'c']
+* toPath('.a.b.c') // Returns ['', 'a', 'b', 'c']
+* toPath('a["b.c"].d') // Returns ['a', 'b.c', 'd']
+* toPath('') // Returns []
+* toPath('.a[b].c.d[e]["f.g"].h') // Returns ['', 'a', 'b', 'c', 'd', 'e', 'f.g', 'h']
+*/
+function toPath(deepKey) {
+	if (Array.isArray(deepKey)) return deepKey.map(toKey/* toKey */.f);
+	if (typeof deepKey === "symbol") return [deepKey];
+	deepKey = toString_toString(deepKey);
+	const result = [];
+	const length = deepKey.length;
+	if (length === 0) return result;
+	let index = 0;
+	let key = "";
+	let quoteChar = "";
+	let bracket = false;
+	let bracketHadQuote = false;
+	const bracketNumberRegex = /^-?\d+(?:\.\d+)?$/;
+	if (deepKey.charCodeAt(0) === 46) result.push("");
+	while (index < length) {
+		const char = deepKey[index];
+		if (quoteChar) {
+			if (char === "\\" && index + 1 < length) {
+				index++;
+				key += deepKey[index];
+			} else if (char === quoteChar) quoteChar = "";
+			else key += char;
+		} else if (bracket) {
+			if (char === "\"" || char === "'") {
+				quoteChar = char;
+				bracketHadQuote = true;
+			} else if (char === "]") {
+				bracket = false;
+				if (!bracketHadQuote && key.includes(".") && !bracketNumberRegex.test(key)) {
+					const segments = key.split(".");
+					for (let i = 0; i < segments.length; i++) if (segments[i] !== "") result.push(segments[i]);
+				} else result.push(key);
+				key = "";
+			} else key += char;
+		} else if (char === "[") {
+			bracket = true;
+			bracketHadQuote = false;
+			if (key) {
+				result.push(key);
+				key = "";
+			}
+		} else if (char === ".") {
+			if (key) {
+				result.push(key);
+				key = "";
+			}
+			const next = deepKey[index + 1];
+			if (next === void 0 || next === ".") result.push("");
+		} else key += char;
+		index++;
+	}
+	if (key) result.push(key);
+	return result;
+}
+
+
+
+/***/ }),
+
 /***/ 38913:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
@@ -290502,7 +303506,7 @@ const SetOperationNode = (0,_util_object_utils_js__WEBPACK_IMPORTED_MODULE_0__/*
 
 /***/ }),
 
-/***/ 53243:
+/***/ 75624:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -291547,7 +304551,7 @@ function createOverBuilder() {
 /* harmony import */ var _operation_node_alias_node_js__WEBPACK_IMPORTED_MODULE_8__ = __nccwpck_require__(80675);
 /* harmony import */ var _operation_node_column_node_js__WEBPACK_IMPORTED_MODULE_7__ = __nccwpck_require__(53679);
 /* harmony import */ var _operation_node_reference_node_js__WEBPACK_IMPORTED_MODULE_6__ = __nccwpck_require__(85812);
-/* harmony import */ var _operation_node_table_node_js__WEBPACK_IMPORTED_MODULE_11__ = __nccwpck_require__(53243);
+/* harmony import */ var _operation_node_table_node_js__WEBPACK_IMPORTED_MODULE_11__ = __nccwpck_require__(75624);
 /* harmony import */ var _util_object_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(96427);
 /* harmony import */ var _expression_parser_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(83359);
 /* harmony import */ var _operation_node_identifier_node_js__WEBPACK_IMPORTED_MODULE_9__ = __nccwpck_require__(50060);
@@ -291776,7 +304780,7 @@ function parseSelectAllArg(table) {
 /* harmony export */ });
 /* harmony import */ var _util_object_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(96427);
 /* harmony import */ var _operation_node_alias_node_js__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(80675);
-/* harmony import */ var _operation_node_table_node_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(53243);
+/* harmony import */ var _operation_node_table_node_js__WEBPACK_IMPORTED_MODULE_5__ = __nccwpck_require__(75624);
 /* harmony import */ var _expression_parser_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(83359);
 /* harmony import */ var _operation_node_identifier_node_js__WEBPACK_IMPORTED_MODULE_4__ = __nccwpck_require__(50060);
 /* harmony import */ var _dynamic_dynamic_table_builder_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(41869);
@@ -291999,7 +305003,7 @@ function isRootOperationNode(thing) {
 // EXTERNAL MODULE: ./node_modules/.pnpm/kysely@0.29.9/node_modules/kysely/dist/operation-node/schemable-identifier-node.js
 var schemable_identifier_node = __nccwpck_require__(80185);
 // EXTERNAL MODULE: ./node_modules/.pnpm/kysely@0.29.9/node_modules/kysely/dist/operation-node/table-node.js
-var table_node = __nccwpck_require__(53243);
+var table_node = __nccwpck_require__(75624);
 // EXTERNAL MODULE: ./node_modules/.pnpm/kysely@0.29.9/node_modules/kysely/dist/operation-node/using-node.js
 var using_node = __nccwpck_require__(8139);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/kysely@0.29.9/node_modules/kysely/dist/plugin/with-schema/with-schema-transformer.js
@@ -297787,7 +310791,7 @@ update_query_builder_a = UpdateQueryBuilder;
 // EXTERNAL MODULE: ./node_modules/.pnpm/kysely@0.29.9/node_modules/kysely/dist/operation-node/select-query-node.js + 2 modules
 var select_query_node = __nccwpck_require__(81112);
 // EXTERNAL MODULE: ./node_modules/.pnpm/kysely@0.29.9/node_modules/kysely/dist/operation-node/table-node.js
-var table_node = __nccwpck_require__(53243);
+var table_node = __nccwpck_require__(75624);
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/kysely@0.29.9/node_modules/kysely/dist/operation-node/common-table-expression-name-node.js
 /// <reference types="./common-table-expression-name-node.d.ts" />
 

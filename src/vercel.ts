@@ -9,6 +9,7 @@ import ejs from "ejs";
 import path from "path";
 import { AppModule } from "./app.module";
 import { envVars } from "./config/env.config";
+import { setupSwagger } from "./config/swagger.config";
 
 // Intercept Module._load so dynamic createRequire calls inside bundled dependencies
 // (such as @thallesp/nestjs-better-auth's getExpressBodyParser and express view engines)
@@ -20,6 +21,9 @@ const origLoad = (Module as any)._load;
   }
   if (request === "ejs") {
     return ejs;
+  }
+  if (request.includes("swagger-ui-dist")) {
+    return () => process.cwd();
   }
   return origLoad.apply(this, arguments);
 };
@@ -73,10 +77,21 @@ async function bootstrapServer() {
     credentials: true,
   });
 
-  // Global API Prefix for application controllers, excluding Better Auth (/api/auth) and root
+  // Global API Prefix for application controllers, excluding Better Auth, Swagger and root
   app.setGlobalPrefix("api/v1", {
-    exclude: ["api/auth/{*path}", "api/auth", "/"],
+    exclude: [
+      "docs",
+      "docs/{*path}",
+      "api/docs",
+      "api/docs/{*path}",
+      "api/auth/{*path}",
+      "api/auth",
+      "/",
+    ],
   });
+
+  // Setup Swagger API Documentation
+  setupSwagger(app);
 
   // Global DTO Validation Pipe
   app.useGlobalPipes(

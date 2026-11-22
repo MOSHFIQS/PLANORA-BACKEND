@@ -10,6 +10,13 @@ import {
   HttpStatus,
   HttpCode,
 } from "@nestjs/common";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from "@nestjs/swagger";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import { Public } from "../../common/decorators/public.decorator";
@@ -29,6 +36,7 @@ import {
   ResendOtpDto,
 } from "./dto/auth-actions.dto";
 
+@ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -36,6 +44,9 @@ export class AuthController {
   @Public()
   @Post("register")
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: "Register new user account (Password + OTP verification sent)" })
+  @ApiResponse({ status: 201, description: "User registered successfully, verification email sent" })
+  @ApiResponse({ status: 400, description: "User with this email already exists" })
   async registerUser(
     @Body() payload: RegisterDto,
     @Res({ passthrough: true }) res: Response
@@ -62,6 +73,9 @@ export class AuthController {
   @Public()
   @Post("login")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Log in with email and password" })
+  @ApiResponse({ status: 200, description: "User logged in successfully; tokens and cookies set" })
+  @ApiResponse({ status: 400, description: "Invalid credentials or unverified email" })
   async loginUser(
     @Body() payload: LoginDto,
     @Res({ passthrough: true }) res: Response
@@ -88,6 +102,9 @@ export class AuthController {
   @Public()
   @Post("refresh-token")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Refresh access token using refreshToken cookie / session cookie" })
+  @ApiResponse({ status: 200, description: "New access & refresh tokens generated successfully" })
+  @ApiResponse({ status: 401, description: "Invalid or expired refresh token" })
   async getNewToken(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response
@@ -121,6 +138,10 @@ export class AuthController {
 
   @Public()
   @Get("login/google")
+  @ApiOperation({ summary: "Initiate Google OAuth2 social login" })
+  @ApiQuery({ name: "redirect", required: false, description: "Destination redirect route after OAuth", example: "/dashboard" })
+  @ApiQuery({ name: "role", required: false, description: "User role to assign upon creation", example: "USER" })
+  @ApiResponse({ status: 200, description: "Renders Google OAuth authorization redirect page" })
   googleLogin(
     @Query("redirect") redirect: string = "/dashboard",
     @Query("role") role: string = "USER",
@@ -138,6 +159,9 @@ export class AuthController {
 
   @Public()
   @Get("google/success")
+  @ApiOperation({ summary: "Google OAuth callback handler" })
+  @ApiQuery({ name: "redirect", required: false, example: "/dashboard" })
+  @ApiResponse({ status: 302, description: "Redirects user back to frontend client" })
   async googleLoginSuccess(
     @Req() req: Request,
     @Res() res: Response,
@@ -183,6 +207,8 @@ export class AuthController {
 
   @Public()
   @Get("oauth/error")
+  @ApiOperation({ summary: "Google OAuth error fallback handler" })
+  @ApiQuery({ name: "error", required: false, example: "oauth_failed" })
   handleOAuthError(
     @Query("error") error: string = "oauth_failed",
     @Res() res: Response
@@ -191,7 +217,11 @@ export class AuthController {
   }
 
   @Post("change-password")
+  @ApiBearerAuth("bearer")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Change account password for authenticated user" })
+  @ApiResponse({ status: 200, description: "Password updated successfully" })
+  @ApiResponse({ status: 400, description: "Current password incorrect" })
   async changePassword(
     @Body() payload: ChangePasswordDto,
     @CurrentUser() user: IRequestUser,
@@ -212,7 +242,10 @@ export class AuthController {
   }
 
   @Post("logout")
+  @ApiBearerAuth("bearer")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Log out user & clear session cookies" })
+  @ApiResponse({ status: 200, description: "User logged out successfully" })
   async logoutUser(
     @CurrentUser() user: IRequestUser,
     @Res({ passthrough: true }) res: Response
@@ -236,6 +269,9 @@ export class AuthController {
   @Public()
   @Post("verify-email")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Verify email with 6-digit OTP" })
+  @ApiResponse({ status: 200, description: "Email verified successfully" })
+  @ApiResponse({ status: 400, description: "Invalid or expired OTP" })
   async verifyEmail(@Body() payload: VerifyEmailDto) {
     await this.authService.verifyEmail(payload.email, payload.otp);
     return {
@@ -247,6 +283,8 @@ export class AuthController {
   @Public()
   @Post("forget-password")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Request password reset OTP to email" })
+  @ApiResponse({ status: 200, description: "OTP sent to email successfully" })
   async forgetPassword(@Body() payload: ForgetPasswordDto) {
     await this.authService.forgetPassword(payload.email);
     return {
@@ -258,6 +296,9 @@ export class AuthController {
   @Public()
   @Post("reset-password")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Reset password using OTP code" })
+  @ApiResponse({ status: 200, description: "Password reset successfully" })
+  @ApiResponse({ status: 400, description: "Invalid OTP or user not found" })
   async resetPassword(@Body() payload: ResetPasswordDto) {
     await this.authService.resetPassword(
       payload.email,
@@ -273,6 +314,8 @@ export class AuthController {
   @Public()
   @Post("resend-otp")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Resend verification or password reset OTP" })
+  @ApiResponse({ status: 200, description: "OTP resent successfully" })
   async resendOTP(@Body() payload: ResendOtpDto) {
     await this.authService.resendOTP(payload.email, payload.type);
     return {
