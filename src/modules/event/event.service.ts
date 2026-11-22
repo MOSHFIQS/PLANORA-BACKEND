@@ -96,54 +96,58 @@ export class EventService {
       .execute();
   }
 
-  async getSingleEventPublic(user: IRequestUser, eventId: string) {
-    const participation = await this.prisma.participation.findFirst({
-      where: {
-        eventId,
-        userId: user.userId,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
-          },
+  async getSingleEventPublic(user: IRequestUser | null | undefined, eventId: string) {
+    let participation = null;
+
+    if (user?.userId) {
+      participation = await this.prisma.participation.findFirst({
+        where: {
+          eventId,
+          userId: user.userId,
         },
-        event: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            venue: true,
-            dateTime: true,
-            type: true,
-            fee: true,
-            images: true,
-            meetingLink: true,
-            organizerId: true,
-            organizer: {
-              select: {
-                id: true,
-                name: true,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
+          event: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              venue: true,
+              dateTime: true,
+              type: true,
+              fee: true,
+              images: true,
+              meetingLink: true,
+              organizerId: true,
+              organizer: {
+                select: {
+                  id: true,
+                  name: true,
+                },
               },
             },
           },
-        },
-        ticket: true,
-        payment: {
-          select: {
-            id: true,
-            amount: true,
-            status: true,
-            createdAt: true,
-            invoiceUrl: true,
-            transactionId: true,
+          ticket: true,
+          payment: {
+            select: {
+              id: true,
+              amount: true,
+              status: true,
+              createdAt: true,
+              invoiceUrl: true,
+              transactionId: true,
+            },
           },
         },
-      },
-    });
+      });
+    }
 
     const isUnlocked =
       participation &&
@@ -153,24 +157,22 @@ export class EventService {
     if (isUnlocked) {
       return {
         type: "FULL",
-        data: participation,
+        data: {
+          ...participation,
+          isJoined: true,
+        },
       };
     }
 
     const event = await this.prisma.event.findUnique({
       where: { id: eventId },
-      select: {
-        id: true,
-        title: true,
-        venue: true,
-        dateTime: true,
-        type: true,
-        fee: true,
-        images: true,
+      include: {
+        category: true,
         organizer: {
           select: {
             id: true,
             name: true,
+            image: true,
           },
         },
       },
@@ -182,7 +184,11 @@ export class EventService {
 
     return {
       type: "PUBLIC",
-      data: event,
+      data: {
+        ...event,
+        myParticipation: participation,
+        isJoined: !!participation,
+      },
     };
   }
 

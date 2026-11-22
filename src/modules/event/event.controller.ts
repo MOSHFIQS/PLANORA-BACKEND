@@ -51,14 +51,13 @@ export class EventController {
     return this.eventService.getFeaturedEvents();
   }
 
+  @Public()
   @Get("public/:id")
-  @ApiBearerAuth("bearer")
-  @Roles(Role.USER, Role.ADMIN, Role.SUPERADMIN, Role.ORGANIZER)
-  @ApiOperation({ summary: "Get single event public details with user participation check" })
+  @ApiOperation({ summary: "Get single event public details with optional user participation check" })
   @ApiParam({ name: "id", description: "Event ID" })
   @ApiResponse({ status: 200, description: "Event details returned successfully" })
   async getSingleEventPublic(
-    @CurrentUser() user: IRequestUser,
+    @CurrentUser() user: IRequestUser | null,
     @Param("id") id: string
   ) {
     return this.eventService.getSingleEventPublic(user, id);

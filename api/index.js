@@ -147470,10 +147470,9 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], EventController.prototype, "getFeaturedEvents", null);
 __decorate([
+    (0, public_decorator_1.Public)(),
     (0, common_1.Get)("public/:id"),
-    (0, swagger_1.ApiBearerAuth)("bearer"),
-    (0, roles_decorator_1.Roles)(enums_1.Role.USER, enums_1.Role.ADMIN, enums_1.Role.SUPERADMIN, enums_1.Role.ORGANIZER),
-    (0, swagger_1.ApiOperation)({ summary: "Get single event public details with user participation check" }),
+    (0, swagger_1.ApiOperation)({ summary: "Get single event public details with optional user participation check" }),
     (0, swagger_1.ApiParam)({ name: "id", description: "Event ID" }),
     (0, swagger_1.ApiResponse)({ status: 200, description: "Event details returned successfully" }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
@@ -147704,76 +147703,77 @@ let EventService = class EventService {
             .execute();
     }
     async getSingleEventPublic(user, eventId) {
-        const participation = await this.prisma.participation.findFirst({
-            where: {
-                eventId,
-                userId: user.userId,
-            },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                        image: true,
-                    },
+        let participation = null;
+        if (user?.userId) {
+            participation = await this.prisma.participation.findFirst({
+                where: {
+                    eventId,
+                    userId: user.userId,
                 },
-                event: {
-                    select: {
-                        id: true,
-                        title: true,
-                        description: true,
-                        venue: true,
-                        dateTime: true,
-                        type: true,
-                        fee: true,
-                        images: true,
-                        meetingLink: true,
-                        organizerId: true,
-                        organizer: {
-                            select: {
-                                id: true,
-                                name: true,
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            image: true,
+                        },
+                    },
+                    event: {
+                        select: {
+                            id: true,
+                            title: true,
+                            description: true,
+                            venue: true,
+                            dateTime: true,
+                            type: true,
+                            fee: true,
+                            images: true,
+                            meetingLink: true,
+                            organizerId: true,
+                            organizer: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                },
                             },
                         },
                     },
-                },
-                ticket: true,
-                payment: {
-                    select: {
-                        id: true,
-                        amount: true,
-                        status: true,
-                        createdAt: true,
-                        invoiceUrl: true,
-                        transactionId: true,
+                    ticket: true,
+                    payment: {
+                        select: {
+                            id: true,
+                            amount: true,
+                            status: true,
+                            createdAt: true,
+                            invoiceUrl: true,
+                            transactionId: true,
+                        },
                     },
                 },
-            },
-        });
+            });
+        }
         const isUnlocked = participation &&
             (participation.status === enums_1.ParticipationStatus.APPROVED ||
                 participation.payment?.some((p) => p.status === enums_1.PaymentStatus.SUCCESS));
         if (isUnlocked) {
             return {
                 type: "FULL",
-                data: participation,
+                data: {
+                    ...participation,
+                    isJoined: true,
+                },
             };
         }
         const event = await this.prisma.event.findUnique({
             where: { id: eventId },
-            select: {
-                id: true,
-                title: true,
-                venue: true,
-                dateTime: true,
-                type: true,
-                fee: true,
-                images: true,
+            include: {
+                category: true,
                 organizer: {
                     select: {
                         id: true,
                         name: true,
+                        image: true,
                     },
                 },
             },
@@ -147783,7 +147783,11 @@ let EventService = class EventService {
         }
         return {
             type: "PUBLIC",
-            data: event,
+            data: {
+                ...event,
+                myParticipation: participation,
+                isJoined: !!participation,
+            },
         };
     }
     async organizersSingleEventById(id) {
