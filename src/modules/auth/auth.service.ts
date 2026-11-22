@@ -354,20 +354,6 @@ export class AuthService {
       throw new NotFoundException("User not found in system");
     }
 
-    const hasCredentialAccount = user.accounts.some(
-      (acc) => acc.providerId === "credential"
-    );
-
-    if (!hasCredentialAccount) {
-      await this.prisma.session.deleteMany({ where: { userId: user.id } });
-      await this.prisma.account.deleteMany({ where: { userId: user.id } });
-      await this.prisma.user.delete({ where: { id: user.id } });
-
-      throw new ForbiddenException(
-        "No account found for this Google email. Please register with your email and password first, verify your email, then you can sign in with Google."
-      );
-    }
-
     if (user.status === UserStatus.SUSPENDED) {
       throw new ForbiddenException("User account is suspended");
     }
